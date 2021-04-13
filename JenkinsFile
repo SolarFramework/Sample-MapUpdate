@@ -1,0 +1,75 @@
+node("master") {
+
+SolArModulePipeline {
+    moduleName="Mapping"
+    dirName="SolARBuild"
+    buildDir="MapExtension/SolARSample_Mapping_MapExtension_Mono"
+    android=false
+} 
+
+SolArModulePipeline {
+    moduleName="Mapping"
+    dirName="SolARBuild"
+    buildDir="MapFusion/SolARSample_Mapping_FloatingMapFusion_Mono"
+    android=false
+}    
+
+SolArModulePipeline {
+    moduleName="Mapping"
+    dirName="SolARBuild"
+    buildDir="MapFusion/SolARSample_Mapping_LocalMapFusion_Mono"
+    android=false
+}
+
+SolArModulePipeline {
+    moduleName="Mapping"
+    dirName="SolARBuild"
+    buildDir="Mapping/SolARSample_Mapping_Mono"
+    android=false
+}
+
+SolArModulePipeline {
+    moduleName="Mapping"
+    dirName="SolARBuild"
+    buildDir="Mapping/SolARSample_Mapping_Multi"
+    android=false
+}
+
+SolArModulePipeline {
+    moduleName="Mapping"
+    dirName="SolARBuild"
+    buildDir="Mapping/SolARPipeline_Mapping_Mono"
+    android=false
+}
+
+SolArModulePipeline {
+    moduleName="Mapping"
+    dirName="SolARBuild"
+    buildDir="Mapping/SolARPipeline_Mapping_Mono/tests/SolARPipelineTest_Mapping_Mono"
+    android=false
+}
+
+SolArModulePipeline {
+    moduleName="Mapping"
+    dirName="SolARBuild"
+    buildDir="Mapping/SolARPipeline_Mapping_Multi"
+    android=false
+}
+
+SolArModulePipeline {
+    moduleName="Mapping"
+    dirName="SolARBuild"
+    buildDir="Mapping/SolARPipeline_Mapping_Multi/tests/SolARPipelineTest_Mapping_Multi"
+    android=false
+}
+
+SolArModulePipeline {
+    moduleName="Mapping"
+    dirName="SolARBuild"
+    buildDir="MapViz"
+    android=false
+}
+
+}
+
+

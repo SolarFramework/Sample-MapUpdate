@@ -1,0 +1,102 @@
+build/
+bin/
+
+*.pro.user
+
+*-Debug
+*-Release
+*-debug.bat
+*-release.bat
+*_debug.bat
+*_release.bat
+**/build*
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+#others
+
+*.rej
+*.stash
+*.rc
+*.res
+*.exp
+*.ilk
+*.pdb
+
+# Visual Studio files
+.vs*
+x64*
+*.vcxproj.user
+*.ib_pdb_index
+*.idb
+*.ilk
+*.pdb
+*.sln
+*.suo
+*.vcproj
+*vcproj.*.*.user
+*.ncb
+*.sdf
+*.opensdf
+*.vcxproj
+*vcxproj.*
+x64/
+.vs/
+*remakeninfo.txt
+Debug/
+Release/
+*-packagedependencies.*
+*-packagedependencies-win.*
+*.pc
+
+#generated files
+*remakeninfo.txt
+*.vcxproj
+*.vcxproj.filters
+*.sln
+**/debug/
+**/release/
+*/debug/*
+*/release/*
+*.vcxproj
+*.vcxproj.filters
+*-packagedependencies.txt
+data*
+*-packagedependencies-win.txt
+*.pc
+*.sln
+*aps
+bin/*
+*/build*
+run.sh
