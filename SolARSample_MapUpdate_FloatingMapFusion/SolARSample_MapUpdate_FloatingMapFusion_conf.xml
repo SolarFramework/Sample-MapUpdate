@@ -229,7 +229,7 @@
 			<property name="calibrationFile" type="string" value="../../data/data_hololens/hololens_calibration.yml"/>
 		</configure>
 		<configure component="SolARMapManager" name="globalMapper">
-			<property name="directory" type="string" value="../../data/map_local/mapA"/>
+			<property name="directory" type="string" value="../../data/map_hololens/mapA"/>
 			<property name="identificationFileName" type="string" value="identification.bin"/>
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
@@ -240,7 +240,7 @@
 			<property name="thresConfidence" type="float" value="0.03"/>
 		</configure>
 		<configure component="SolARMapManager" name="floatingMapper">
-			<property name="directory" type="string" value="../../data/map_local/mapB"/>
+			<property name="directory" type="string" value="../../data/map_hololens/mapB"/>
 			<property name="identificationFileName" type="string" value="identification.bin"/>
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
@@ -251,7 +251,7 @@
 			<property name="thresConfidence" type="float" value="0.03"/>
 		</configure>
 		<configure component="SolARMapManager" name="fusionMapper">
-			<property name="directory" type="string" value="../../data/map_local/mapAB"/>
+			<property name="directory" type="string" value="../../data/map_hololens/mapAB"/>
 			<property name="identificationFileName" type="string" value="identification.bin"/>
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>

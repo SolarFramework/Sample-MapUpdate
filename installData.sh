@@ -13,3 +13,9 @@ curl https://artifact.b-com.com/solar-generic-local/maps/hololens/bcomLab/mapLab
 unzip -o mapB.zip -d ./data/map_hololens
 rm mapB.zip
 
+# Download calibration file
+echo Download calibration file
+curl https://artifact.b-com.com/solar-generic-local/captures/hololens/hololens_calibration.yml -L -o hololens_calibration.yml
+mkdir ./data/data_hololens
+mv hololens_calibration.yml ./data/data_hololens/hololens_calibration.yml
+

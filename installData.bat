@@ -15,3 +15,9 @@ del mapA.zip
 curl https://artifact.b-com.com/solar-generic-local/maps/hololens/bcomLab/mapLabB_win_0_9_1.zip -L -o mapB.zip
 powershell Expand-Archive mapB.zip -DestinationPath .\data\map_hololens -F
 del mapB.zip
+
+:: Download calibration file
+echo Download calibration file
+curl https://artifact.b-com.com/solar-generic-local/captures/hololens/hololens_calibration.yml -L -o hololens_calibration.yml
+md .\data\data_hololens
+move hololens_calibration.yml .\data\data_hololens\hololens_calibration.yml

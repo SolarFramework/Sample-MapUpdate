@@ -13,13 +13,13 @@ CONFIG += console
 include(findremakenrules.pri)
 
 CONFIG(debug,debug|release) {
-	TARGETDEPLOYDIR = $${PWD}/../../bin/Debug
+        TARGETDEPLOYDIR = $${PWD}/../bin/Debug
     DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
 
 CONFIG(release,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}/../../bin/Release
+    TARGETDEPLOYDIR = $${PWD}/../bin/Release
     DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
 }
@@ -68,7 +68,7 @@ android {
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $$files($${PWD}/SolARSample_Mapping_FloatingMapFusion_Mono_conf.xml)
+configfile.files = $$files($${PWD}/SolARSample_MapUpdate_FloatingMapFusion_conf.xml)
 INSTALLS += configfile
 
 linux {

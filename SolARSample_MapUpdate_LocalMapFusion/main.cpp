@@ -146,7 +146,8 @@ int main(int argc, char *argv[])
 
 		// global bundle adjustment
 		globalBundler->setMap(globalMap);
-		globalBundler->bundleAdjustment(camParams.intrinsic, camParams.distortion);
+        double error_bundle = globalBundler->bundleAdjustment(camParams.intrinsic, camParams.distortion);
+        LOG_INFO("Error after bundler: {}", error_bundle);
 
 		// pruning
 		globalMapManager->pointCloudPruning();
