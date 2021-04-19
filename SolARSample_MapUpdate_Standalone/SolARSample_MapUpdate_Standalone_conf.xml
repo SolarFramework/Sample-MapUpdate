@@ -197,6 +197,10 @@
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="fe6a40ca-137c-11eb-adc1-0242ac120002" name="IOverlapDetector" description="IOverlapDetector"/>
 		</component>
+		<component uuid="3960331a-9190-48f4-aeba-e20bf6a24465" name="SolARMapUpdate" description="SolARMapUpdate">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="943dd9a0-4889-489a-80a7-84be1a6c1650" name="IMapUpdate" description="IMapUpdate"/>
+		</component>
 	</module>
 	
 	<module uuid="b81f0b90-bdbc-11e8-a355-529269fb1459" name="SolARModuleFBOW" description="SolARModuleFBOW" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleFBOW/0.9.4/lib/x86_64/shared">
@@ -219,7 +223,7 @@
 			<bind interface="IDescriptorMatcher" to="SolARDescriptorMatcherKNNOpencv"/>
 			<bind interface="IBundler" range="default|all" to="SolAROptimizationG2O"/>
 			<bind interface="IMapManager" to="SolARMapManager" name="globalMapper" range="default|all" properties="globalMapper"/>
-			<bind interface="IMapManager" to="SolARMapManager" name="floatingMapper" range="default|all" properties="floatingMapper"/>
+			<bind interface="IMapManager" to="SolARMapManager" name="localMapper" range="default|all" properties="localMapper"/>
 			<bind interface="IMapManager" to="SolARMapManager" name="fusionMapper" range="default|all" properties="fusionMapper"/>
 		</bindings>
 	</factory>
@@ -227,6 +231,10 @@
 	<properties>
 		<configure component="SolARDeviceDataLoader">
 			<property name="calibrationFile" type="string" value="../../data/calibrations/hololens_calibration.yml"/>
+		</configure>
+		<configure component="SolARMapManager">
+			<property name="reprojErrorThreshold" type="float" value="10.0"/>
+			<property name="thresConfidence" type="float" value="0.1"/>
 		</configure>
 		<configure component="SolARMapManager" name="globalMapper">
 			<property name="directory" type="string" value="../../data/maps/mapA"/>
@@ -239,7 +247,7 @@
 			<property name="reprojErrorThreshold" type="float" value="10.0"/>
 			<property name="thresConfidence" type="float" value="0.03"/>
 		</configure>
-		<configure component="SolARMapManager" name="floatingMapper">
+		<configure component="SolARMapManager" name="localMapper">
 			<property name="directory" type="string" value="../../data/maps/mapB"/>
 			<property name="identificationFileName" type="string" value="identification.bin"/>
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
@@ -267,10 +275,13 @@
 		<configure component="SolARMapFusionOpencv">
 			<property name="radius" type="float" value="0.2"/>
 		</configure>
+		<configure component="SolARMapUpdate">
+			<property name="thresAngleViewDirection" type="float" value="0.87"/>
+		</configure>
 		<configure component="SolAR3DTransformEstimationSACFrom3D3D">
 			<property name="iterationsCount" type="int" value="500"/>
-			<property name="reprojError" type="float" value="10.0"/>
-			<property name="distanceError" type="float" value="0.1"/>
+			<property name="reprojError" type="float" value="3.0"/>
+			<property name="distanceError" type="float" value="0.05"/>
 			<property name="confidence" type="float" value="0.9"/>
 			<property name="minNbInliers" type="int" value="30"/>
 		</configure>

@@ -9,15 +9,15 @@ del fbow_voc.zip
 :: Download maps
 echo Download and install maps
 curl https://artifact.b-com.com/solar-generic-local/maps/hololens/bcomLab/mapLabA_win_0_9_1.zip -L -o mapA.zip
-powershell Expand-Archive mapA.zip -DestinationPath .\data\map_hololens -F
+powershell Expand-Archive mapA.zip -DestinationPath .\data\maps -F
 del mapA.zip
 
 curl https://artifact.b-com.com/solar-generic-local/maps/hololens/bcomLab/mapLabB_win_0_9_1.zip -L -o mapB.zip
-powershell Expand-Archive mapB.zip -DestinationPath .\data\map_hololens -F
+powershell Expand-Archive mapB.zip -DestinationPath .\data\maps -F
 del mapB.zip
 
 :: Download calibration file
 echo Download calibration file
 curl https://artifact.b-com.com/solar-generic-local/captures/hololens/hololens_calibration.yml -L -o hololens_calibration.yml
-md .\data\data_hololens
-move hololens_calibration.yml .\data\data_hololens\hololens_calibration.yml
+md .\data\calibrations
+move hololens_calibration.yml .\data\calibrations\hololens_calibration.yml
