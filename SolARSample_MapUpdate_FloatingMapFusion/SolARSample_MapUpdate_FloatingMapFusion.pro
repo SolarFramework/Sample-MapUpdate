@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARSample_MapUpdate_FloatingMapFusion
-VERSION=0.9.4
+VERSION=0.9.3
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
