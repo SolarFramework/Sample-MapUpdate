@@ -37,7 +37,7 @@ PipelineMapUpdateProcessing::~PipelineMapUpdateProcessing()
     delete m_mapUpdateTask;
 }
 
-FrameworkReturnCode PipelineMapUpdateProcessing::init(SRef<xpcf::IComponentManager> componentManager) 
+FrameworkReturnCode PipelineMapUpdateProcessing::init()
 {
     LOG_DEBUG("PipelineMapUpdateProcessing init");
 	m_mapManager->getMap(m_globalMap);

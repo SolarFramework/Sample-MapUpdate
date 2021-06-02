@@ -63,7 +63,7 @@ int main(int argc, char ** argv)
 		LOG_INFO("Map update process components loaded");
 
 		// Init map update pipeline
-		if (mapUpdatePipeline->init(processorComponentMgr) != FrameworkReturnCode::_SUCCESS)
+        if (mapUpdatePipeline->init() != FrameworkReturnCode::_SUCCESS)
 		{
 			LOG_INFO("Cannot init map update pipeline");
 			return 0;
