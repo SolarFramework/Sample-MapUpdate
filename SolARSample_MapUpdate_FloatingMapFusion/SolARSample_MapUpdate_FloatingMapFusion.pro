@@ -48,6 +48,11 @@ unix {
     QMAKE_CXXFLAGS += -DBOOST_LOG_DYN_LINK
 }
 
+linux {
+        QMAKE_LFLAGS += -ldl
+        LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
+}
+
 macx {
     QMAKE_MAC_SDK= macosx
     QMAKE_CXXFLAGS += -fasm-blocks -x objective-c++
