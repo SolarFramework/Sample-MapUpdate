@@ -107,7 +107,7 @@ int main(int argc, char ** argv)
 		mapUpdatePipeline->stop();
 
 		// Display the global map
-		auto globalMapManager = processorComponentMgr->resolve<storage::IMapManager>();	
+        auto globalMapManager = processorComponentMgr->resolve<storage::IMapManager>();
 		SRef<Map> globalMap;
 		globalMapManager->getMap(globalMap);
 		std::vector<SRef<Keyframe>> globalKeyframes;

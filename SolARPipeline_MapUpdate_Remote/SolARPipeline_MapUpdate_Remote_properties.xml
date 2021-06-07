@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xpcf-registry autoAlias="true">
+
+    <properties>
+
+        <!-- server configuration -->
+        <!--
+        <configure component="GrpcServerManager">
+            <property name="server_address" access="rw" type="string" value="0.0.0.0"/>
+            <property name="server_port" access="rw" type="string" value="50000"/>
+            <property name="serverCredentials" access="rw" type="uint" value="0"/>
+            <property name="max_receive_message_size" access="rw" type="uint" value="7000000"/>
+            <property name="max_send_message_size" access="rw" type="uint" value="2000000"/>
+        </configure>
+        -->
+
+        <!-- map update pipeline configuration -->
+        <configure component="SolARMapManager">
+                <property name="directory" type="string" value="../../data/maps/globalMap"/>
+                <property name="identificationFileName" type="string" value="identification.bin"/>
+                <property name="coordinateFileName" type="string" value="coordinate.bin"/>
+                <property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
+                <property name="keyframesManagerFileName" type="string" value="keyframes.bin"/>
+                <property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
+                <property name="keyframeRetrieverFileName" type="string" value="keyframe_retriever.bin"/>
+                <property name="reprojErrorThreshold" type="float" value="10.0"/>
+                <property name="thresConfidence" type="float" value="0.1"/>
+        </configure>
+        <configure component="SolAROverlapDetector">
+                <property name="minNbInliers" type="int" value="50"/>
+        </configure>
+        <configure component="SolARMapFusionOpencv">
+                <property name="radius" type="float" value="0.2"/>
+        </configure>
+        <configure component="SolARMapUpdate">
+                <property name="thresAngleViewDirection" type="float" value="0.87"/>
+        </configure>
+        <configure component="SolAR3DTransformEstimationSACFrom3D3D">
+                <property name="iterationsCount" type="int" value="500"/>
+                <property name="reprojError" type="float" value="3.0"/>
+                <property name="distanceError" type="float" value="0.05"/>
+                <property name="confidence" type="float" value="0.9"/>
+                <property name="minNbInliers" type="int" value="30"/>
+        </configure>
+        <configure component="SolARDescriptorMatcherKNNOpencv">
+                <property name="distanceRatio" type="float" value="0.8"/>
+                <property name="radius" type="float" value="15"/>
+                <property name="matchingDistanceMax" type="float" value="800"/>
+        </configure>
+        <configure component="SolARGeometricMatchesFilterOpencv">
+                <property name="confidence" type="float" value="0.99"/>
+                <property name="outlierDistanceRatio" type="float" value="0.005"/>
+                <property name="epilinesDistance" type="float" value="3.0"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv">
+                <property name="iterationsCount" type="int" value="500"/>
+                <property name="reprojError" type="float" value="3.0"/>
+                <property name="confidence" type="float" value="0.99"/>
+                <property name="minNbInliers" type="int" value="40"/>
+        </configure>
+        <configure component="SolARKeyframeRetrieverFBOW">
+                <property name="VOCpath" type="String" value="../../data/fbow_voc/akaze.fbow"/>
+                <property name="threshold" type="float" value="0.02"/>
+                <property name="level" type="int" value="3"/>
+                <property name="matchingDistanceRatio" type="float" value="0.8"/>
+                <property name="matchingDistanceMax" type="float" value="800"/>
+        </configure>
+        <configure component="SolAROptimizationG2O">
+                <property name="nbIterationsLocal" type="int" value="10"/>
+                <property name="nbIterationsGlobal" type="int" value="20"/>
+                <property name="setVerbose" type="int" value="0"/>
+                <property name="nbMaxFixedKeyframes" type="int" value="20"/>
+                <property name="errorOutlier" type="float" value="10.0"/>
+                <property name="useSpanningTree" type="int" value="0"/>
+                <property name="isRobust" type="int" value="0"/>
+                <property name="fixedMap" type="int" value="0"/>
+                <property name="fixedKeyframes" type="int" value="0"/>
+        </configure>
+    </properties>
+</xpcf-registry>

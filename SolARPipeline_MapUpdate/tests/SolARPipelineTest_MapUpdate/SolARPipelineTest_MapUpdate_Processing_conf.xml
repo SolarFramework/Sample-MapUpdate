@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xpcf-registry autoAlias="true">
 
-	<module uuid="af90f957-90a4-437e-8436-5dd276d782c8" name="SolARPipeline_MapUpdate" description="SolARPipeline_MapUpdate" path="$XPCF_MODULE_ROOT/SolARBuild/SolARPipeline_MapUpdate/0.9.3/lib/x86_64/shared">
+        <module uuid="af90f957-90a4-437e-8436-5dd276d782c8" name="SolARPipelineMapUpdate" description="SolARPipelineMapUpdate" path="$XPCF_MODULE_ROOT/SolARBuild/SolARPipelineMapUpdate/0.9.3/lib/x86_64/shared">
 		<component uuid="7eb960b3-862f-4921-bd7c-a67222d0bf82" name="PipelineMapUpdateProcessing" description="PipelineMapUpdateProcessing">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="49cbd32c-6dfa-4155-b151-7261dd13f552" name="IMapUpdatePipeline" description="IMapUpdatePipeline"/>
