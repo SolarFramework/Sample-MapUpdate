@@ -33,6 +33,36 @@ void print_error(const std::string& msg)
     std::cerr << msg << std::endl;
 }
 
+void tryConfigureServer(SRef<xpcf::IGrpcServerManager> server, const std::string & propName, const std::string & envVarName)
+{
+    char * envValue = getenv(envVarName.c_str());
+    if (envValue != nullptr) {
+        xpcf::IProperty::PropertyType type = server->bindTo<xpcf::IConfigurable>()->getProperty(propName.c_str())->getType();
+        switch (type) {
+        case xpcf::IProperty::PropertyType::IProperty_CHARSTR:
+            server->bindTo<xpcf::IConfigurable>()->getProperty(propName.c_str())->setStringValue(envValue);
+            std::cout << "Set property " << propName << " to " << envValue << std::endl;
+            break;
+
+        case xpcf::IProperty::PropertyType::IProperty_UINTEGER:
+            server->bindTo<xpcf::IConfigurable>()->getProperty(propName.c_str())->setUnsignedIntegerValue(std::atoi(envValue));
+            std::cout << "Set property " << propName << " to " << envValue << std::endl;
+            break;
+
+        case xpcf::IProperty::PropertyType::IProperty_LONG:
+            server->bindTo<xpcf::IConfigurable>()->getProperty(propName.c_str())->setLongValue(std::atol(envValue));
+            std::cout << "Set property " << propName << " to " << envValue << std::endl;
+        break;
+        default:
+            std::cout<<"GrpcServerManager Property type not handled"<<std::endl;
+            break;
+        }
+    }
+    else {
+        std::cout<<"No '"<<envVarName<<"' environment variable found"<<std::endl;
+    }
+}
+
 int main(int argc, char* argv[])
 {
 #if NDEBUG
@@ -94,20 +124,11 @@ int main(int argc, char* argv[])
 
     auto serverMgr = cmpMgr->resolve<xpcf::IGrpcServerManager>();
 
-    // Check if server port is defined in environment variable XPCF_GRPC_SERVER_PORT
-
-    char * serverPort = getenv("XPCF_GRPC_SERVER_PORT");
-
-    if (serverPort != nullptr) {
-        serverMgr->bindTo<xpcf::IConfigurable>()->getProperty("server_port")->setStringValue(serverPort);
-
-        std::cout << "'XPCF_GRPC_SERVER_PORT' environment variable found: set server port to "
-                  << serverMgr->bindTo<xpcf::IConfigurable>()->getProperty("server_port")->getStringValue() << std::endl;
-    }
-    else {
-        std::cout<<"No 'XPCF_GRPC_SERVER_PORT' environment variable found: set server port to default value ("
-                 << serverMgr->bindTo<xpcf::IConfigurable>()->getProperty("server_port")->getStringValue() << ")" << std::endl;
-    }
+    // Check environment variables
+    tryConfigureServer(serverMgr, "server_address", "XPCF_GRPC_SERVER_URL");
+    tryConfigureServer(serverMgr, "server_credentials", "XPCF_GRPC_CREDENTIALS");
+    tryConfigureServer(serverMgr, "max_receive_message_size", "XPCF_GRPC_MAX_RECV_MSG_SIZE");
+    tryConfigureServer(serverMgr, "max_send_message_size", "XPCF_GRPC_MAX_SEND_MSG_SIZE");
 
     // Check if log level is defined in environment variable SOLAR_LOG_LEVEL
     char * log_level = getenv("SOLAR_LOG_LEVEL");
@@ -146,6 +167,8 @@ int main(int argc, char* argv[])
     else {
         std::cout << "No 'SOLAR_LOG_LEVEL' environment variable found: set log level to default value (INFO)" << std::endl;
     }
+
+    std::cout<<"xpcf_grpc_server listens on: "<<serverMgr->bindTo<xpcf::IConfigurable>()->getProperty("server_address")->getStringValue()<<std::endl;
 
     serverMgr->runServer();
 

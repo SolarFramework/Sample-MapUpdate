@@ -8,8 +8,7 @@ GrpcServerManager::GrpcServerManager():ConfigurableBase(toMap<GrpcServerManager>
 
     declareInterface<IGrpcServerManager>(this);
     declareProperty("server_address",m_serverAddress);
-    declareProperty("server_port",m_serverPort);
-    declareProperty("serverCredentials",m_serverCredentials);
+    declareProperty("server_credentials",m_serverCredentials);
     declareProperty("max_receive_message_size", m_receiveMessageMaxSize);
     declareProperty("max_send_message_size", m_sendMessageMaxSize);
     declareInjectable<IGrpcService>(m_services);
@@ -34,15 +33,6 @@ void GrpcServerManager::unloadComponent ()
 
 XPCFErrorCode GrpcServerManager::onConfigured()
 {
-    if (m_receiveMessageMaxSize > 0) {
-        m_builder.SetMaxReceiveMessageSize(m_receiveMessageMaxSize);
-        std::cout << "Set max receive message size to: " << m_receiveMessageMaxSize << std::endl;
-    }
-
-    if (m_sendMessageMaxSize > 0) {
-        m_builder.SetMaxSendMessageSize(m_sendMessageMaxSize);
-        std::cout << "Set max send message size to: " << m_sendMessageMaxSize << std::endl;
-    }
     return XPCFErrorCode::_SUCCESS;
 }
 
@@ -68,25 +58,20 @@ void GrpcServerManager::registerService(const grpc::string & host, SRef<IGrpcSer
 
 void GrpcServerManager::runServer()
 {
-    m_builder.AddListeningPort(m_serverAddress + ":" + m_serverPort, GrpcHelper::getServerCredentials(static_cast<grpcCredentials>(m_serverCredentials)));
-
-    for (auto service: *m_services) {
-        std::cout << "Registering IGrpcService # " << service->getServiceName() << std::endl;
-        registerService(service);
-    }
-
     if (m_receiveMessageMaxSize > 0) {
         m_builder.SetMaxReceiveMessageSize(m_receiveMessageMaxSize);
-        std::cout << "Set max receive message size to: " << m_receiveMessageMaxSize << std::endl;
     }
 
     if (m_sendMessageMaxSize > 0) {
         m_builder.SetMaxSendMessageSize(m_sendMessageMaxSize);
-        std::cout << "Set max send message size to: " << m_sendMessageMaxSize << std::endl;
     }
-
+    m_builder.AddListeningPort(m_serverAddress, GrpcHelper::getServerCredentials(static_cast<grpcCredentials>(m_serverCredentials)));
+    for (auto service: *m_services) {
+        std::cout << "Registering IGrpcService # " << service->getServiceName() << std::endl;
+        registerService(service);
+    }
     std::unique_ptr<grpc::Server> server(m_builder.BuildAndStart());
-    std::cout << "Server listening on " << m_serverAddress << ":" << m_serverPort << std::endl;
+    std::cout << "Server listening on " << m_serverAddress << std::endl;
     server->Wait();
 }
 

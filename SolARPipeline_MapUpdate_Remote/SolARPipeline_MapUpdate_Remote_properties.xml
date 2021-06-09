@@ -6,9 +6,8 @@
         <!-- server configuration -->
         <!--
         <configure component="GrpcServerManager">
-            <property name="server_address" access="rw" type="string" value="0.0.0.0"/>
-            <property name="server_port" access="rw" type="string" value="50000"/>
-            <property name="serverCredentials" access="rw" type="uint" value="0"/>
+            <property name="server_address" access="rw" type="string" value="0.0.0.0:8080"/>
+            <property name="server_credentials" access="rw" type="uint" value="0"/>
             <property name="max_receive_message_size" access="rw" type="uint" value="7000000"/>
             <property name="max_send_message_size" access="rw" type="uint" value="2000000"/>
         </configure>

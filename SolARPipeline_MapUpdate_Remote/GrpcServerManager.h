@@ -45,11 +45,10 @@ public:
 
 private:
     grpc::ServerBuilder m_builder;    
-    std::string m_serverAddress = "0.0.0.0";    // Default server address
-    std::string m_serverPort = "50000";         // Default server port
+    std::string m_serverAddress = "0.0.0.0:8080";
     uint32_t m_serverCredentials = grpcCredentials::InsecureChannelCredentials;
-    int64_t m_receiveMessageMaxSize = 500000000;  // Default receive message max size
-    int64_t m_sendMessageMaxSize = 0;           // Default send message max size
+    int64_t m_receiveMessageMaxSize = -1;
+    int64_t m_sendMessageMaxSize = -1;
     SRef<org::bcom::xpcf::ICollection<SRef<IGrpcService> >> m_services;
 };
 
