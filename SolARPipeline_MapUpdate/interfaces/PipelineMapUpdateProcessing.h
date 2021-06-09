@@ -90,6 +90,11 @@ namespace PIPELINES {
 		/// @return FrameworkReturnCode::_SUCCESS if the data are ready to be processed, else FrameworkReturnCode::_ERROR_
 		FrameworkReturnCode mapUpdateRequest(const SRef<datastructure::Map> map) override;
 
+        /// @brief Request to the map update pipeline to get the global map
+        /// @param[out] map: the output global map
+        /// @return FrameworkReturnCode::_SUCCESS if the global map is available, else FrameworkReturnCode::_ERROR_
+        FrameworkReturnCode getMapRequest(SRef<SolAR::datastructure::Map> & map) const override;
+
 	private:
 		/// @brief method that implementes the full maping processing
 		void processMapUpdate();

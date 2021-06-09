@@ -45,7 +45,7 @@
 		<bindings>
 			<bind interface="IMapManager" to="SolARMapManager" range="all" name="Map1" properties="Map1"/>
 			<bind interface="IMapManager" to="SolARMapManager" range="all" name="Map2" properties="Map2"/>
-		</bindings>
+                </bindings>
 	</factory>
 
 	<properties>
@@ -76,8 +76,8 @@
 			<property name="reprojErrorThreshold" type="float" value="10.0"/>
 			<property name="thresConfidence" type="float" value="0.03"/>
 		</configure>
-		<configure component="SolAR3DPointsViewerOpengl">
-			<property name="title" type="string" value="Global Map"/>
+                <configure component="SolAR3DPointsViewerOpengl">
+                        <property name="title" type="string" value="Global Map"/>
 			<property name="width" type="uint" value="1280"/>
 			<property name="height" type="uint" value="960"/>
 			<property name="backgroundColor" type="uint">
@@ -126,6 +126,6 @@
 			<property name="zoomSensitivity" type="float" value="10.0"/>
 			<property name="exitKey" type="int" value="27"/>
 		</configure>
-	</properties>
+        </properties>
 
 </xpcf-registry>

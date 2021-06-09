@@ -40,7 +40,8 @@ PipelineMapUpdateProcessing::~PipelineMapUpdateProcessing()
 FrameworkReturnCode PipelineMapUpdateProcessing::init()
 {
     LOG_DEBUG("PipelineMapUpdateProcessing init");
-	m_mapManager->getMap(m_globalMap);
+    m_mapManager->loadFromFile();
+    m_mapManager->getMap(m_globalMap);
 	m_stopFlag = false;
 	m_startedOK = false;
     return FrameworkReturnCode::_SUCCESS;
@@ -92,6 +93,15 @@ FrameworkReturnCode PipelineMapUpdateProcessing::mapUpdateRequest(const SRef<dat
 		return FrameworkReturnCode::_ERROR_;
 	m_inputMapBuffer.push(map);
 	return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode PipelineMapUpdateProcessing::getMapRequest(SRef<SolAR::datastructure::Map> & map) const
+{
+    LOG_INFO("Get global map from context");
+
+    map = m_globalMap;
+
+    return FrameworkReturnCode::_SUCCESS;
 }
 
 void PipelineMapUpdateProcessing::processMapUpdate()

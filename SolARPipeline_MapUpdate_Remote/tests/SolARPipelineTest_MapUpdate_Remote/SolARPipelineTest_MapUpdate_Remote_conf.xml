@@ -44,6 +44,13 @@
         </component>
     </module>
 
+    <module uuid="6e960df6-9a36-11e8-9eb6-529269fb1459" name="SolARModuleOpenGL" description="SolARModuleOpenGL" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenGL/0.9.3/lib/x86_64/shared">
+        <component uuid="afd38ea0-9a46-11e8-9eb6-529269fb1459" name="SolAR3DPointsViewerOpengl" description="SolAR3DPointsViewerOpengl">
+            <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+            <interface uuid="575d365a-9a27-11e8-9eb6-529269fb1459" name="I3DPointsViewer" description="I3DPointsViewer"/>
+        </component>
+    </module>
+
     <factory>
         <bindings>
             <bind interface="IMapManager" to="SolARMapManager" range="all" name="Map1" properties="Map1"/>
@@ -84,6 +91,56 @@
             <property name="keyframeRetrieverFileName" type="string" value="keyframe_retriever.bin"/>
             <property name="reprojErrorThreshold" type="float" value="10.0"/>
             <property name="thresConfidence" type="float" value="0.03"/>
+        </configure>
+        <configure component="SolAR3DPointsViewerOpengl">
+            <property name="title" type="string" value="Global Map"/>
+            <property name="width" type="uint" value="1280"/>
+            <property name="height" type="uint" value="960"/>
+            <property name="backgroundColor" type="uint">
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+            </property>
+            <property name="fixedPointsColor" type="uint" value="0"/>
+            <property name="pointsColor" type="uint">
+                <value>0</value>
+                <value>255</value>
+                <value>0</value>
+            </property>
+            <property name="points2Color" type="uint">
+                <value>255</value>
+                <value>0</value>
+                <value>0</value>
+            </property>
+            <property name="cameraColor" type="uint">
+                <value>255</value>
+                <value>255</value>
+                <value>255</value>
+            </property>
+            <property name="drawCameraAxis" type="uint" value="0"/>
+            <property name="drawSceneAxis" type="uint" value="0"/>
+            <property name="drawWorldAxis" type="uint" value="0"/>
+            <property name="axisScale" type="float" value="0.01"/>
+            <property name="pointSize" type="float" value="1.0"/>
+            <property name="cameraScale" type="float" value="0.075"/>
+            <property name="keyframeAsCamera" type="uint" value="1"/>
+            <property name="framesColor" type="uint">
+                <value>255</value>
+                <value>255</value>
+                <value>255</value>
+            </property>
+            <property name="keyframesColor" type="uint">
+                <value>255</value>
+                <value>0</value>
+                <value>0</value>
+            </property>
+            <property name="keyframes2Color" type="uint">
+                <value>0</value>
+                <value>0</value>
+                <value>255</value>
+            </property>
+            <property name="zoomSensitivity" type="float" value="10.0"/>
+            <property name="exitKey" type="int" value="27"/>
         </configure>
     </properties>
 

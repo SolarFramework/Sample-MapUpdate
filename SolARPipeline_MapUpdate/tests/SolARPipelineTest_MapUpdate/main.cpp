@@ -40,18 +40,8 @@ int main(int argc, char ** argv)
 
 	LOG_ADD_LOG_TO_CONSOLE();
 	try {
-		// Load components of producer	
-		LOG_INFO("Start creating producer components");
-		SRef<xpcf::IComponentManager> producerComponentMgr = xpcf::getComponentManagerInstance();		
-		if (producerComponentMgr->load("SolARPipelineTest_MapUpdate_Producer_conf.xml") != xpcf::_SUCCESS) {
-			LOG_ERROR("The file SolARPipelineTest_MapUpdate_Producer_conf.xml has an error");
-		}
-		auto gArDevice = producerComponentMgr->resolve<input::devices::IARDevice>();
-		auto gMapManager1 = producerComponentMgr->resolve<storage::IMapManager>("Map1");
-		auto gMapManager2 = producerComponentMgr->resolve<storage::IMapManager>("Map2");
-		auto gViewer3D = producerComponentMgr->resolve<display::I3DPointsViewer>();
-		CameraParameters gCamParams = gArDevice->getParameters(INDEX_USE_CAMERA);
-		LOG_INFO("Producer components loaded");
+
+        SRef<xpcf::IComponentManager> producerComponentMgr = xpcf::getComponentManagerInstance();
 		
 		// Load components of the map update processing	
 		LOG_INFO("Start creating map update process components");
@@ -62,13 +52,25 @@ int main(int argc, char ** argv)
 		auto mapUpdatePipeline = processorComponentMgr->resolve<pipeline::IMapUpdatePipeline>();
 		LOG_INFO("Map update process components loaded");
 
+        // Load components of producer
+        LOG_INFO("Start creating producer components");
+        if (producerComponentMgr->load("SolARPipelineTest_MapUpdate_Producer_conf.xml") != xpcf::_SUCCESS) {
+            LOG_ERROR("The file SolARPipelineTest_MapUpdate_Producer_conf.xml has an error");
+        }
+        auto gArDevice = producerComponentMgr->resolve<input::devices::IARDevice>();
+        auto gMapManager1 = producerComponentMgr->resolve<storage::IMapManager>("Map1");
+        auto gMapManager2 = producerComponentMgr->resolve<storage::IMapManager>("Map2");
+        auto gViewer3D = producerComponentMgr->resolve<display::I3DPointsViewer>();
+        CameraParameters gCamParams = gArDevice->getParameters(INDEX_USE_CAMERA);
+        LOG_INFO("Producer components loaded");
+
 		// Init map update pipeline
         if (mapUpdatePipeline->init() != FrameworkReturnCode::_SUCCESS)
 		{
 			LOG_INFO("Cannot init map update pipeline");
 			return 0;
 		}
-			
+
 		// Set camera parameters
 		if (mapUpdatePipeline->setCameraParameters(gCamParams) != FrameworkReturnCode::_SUCCESS) {
 			LOG_INFO("Cannot set camera parameters for map update pipeline");
@@ -80,6 +82,28 @@ int main(int argc, char ** argv)
 			LOG_INFO("Cannot start map update pipeline");
 			return 0;
 		}
+
+        // Display the initial global map
+        SRef<Map> globalMap;
+        mapUpdatePipeline->getMapRequest(globalMap);
+        std::vector<SRef<Keyframe>> globalKeyframes;
+        std::vector<SRef<CloudPoint>> globalPointCloud;
+        globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
+        globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
+        std::vector<Transform3Df> globalKeyframesPoses;
+        if (globalPointCloud.size() > 0) {
+            for (const auto &it : globalKeyframes)
+                globalKeyframesPoses.push_back(it->getPose());
+
+            LOG_INFO("==> Display initial global map");
+
+            gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
+        }
+        else {
+            LOG_INFO("Initial global map is empty!");
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(3));
 
 		// Load two maps
 		if (gMapManager1->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
@@ -96,32 +120,53 @@ int main(int argc, char ** argv)
 		gMapManager1->getMap(map);
 		LOG_INFO("Nb points: {}", map->getConstPointCloud()->getNbPoints());
 		mapUpdatePipeline->mapUpdateRequest(map);
-		std::this_thread::sleep_for(std::chrono::seconds(10));
+        std::this_thread::sleep_for(std::chrono::seconds(10));
 
-		gMapManager2->getMap(map);
+        // Display the intermediate global map
+        mapUpdatePipeline->getMapRequest(globalMap);
+        globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
+        globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
+        if (globalPointCloud.size() > 0) {
+            globalKeyframesPoses.clear();
+            for (const auto &it : globalKeyframes)
+                globalKeyframesPoses.push_back(it->getPose());
+
+            LOG_INFO("==> Display intermediate global map (after Map1 processing)");
+
+            gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
+        }
+        else {
+            LOG_INFO("Intermediate global map is empty!");
+        }
+
+        gMapManager2->getMap(map);
 		LOG_INFO("Nb points: {}", map->getConstPointCloud()->getNbPoints());
 		mapUpdatePipeline->mapUpdateRequest(map);
-		std::this_thread::sleep_for(std::chrono::seconds(10));
+        std::this_thread::sleep_for(std::chrono::seconds(10));
 		
-		// Stop pipeline
+        // Display the final global map
+        mapUpdatePipeline->getMapRequest(globalMap);
+        globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
+        globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
+        if (globalPointCloud.size() > 0) {
+            globalKeyframesPoses.clear();
+            for (const auto &it : globalKeyframes)
+                globalKeyframesPoses.push_back(it->getPose());
+
+            LOG_INFO("==> Display final global map (after Map2 processing)");
+
+            while (true) {
+                if (gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses) == FrameworkReturnCode::_STOP)
+                    break;
+            }
+        }
+        else {
+            LOG_INFO("Final global map is empty!");
+        }
+
+        // Stop pipeline
 		mapUpdatePipeline->stop();
 
-		// Display the global map
-        auto globalMapManager = processorComponentMgr->resolve<storage::IMapManager>();
-		SRef<Map> globalMap;
-		globalMapManager->getMap(globalMap);
-		std::vector<SRef<Keyframe>> globalKeyframes;
-		std::vector<SRef<CloudPoint>> globalPointCloud;
-		globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
-		globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
-		std::vector<Transform3Df> globalKeyframesPoses;
-		for (const auto &it : globalKeyframes)
-			globalKeyframesPoses.push_back(it->getPose());
-
-		while (true) {
-			if (gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses) == FrameworkReturnCode::_STOP)
-				break;
-		}
 	}
 	catch (xpcf::InjectableNotFoundException e)
 	{
