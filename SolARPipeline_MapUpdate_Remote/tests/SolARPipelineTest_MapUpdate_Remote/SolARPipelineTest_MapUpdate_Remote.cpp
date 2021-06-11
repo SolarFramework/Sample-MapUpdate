@@ -11,6 +11,7 @@
 #include <xpcf/api/IComponentManager.h>
 #include <xpcf/core/helpers.h>
 #include <boost/log/core.hpp>
+#include <signal.h>
 
 #include "core/Log.h"
 #include "api/pipeline/IMapUpdatePipeline.h"
@@ -26,6 +27,9 @@ namespace xpcf=org::bcom::xpcf;
 
 #define INDEX_USE_CAMERA 0
 
+// Global var for interruption signal
+bool interruption_signal = false;
+
 // print help options
 void print_help(const cxxopts::Options& options)
 {
@@ -38,6 +42,12 @@ void print_error(const string& msg)
     cerr << msg << std::endl;
 }
 
+// Function called when interruption signal is triggered
+static void SigInt(int signo) {
+
+    interruption_signal = true;
+}
+
 int main(int argc, char* argv[])
 {
     #if NDEBUG
@@ -45,6 +55,9 @@ int main(int argc, char* argv[])
     #endif
 
     LOG_ADD_LOG_TO_CONSOLE();
+
+    // Signal interruption function (Ctrl + C)
+    signal(SIGINT, SigInt);
 
     cxxopts::Options option_list("SolARPipelineTest_MapUpdate_Remote",
                                  "SolARPipelineTest_MapUpdate_Remote - The commandline interface to the xpcf grpc client test application.\n");
@@ -90,7 +103,6 @@ int main(int argc, char* argv[])
         auto gArDevice = componentManager->resolve<input::devices::IARDevice>();
         auto gMapManager1 = componentManager->resolve<storage::IMapManager>("Map1");
         auto gMapManager2 = componentManager->resolve<storage::IMapManager>("Map2");
-        auto gViewer3D = componentManager->resolve<display::I3DPointsViewer>();
         LOG_INFO("Client components loaded");
 
         CameraParameters gCamParams = gArDevice->getParameters(INDEX_USE_CAMERA);
@@ -125,19 +137,27 @@ int main(int argc, char* argv[])
         globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
         globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
         std::vector<Transform3Df> globalKeyframesPoses;
+
+        auto gViewer3D = componentManager->resolve<display::I3DPointsViewer>();
+
         if (globalPointCloud.size() > 0) {
             for (const auto &it : globalKeyframes)
                 globalKeyframesPoses.push_back(it->getPose());
 
-            LOG_INFO("==> Display initial global map");
+            LOG_INFO("==> Display initial global map: press Ctrl+C to go on");
 
-            gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
+            while (!interruption_signal)
+            {
+                gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
+            }
+
+            interruption_signal = false;
         }
         else {
             LOG_INFO("Initial global map is empty!");
         }
 
-        std::this_thread::sleep_for(std::chrono::seconds(3));
+//        std::this_thread::sleep_for(std::chrono::seconds(3));
 
         LOG_INFO("Load 1st map");
 
@@ -153,24 +173,30 @@ int main(int argc, char* argv[])
         LOG_INFO("Nb points: {}", map->getConstPointCloud()->getNbPoints());
         mapUpdatePipeline->mapUpdateRequest(map);
         std::this_thread::sleep_for(std::chrono::seconds(10));
-/*
+
         // Display the intermediate global map
         mapUpdatePipeline->getMapRequest(globalMap);
         globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
         globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
+
         if (globalPointCloud.size() > 0) {
             globalKeyframesPoses.clear();
             for (const auto &it : globalKeyframes)
                 globalKeyframesPoses.push_back(it->getPose());
 
-            LOG_INFO("==> Display intermediate global map (after Map1 processing)");
+            LOG_INFO("==> Display intermediate global map (after Map1 processing): press Ctrl+C to go on");
 
-            gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
+            while (!interruption_signal)
+            {
+                gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
+            }
+
+            interruption_signal = false;
         }
         else {
             LOG_INFO("Intermediate global map is empty!");
         }
-*/
+
 
         LOG_INFO("Load 2nd map");
 
@@ -185,27 +211,28 @@ int main(int argc, char* argv[])
         LOG_INFO("Nb points: {}", map->getConstPointCloud()->getNbPoints());
         mapUpdatePipeline->mapUpdateRequest(map);
         std::this_thread::sleep_for(std::chrono::seconds(10));
-/*
+
         // Display the final global map
         mapUpdatePipeline->getMapRequest(globalMap);
         globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
         globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
+
         if (globalPointCloud.size() > 0) {
             globalKeyframesPoses.clear();
             for (const auto &it : globalKeyframes)
                 globalKeyframesPoses.push_back(it->getPose());
 
-            LOG_INFO("==> Display final global map (after Map2 processing)");
+            LOG_INFO("==> Display final global map (after Map2 processing): press Ctrl+C to end test");
 
-            while (true) {
-                if (gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses) == FrameworkReturnCode::_STOP)
-                    break;
+            while (!interruption_signal)
+            {
+                gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
             }
         }
         else {
             LOG_INFO("Final global map is empty!");
         }
-*/
+
         LOG_INFO("Stop map update pipeline");
 
         mapUpdatePipeline->stop();

@@ -37,29 +37,24 @@ void tryConfigureServer(SRef<xpcf::IGrpcServerManager> server, const std::string
 {
     char * envValue = getenv(envVarName.c_str());
     if (envValue != nullptr) {
+        LOG_DEBUG("Environment variable {}: {}", envVarName, envValue);
         xpcf::IProperty::PropertyType type = server->bindTo<xpcf::IConfigurable>()->getProperty(propName.c_str())->getType();
         switch (type) {
         case xpcf::IProperty::PropertyType::IProperty_CHARSTR:
             server->bindTo<xpcf::IConfigurable>()->getProperty(propName.c_str())->setStringValue(envValue);
-            std::cout << "Set property " << propName << " to " << envValue << std::endl;
             break;
 
         case xpcf::IProperty::PropertyType::IProperty_UINTEGER:
             server->bindTo<xpcf::IConfigurable>()->getProperty(propName.c_str())->setUnsignedIntegerValue(std::atoi(envValue));
-            std::cout << "Set property " << propName << " to " << envValue << std::endl;
             break;
 
         case xpcf::IProperty::PropertyType::IProperty_LONG:
             server->bindTo<xpcf::IConfigurable>()->getProperty(propName.c_str())->setLongValue(std::atol(envValue));
-            std::cout << "Set property " << propName << " to " << envValue << std::endl;
         break;
         default:
-            std::cout<<"GrpcServerManager Property type not handled"<<std::endl;
+            LOG_DEBUG("GrpcServerManager Property type not handled");
             break;
         }
-    }
-    else {
-        std::cout<<"No '"<<envVarName<<"' environment variable found"<<std::endl;
     }
 }
 
@@ -100,43 +95,16 @@ int main(int argc, char* argv[])
     }
     else if ((!options.count("modules") || options["modules"].as<std::string>().empty())
           || (!options.count("properties") || options["properties"].as<std::string>().empty())) {
-        print_error("missing one of modules (-m) or properties (-p) argument");
+        LOG_ERROR("missing one of modules (-m) or properties (-p) argument");
         return -1;
     }
-
-    configSrc = options["modules"].as<std::string>();
-
-    std::cout << "Load modules configuration file: " << configSrc << std::endl;
-
-    if (cmpMgr->load(configSrc.c_str()) != org::bcom::xpcf::_SUCCESS) {
-        std::cout << "Failed to load modules configuration file: " << configSrc << std::endl;
-        return -1;
-    }
-
-    configSrc = options["properties"].as<std::string>();
-
-    std::cout << "Load properties configuration file: " << configSrc << std::endl;
-
-    if (cmpMgr->load(configSrc.c_str()) != org::bcom::xpcf::_SUCCESS) {
-        std::cout << "Failed to load properties configuration file: " << configSrc << std::endl;
-        return -1;
-    }
-
-    auto serverMgr = cmpMgr->resolve<xpcf::IGrpcServerManager>();
-
-    // Check environment variables
-    tryConfigureServer(serverMgr, "server_address", "XPCF_GRPC_SERVER_URL");
-    tryConfigureServer(serverMgr, "server_credentials", "XPCF_GRPC_CREDENTIALS");
-    tryConfigureServer(serverMgr, "max_receive_message_size", "XPCF_GRPC_MAX_RECV_MSG_SIZE");
-    tryConfigureServer(serverMgr, "max_send_message_size", "XPCF_GRPC_MAX_SEND_MSG_SIZE");
 
     // Check if log level is defined in environment variable SOLAR_LOG_LEVEL
     char * log_level = getenv("SOLAR_LOG_LEVEL");
+    std::string str_log_level = "INFO(default)";
 
     if (log_level != nullptr) {
-        std::string str_log_level(log_level);
-
-        std::cout << "'SOLAR_LOG_LEVEL' environment variable found with value: " << log_level << std::endl;
+        str_log_level = std::string(log_level);
 
         if (str_log_level == "DEBUG"){
             LOG_SET_DEBUG_LEVEL();
@@ -157,18 +125,61 @@ int main(int argc, char* argv[])
             LOG_SET_WARNING_LEVEL();
         }
         else {
-            std::cout << "*********************************************************************" << std::endl;
-            std::cout << "'SOLAR_LOG_LEVEL' environment variable: invalid value" << std::endl;
-            std::cout << "Expected values are: DEBUG, CRITICAL, ERROR, INFO, TRACE or WARNING" << std::endl;
-            std::cout << "Set log level to default value" << std::endl;
-            std::cout << "*********************************************************************" << std::endl;
+            LOG_ERROR ("'SOLAR_LOG_LEVEL' environment variable: invalid value");
+            LOG_ERROR ("Expected values are: DEBUG, CRITICAL, ERROR, INFO, TRACE or WARNING");
         }
-    }
-    else {
-        std::cout << "No 'SOLAR_LOG_LEVEL' environment variable found: set log level to default value (INFO)" << std::endl;
+
+        LOG_DEBUG("Environment variable SOLAR_LOG_LEVEL={}", str_log_level);
     }
 
-    std::cout<<"xpcf_grpc_server listens on: "<<serverMgr->bindTo<xpcf::IConfigurable>()->getProperty("server_address")->getStringValue()<<std::endl;
+    configSrc = options["modules"].as<std::string>();
+
+    LOG_INFO("Load modules configuration file: {}", configSrc);
+
+    if (cmpMgr->load(configSrc.c_str()) != org::bcom::xpcf::_SUCCESS) {
+        LOG_ERROR("Failed to load modules configuration file: {}", configSrc);
+        return -1;
+    }
+
+    configSrc = options["properties"].as<std::string>();
+
+    LOG_INFO("Load properties configuration file: {}", configSrc);
+
+    if (cmpMgr->load(configSrc.c_str()) != org::bcom::xpcf::_SUCCESS) {
+        LOG_ERROR("Failed to load properties configuration file: {}", configSrc);
+        return -1;
+    }
+
+    auto serverMgr = cmpMgr->resolve<xpcf::IGrpcServerManager>();
+
+    // Check environment variables
+    tryConfigureServer(serverMgr, "server_address", "XPCF_GRPC_SERVER_URL");
+    tryConfigureServer(serverMgr, "server_credentials", "XPCF_GRPC_CREDENTIALS");
+    tryConfigureServer(serverMgr, "max_receive_message_size", "XPCF_GRPC_MAX_RECV_MSG_SIZE");
+    tryConfigureServer(serverMgr, "max_send_message_size", "XPCF_GRPC_MAX_SEND_MSG_SIZE");
+
+    LOG_INFO ("LOG LEVEL: {}", str_log_level);
+    LOG_INFO ("GRPC SERVER ADDRESS: {}",
+              serverMgr->bindTo<xpcf::IConfigurable>()->getProperty("server_address")->getStringValue());
+    LOG_INFO ("GRPC SERVER CREDENTIALS: {}",
+              serverMgr->bindTo<xpcf::IConfigurable>()->getProperty("server_credentials")->getUnsignedIntegerValue());
+    uint64_t max_msg_size = serverMgr->bindTo<xpcf::IConfigurable>()->getProperty("max_receive_message_size")->getLongValue();
+    if (max_msg_size == 0) {
+        LOG_INFO ("GRPC MAX RECEIVED MESSAGE SIZE: 4000000 (default) {}", max_msg_size);
+    }
+    else {
+        LOG_INFO ("GRPC MAX RECEIVED MESSAGE SIZE: {}", max_msg_size);
+    }
+    max_msg_size = serverMgr->bindTo<xpcf::IConfigurable>()->getProperty("max_send_message_size")->getLongValue();
+    if (max_msg_size == 0) {
+        LOG_INFO ("GRPC MAX SENT MESSAGE SIZE: 4000000 (default)");
+    }
+    else {
+        LOG_INFO ("GRPC MAX SENT MESSAGE SIZE: {}", max_msg_size);
+    }
+
+    LOG_INFO ("XPCF gRPC server listens on: {}",
+              serverMgr->bindTo<xpcf::IConfigurable>()->getProperty("server_address")->getStringValue())
 
     serverMgr->runServer();
 

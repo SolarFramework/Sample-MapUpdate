@@ -27,6 +27,10 @@
 #include <xpcf/collection/ICollection.h>
 #include <xpcf/remoting/GrpcHelper.h>
 
+#include "core/Log.h"
+
+using namespace SolAR;
+
 namespace org { namespace bcom { namespace xpcf {
 
 class GrpcServerManager : public ConfigurableBase, virtual public IGrpcServerManager
@@ -44,7 +48,7 @@ public:
     void runServer() override;
 
 private:
-    grpc::ServerBuilder m_builder;    
+    grpc::ServerBuilder m_builder;
     std::string m_serverAddress = "0.0.0.0:8080";
     uint32_t m_serverCredentials = grpcCredentials::InsecureChannelCredentials;
     int64_t m_receiveMessageMaxSize = -1;

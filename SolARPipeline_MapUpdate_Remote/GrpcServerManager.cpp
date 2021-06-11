@@ -4,7 +4,7 @@ namespace org { namespace bcom { namespace xpcf {
 
 GrpcServerManager::GrpcServerManager():ConfigurableBase(toMap<GrpcServerManager>())
 {
-    std::cout<<"ConfigurableBase" << std::endl;
+    LOG_DEBUG("ConfigurableBase");
 
     declareInterface<IGrpcServerManager>(this);
     declareProperty("server_address",m_serverAddress);
@@ -13,17 +13,17 @@ GrpcServerManager::GrpcServerManager():ConfigurableBase(toMap<GrpcServerManager>
     declareProperty("max_send_message_size", m_sendMessageMaxSize);
     declareInjectable<IGrpcService>(m_services);
 
-    std::cout<< "this->getNbInterfaces() = " << this->getNbInterfaces() << std::endl;
+    LOG_DEBUG("this->getNbInterfaces() = {}", this->getNbInterfaces());
 }
 
 GrpcServerManager::~GrpcServerManager()
 {
-    std::cout<<"~GrpcServerManager" << std::endl;
+    LOG_DEBUG("~GrpcServerManager");
 }
 
 void GrpcServerManager::unloadComponent ()
 {
-    std::cout<<"unloadComponent" << std::endl;
+    LOG_DEBUG("~unloadComponent");
 
     // provide component cleanup strategy
     // default strategy is to delete self, uncomment following line in this case :
@@ -60,18 +60,20 @@ void GrpcServerManager::runServer()
 {
     if (m_receiveMessageMaxSize > 0) {
         m_builder.SetMaxReceiveMessageSize(m_receiveMessageMaxSize);
+        LOG_DEBUG("SetMaxReceiveMessageSize: {}", m_receiveMessageMaxSize);
     }
 
     if (m_sendMessageMaxSize > 0) {
         m_builder.SetMaxSendMessageSize(m_sendMessageMaxSize);
+        LOG_DEBUG("SetMaxSendMessageSize: {}", m_sendMessageMaxSize);
     }
     m_builder.AddListeningPort(m_serverAddress, GrpcHelper::getServerCredentials(static_cast<grpcCredentials>(m_serverCredentials)));
     for (auto service: *m_services) {
-        std::cout << "Registering IGrpcService # " << service->getServiceName() << std::endl;
+        LOG_DEBUG("Registering IGrpcService #  {}", service->getServiceName());
         registerService(service);
     }
     std::unique_ptr<grpc::Server> server(m_builder.BuildAndStart());
-    std::cout << "Server listening on " << m_serverAddress << std::endl;
+    LOG_DEBUG("Server listening on  {}", m_serverAddress);
     server->Wait();
 }
 
