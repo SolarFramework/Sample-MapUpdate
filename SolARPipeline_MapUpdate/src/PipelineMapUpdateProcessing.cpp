@@ -39,11 +39,16 @@ PipelineMapUpdateProcessing::~PipelineMapUpdateProcessing()
 
 FrameworkReturnCode PipelineMapUpdateProcessing::init()
 {
-    LOG_DEBUG("PipelineMapUpdateProcessing init");
-    m_mapManager->loadFromFile();
-    m_mapManager->getMap(m_globalMap);
-	m_stopFlag = false;
-	m_startedOK = false;
+    if (!m_init) {
+        LOG_DEBUG("PipelineMapUpdateProcessing init");
+        m_mapManager->loadFromFile();
+        m_mapManager->getMap(m_globalMap);
+        m_init = true;
+    }
+
+    m_stopFlag = false;
+    m_startedOK = false;
+
     return FrameworkReturnCode::_SUCCESS;
 }
 

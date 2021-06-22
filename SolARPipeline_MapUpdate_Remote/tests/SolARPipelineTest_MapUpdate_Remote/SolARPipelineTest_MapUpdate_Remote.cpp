@@ -204,7 +204,7 @@ int main(int argc, char* argv[])
             LOG_INFO("Cannot load local map 2");
             return -1;
         }
-
+/*
         LOG_INFO("Send map request for map 2");
 
         gMapManager2->getMap(map);
@@ -232,7 +232,7 @@ int main(int argc, char* argv[])
         else {
             LOG_INFO("Final global map is empty!");
         }
-
+*/
         LOG_INFO("Stop map update pipeline");
 
         mapUpdatePipeline->stop();

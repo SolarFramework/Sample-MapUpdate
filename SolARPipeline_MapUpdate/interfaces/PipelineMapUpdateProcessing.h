@@ -100,7 +100,8 @@ namespace PIPELINES {
 		void processMapUpdate();
 
     private:
-		bool										m_stopFlag;
+        bool										m_init = false;
+        bool										m_stopFlag;
 		bool										m_startedOK;
 		datastructure::CameraParameters				m_cameraParams;
 		SRef<datastructure::Map>					m_globalMap;
