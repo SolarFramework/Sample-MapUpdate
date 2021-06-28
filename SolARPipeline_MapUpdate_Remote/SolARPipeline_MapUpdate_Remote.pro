@@ -75,7 +75,8 @@ DISTFILES += \
     SolARPipeline_MapUpdate_Remote_modules.xml \
     SolARPipeline_MapUpdate_Remote_properties.xml \
     SolARPipeline_MapUpdate_Remote_properties.xml \
-    packagedependencies.txt
+    packagedependencies.txt \
+    start_mapupdate_service.sh
 
 xml_files.path = $${TARGETDEPLOYDIR}
 xml_files.files =  SolARPipeline_MapUpdate_Remote_modules.xml \
