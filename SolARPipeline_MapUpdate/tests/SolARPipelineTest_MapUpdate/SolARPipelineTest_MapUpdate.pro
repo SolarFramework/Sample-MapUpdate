@@ -5,7 +5,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARPipelineTest_MapUpdate
-VERSION=0.9.4
+VERSION=0.10.0
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
