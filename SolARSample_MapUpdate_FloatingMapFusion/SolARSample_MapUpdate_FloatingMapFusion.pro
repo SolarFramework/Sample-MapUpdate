@@ -41,11 +41,16 @@ DEFINES += BOOST_AUTO_LINK_NOMANGLE
 DEFINES += BOOST_LOG_DYN_LINK
 
 SOURCES += \
-    main.cpp
+    SolARPipeline_MapUpdate_Remote.cpp
 
 unix {
     LIBS += -ldl
     QMAKE_CXXFLAGS += -DBOOST_LOG_DYN_LINK
+}
+
+linux {
+        QMAKE_LFLAGS += -ldl
+        LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
 }
 
 macx {

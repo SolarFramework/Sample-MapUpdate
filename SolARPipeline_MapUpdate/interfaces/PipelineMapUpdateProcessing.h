@@ -19,12 +19,12 @@
 
 #if _WIN32
 #ifdef SolARPipeline_MapUpdate_API_DLLEXPORT
-#define SolARPipelineMapUpdate_EXPORT_API __declspec(dllexport)
+#define SOLARPIPELINE_MAPUPDATE_EXPORT_API __declspec(dllexport)
 #else // SolARPipeline_MapUpdate_API_DLLEXPORT
-#define SolARPipelineMapUpdate_EXPORT_API __declspec(dllimport)
+#define SOLARPIPELINE_MAPUPDATE_EXPORT_API __declspec(dllimport)
 #endif // SolARPipeline_MapUpdate_API_DLLEXPORT
 #else //_WIN32
-#define SolARPipelineMapUpdate_EXPORT_API
+#define SOLARPIPELINE_MAPUPDATE_EXPORT_API
 #endif //_WIN32
 
 #include "xpcf/component/ConfigurableBase.h"
@@ -58,7 +58,7 @@ namespace PIPELINES {
      *
      */
 
-    class SolARPipelineMapUpdate_EXPORT_API PipelineMapUpdateProcessing : public org::bcom::xpcf::ConfigurableBase,
+    class SOLARPIPELINE_MAPUPDATE_EXPORT_API PipelineMapUpdateProcessing : public org::bcom::xpcf::ConfigurableBase,
             public api::pipeline::IMapUpdatePipeline
     {
     public:
@@ -70,7 +70,7 @@ namespace PIPELINES {
         /// @brief Initialization of the pipeline
         /// Initialize the pipeline by providing a reference to the component manager loaded by the PipelineManager.
         /// @param[in] componentManager a shared reference to the component manager which has loaded the components and configuration in the pipleine manager
-        FrameworkReturnCode init(SRef<xpcf::IComponentManager> componentManager) override;
+        FrameworkReturnCode init() override;
 
         /// @brief Set the camera parameters
         /// @param[in] cameraParams: the camera parameters (its resolution and its focal)
@@ -90,12 +90,17 @@ namespace PIPELINES {
 		/// @return FrameworkReturnCode::_SUCCESS if the data are ready to be processed, else FrameworkReturnCode::_ERROR_
 		FrameworkReturnCode mapUpdateRequest(const SRef<datastructure::Map> map) override;
 
+        /// @brief Request to the map update pipeline to get the global map
+        /// @param[out] map: the output global map
+        /// @return FrameworkReturnCode::_SUCCESS if the global map is available, else FrameworkReturnCode::_ERROR_
+        FrameworkReturnCode getMapRequest(SRef<SolAR::datastructure::Map> & map) const override;
+
 	private:
 		/// @brief method that implementes the full maping processing
 		void processMapUpdate();
 
     private:
-		bool										m_stopFlag;
+        bool										m_init = false;
 		bool										m_startedOK;
 		datastructure::CameraParameters				m_cameraParams;
 		SRef<datastructure::Map>					m_globalMap;

@@ -37,18 +37,24 @@ PipelineMapUpdateProcessing::~PipelineMapUpdateProcessing()
     delete m_mapUpdateTask;
 }
 
-FrameworkReturnCode PipelineMapUpdateProcessing::init(SRef<xpcf::IComponentManager> componentManager) 
+FrameworkReturnCode PipelineMapUpdateProcessing::init()
 {
     LOG_DEBUG("PipelineMapUpdateProcessing init");
-	m_mapManager->getMap(m_globalMap);
-	m_stopFlag = false;
-	m_startedOK = false;
+
+    if (!m_init) {
+        m_mapManager->loadFromFile();
+        m_mapManager->getMap(m_globalMap);
+        m_init = true;
+        m_startedOK = false;
+    }
+
     return FrameworkReturnCode::_SUCCESS;
 }
 
 FrameworkReturnCode PipelineMapUpdateProcessing::setCameraParameters(const CameraParameters & cameraParams) {
 
     LOG_DEBUG("PipelineMapUpdateProcessing setCameraParameters");
+
 	m_cameraParams = cameraParams;
 	m_mapOverlapDetector->setCameraParameters(cameraParams.intrinsic, cameraParams.distortion);
 	m_mapUpdate->setCameraParameters(cameraParams.intrinsic, cameraParams.distortion);
@@ -57,49 +63,77 @@ FrameworkReturnCode PipelineMapUpdateProcessing::setCameraParameters(const Camer
 
 FrameworkReturnCode PipelineMapUpdateProcessing::start()
 {
-	if (m_stopFlag)
+    LOG_DEBUG("PipelineMapUpdateProcessing start");
+
+    if (!m_init)
 	{
 		LOG_WARNING("Must initialize before starting");
-		return FrameworkReturnCode::_ERROR_;
+        return FrameworkReturnCode::_ERROR_;
 	}
-	// create and start map update thread
-	auto getMapUpdateThread = [this]() { processMapUpdate(); };
-	m_mapUpdateTask = new xpcf::DelegateTask(getMapUpdateThread);
-	m_mapUpdateTask->start();
-	LOG_INFO("Map update thread started");
-	m_startedOK = true;
+
+    if (!m_startedOK) {
+        // create and start map update thread
+        auto getMapUpdateThread = [this]() { processMapUpdate(); };
+        m_mapUpdateTask = new xpcf::DelegateTask(getMapUpdateThread);
+        m_mapUpdateTask->start();
+        LOG_INFO("Map update thread started");
+        m_startedOK = true;
+    }
+    else {
+        LOG_DEBUG("Pipeline Map Update already started!");
+    }
+
     return FrameworkReturnCode::_SUCCESS;
 }
 
 FrameworkReturnCode PipelineMapUpdateProcessing::stop() 
 {
-	m_stopFlag = true;	
-	if (m_mapUpdateTask != nullptr)
-		m_mapUpdateTask->stop();
+    LOG_DEBUG("PipelineMapUpdateProcessing stop");
 
 	if (!m_startedOK)
 	{
-		LOG_WARNING("Try to stop a pipeline that has not been started");
+        LOG_WARNING("Try to stop a pipeline that has not been started");
 		return FrameworkReturnCode::_ERROR_;
 	}
+    else {
+        if (m_mapUpdateTask != nullptr)
+            m_mapUpdateTask->stop();
+
+        m_startedOK = false;
+    }
+
 	LOG_INFO("Map update pipeline has stopped");
     return FrameworkReturnCode::_SUCCESS;
 }
 
 FrameworkReturnCode PipelineMapUpdateProcessing::mapUpdateRequest(const SRef<datastructure::Map> map)
 {
-	if (m_stopFlag || !m_startedOK)
+    LOG_DEBUG("PipelineMapUpdateProcessing mapUpdateRequest");
+
+    if (!m_startedOK)
 		return FrameworkReturnCode::_ERROR_;
+
 	m_inputMapBuffer.push(map);
+
 	return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode PipelineMapUpdateProcessing::getMapRequest(SRef<SolAR::datastructure::Map> & map) const
+{
+    LOG_DEBUG("PipelineMapUpdateProcessing getMapRequest");
+
+    map = m_globalMap;
+
+    return FrameworkReturnCode::_SUCCESS;
 }
 
 void PipelineMapUpdateProcessing::processMapUpdate()
 {
-	if (m_stopFlag || !m_startedOK || m_inputMapBuffer.empty()) {
+    if (!m_startedOK || m_inputMapBuffer.empty()) {
 		xpcf::DelegateTask::yield();
 		return;
 	}
+
 	SRef<Map> map;
 	m_inputMapBuffer.pop(map);
 

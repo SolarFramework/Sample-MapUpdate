@@ -44,15 +44,13 @@ HEADERS += \
 SOURCES += \
     main.cpp
 
-linux {
-    ## Add rpath to find dependencies at runtime
-    QMAKE_LFLAGS_RPATH=
-    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN\'"
-}
-
-
 unix {
       LIBS += -ldl
+}
+
+linux {
+        QMAKE_LFLAGS += -ldl
+        LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
 }
 
 macx {
