@@ -5,11 +5,11 @@ unzip -o fbow_voc.zip -d ./data/fbow_voc
 rm fbow_voc.zip
 
 # Download maps
-curl https://artifact.b-com.com/solar-generic-local/maps/hololens/bcomLab/mapLabA_linux_0_9_1.zip -L -o mapA.zip
+curl https://artifact.b-com.com/solar-generic-local/maps/hololens/bcomLab/mapLabA_linux_0_10_0.zip -L -o mapA.zip
 unzip -o mapA.zip -d ./data/maps
 rm mapA.zip
 
-curl https://artifact.b-com.com/solar-generic-local/maps/hololens/bcomLab/mapLabB_linux_0_9_1.zip -L -o mapB.zip
+curl https://artifact.b-com.com/solar-generic-local/maps/hololens/bcomLab/mapLabB_linux_0_10_0.zip -L -o mapB.zip
 unzip -o mapB.zip -d ./data/maps
 rm mapB.zip
 
