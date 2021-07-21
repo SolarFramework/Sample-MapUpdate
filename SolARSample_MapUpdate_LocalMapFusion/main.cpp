@@ -67,7 +67,8 @@ int main(int argc, char *argv[])
 		LOG_INFO("Components created!");
 
 		// get intrinsic parameters of camera
-		CameraParameters camParams = arDevice->getParameters(INDEX_USE_CAMERA);
+		CameraRigParameters camRigParams = arDevice->getCameraParameters();
+		CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
 
 		// Load global map from file
 		if (globalMapManager->loadFromFile() == FrameworkReturnCode::_SUCCESS) {
