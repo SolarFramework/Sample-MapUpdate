@@ -42,10 +42,18 @@
                 <property name="minNbInliers" type="int" value="30"/>
         </configure>
         <configure component="SolARDescriptorMatcherKNNOpencv">
-                <property name="distanceRatio" type="float" value="0.8"/>
-                <property name="radius" type="float" value="15"/>
-                <property name="matchingDistanceMax" type="float" value="800"/>
-        </configure>
+				<property name="distanceRatio" type="float" value="0.8"/>
+		</configure>
+		<configure component="SolARDescriptorMatcherRegionOpencv">
+				<property name="distanceRatio" type="float" value="0.8"/>
+				<property name="radius" type="float" value="15"/>
+				<property name="matchingDistanceMax" type="float" value="800"/>
+		</configure>
+		<configure component="SolARDescriptorMatcherGeometricOpencv">
+				<property name="distanceRatio" type="float" value="0.7"/>
+				<property name="paddingRatio" type="float" value="0.003"/>
+				<property name="matchingDistanceMax" type="float" value="500"/>
+		</configure>
         <configure component="SolARGeometricMatchesFilterOpencv">
                 <property name="confidence" type="float" value="0.99"/>
                 <property name="outlierDistanceRatio" type="float" value="0.005"/>
