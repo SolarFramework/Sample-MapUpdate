@@ -4,9 +4,9 @@ CONFIG -= app_bundle qt
 
 ## global defintions : target lib name, version
 INSTALLSUBDIR = SolARBuild
-TARGET = SolARPipelineMapUpdate
+TARGET = SolARPipeline_MapUpdate
 FRAMEWORK = $${TARGET}
-VERSION=0.9.3
+VERSION=0.10.0
 
 DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY

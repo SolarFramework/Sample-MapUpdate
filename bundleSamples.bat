@@ -1,7 +1,7 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
 
-SET version=0.9.4
+SET version=0.10.0
 
 SET filename=SolAR_MapUpdate_%version%
 SET arg1=%1

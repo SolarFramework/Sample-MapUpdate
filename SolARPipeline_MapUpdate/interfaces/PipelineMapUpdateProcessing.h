@@ -19,12 +19,12 @@
 
 #if _WIN32
 #ifdef SolARPipeline_MapUpdate_API_DLLEXPORT
-#define SolARPipelineMapUpdate_EXPORT_API __declspec(dllexport)
+#define SOLARPIPELINE_MAPUPDATE_EXPORT_API __declspec(dllexport)
 #else // SolARPipeline_MapUpdate_API_DLLEXPORT
-#define SolARPipelineMapUpdate_EXPORT_API __declspec(dllimport)
+#define SOLARPIPELINE_MAPUPDATE_EXPORT_API __declspec(dllimport)
 #endif // SolARPipeline_MapUpdate_API_DLLEXPORT
 #else //_WIN32
-#define SolARPipelineMapUpdate_EXPORT_API
+#define SOLARPIPELINE_MAPUPDATE_EXPORT_API
 #endif //_WIN32
 
 #include "xpcf/component/ConfigurableBase.h"
@@ -58,7 +58,7 @@ namespace PIPELINES {
      *
      */
 
-    class SolARPipelineMapUpdate_EXPORT_API PipelineMapUpdateProcessing : public org::bcom::xpcf::ConfigurableBase,
+    class SOLARPIPELINE_MAPUPDATE_EXPORT_API PipelineMapUpdateProcessing : public org::bcom::xpcf::ConfigurableBase,
             public api::pipeline::IMapUpdatePipeline
     {
     public:

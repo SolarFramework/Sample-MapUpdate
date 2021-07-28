@@ -5,7 +5,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARPipelineTest_MapUpdate
-VERSION=0.9.3
+VERSION=0.10.0
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
@@ -64,8 +64,7 @@ win32 {
 }
 
 config_files.path = $${TARGETDEPLOYDIR}
-config_files.files= $$files($${PWD}/SolARPipelineTest_MapUpdate_Producer_conf.xml)\
-                    $$files($${PWD}/SolARPipelineTest_MapUpdate_Processing_conf.xml)
+config_files.files= $$files($${PWD}/SolARPipelineTest_MapUpdate_conf.xml)
 INSTALLS += config_files
 
 linux {
