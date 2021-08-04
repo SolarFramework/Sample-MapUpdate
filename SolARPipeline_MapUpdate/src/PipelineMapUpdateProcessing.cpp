@@ -80,7 +80,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::start()
         m_startedOK = true;
     }
     else {
-        LOG_DEBUG("Pipeline Map Update already started!");
+        LOG_DEBUG("Pipeline Map Update already started");
     }
 
     return FrameworkReturnCode::_SUCCESS;

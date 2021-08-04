@@ -130,35 +130,38 @@ int main(int argc, char* argv[])
         }
 
         // Display the initial global map
-        SRef<Map> globalMap;
-        mapUpdatePipeline->getMapRequest(globalMap);
-        std::vector<SRef<Keyframe>> globalKeyframes;
-        std::vector<SRef<CloudPoint>> globalPointCloud;
-        globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
-        globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
-        std::vector<Transform3Df> globalKeyframesPoses;
 
         auto gViewer3D = componentManager->resolve<display::I3DPointsViewer>();
+
+        LOG_INFO("Try to get global map from Map Update remote pipeline");
+
+        SRef<Map> globalMap;
+        std::vector<SRef<Keyframe>> globalKeyframes;
+        std::vector<SRef<CloudPoint>> globalPointCloud;
+        std::vector<Transform3Df> globalKeyframesPoses;
+
+        mapUpdatePipeline->getMapRequest(globalMap);
+        globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
+        globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
 
         if (globalPointCloud.size() > 0) {
             for (const auto &it : globalKeyframes)
                 globalKeyframesPoses.push_back(it->getPose());
 
-            LOG_INFO("==> Display initial global map: press Ctrl+C to go on");
+            LOG_INFO("==> Display global map: press Ctrl+C to stop ");
 
-            while (!interruption_signal)
-            {
+            while (!interruption_signal) {
                 gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
             }
 
-            interruption_signal = false;
+//            interruption_signal = false;
         }
         else {
             LOG_INFO("Initial global map is empty!");
         }
 
 //        std::this_thread::sleep_for(std::chrono::seconds(3));
-
+/*
         LOG_INFO("Load 1st map");
 
         if (gMapManager1->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
@@ -204,7 +207,7 @@ int main(int argc, char* argv[])
             LOG_INFO("Cannot load local map 2");
             return -1;
         }
-/*
+
         LOG_INFO("Send map request for map 2");
 
         gMapManager2->getMap(map);

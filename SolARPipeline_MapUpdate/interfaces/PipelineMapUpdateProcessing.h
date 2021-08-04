@@ -68,8 +68,7 @@ namespace PIPELINES {
         void unloadComponent() override final {}
 
         /// @brief Initialization of the pipeline
-        /// Initialize the pipeline by providing a reference to the component manager loaded by the PipelineManager.
-        /// @param[in] componentManager a shared reference to the component manager which has loaded the components and configuration in the pipleine manager
+        /// @return FrameworkReturnCode::_SUCCESS if the init succeed, else
         FrameworkReturnCode init() override;
 
         /// @brief Set the camera parameters
@@ -86,7 +85,7 @@ namespace PIPELINES {
         FrameworkReturnCode stop() override;
 
 		/// @brief Request to the map update pipeline to update the global map from a local map
-		/// @param[in] image: the input image to process
+        /// @param[in] map: the input local map to process
 		/// @return FrameworkReturnCode::_SUCCESS if the data are ready to be processed, else FrameworkReturnCode::_ERROR_
 		FrameworkReturnCode mapUpdateRequest(const SRef<datastructure::Map> map) override;
 
