@@ -93,6 +93,7 @@ linux {
 
 
 DISTFILES += \
+    SolARSample_MapUpdate_LocalMapFusion_conf.xml \
     packagedependencies.txt
 
 #NOTE : Must be placed at the end of the .pro

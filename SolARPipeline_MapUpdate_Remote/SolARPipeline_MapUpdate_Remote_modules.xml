@@ -2,7 +2,7 @@
 <xpcf-registry autoAlias="true">
 
         <!-- Module generated from SolARFramework by xpcf_grpc_gen -->
-        <module uuid="adfe6b14-2c1e-4720-9ff5-6df8d23a5d4b" name="SolARFrameworkGRPCRemote" description="xpcf remoting module for project SolARFramework" path="$XPCF_MODULE_ROOT/SolARBuild/SolARFrameworkGRPCRemote/0.9.3/lib/x86_64/shared">
+        <module uuid="adfe6b14-2c1e-4720-9ff5-6df8d23a5d4b" name="SolARFrameworkGRPCRemote" description="xpcf remoting module for project SolARFramework" path="$XPCF_MODULE_ROOT/SolARBuild/SolARFrameworkGRPCRemote/0.10.0/lib/x86_64/shared">
             <component uuid="82f9fdff-06ee-471f-a260-b7f4ac414627" name="IMapUpdatePipeline_grpcServer" description="IMapUpdatePipeline_grpcServer grpc server component">
               <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="XPCF::IComponentIntrospect" description="Component introspection interface."/>
               <interface uuid="baab5e42-2c24-48de-953b-07237af419e4" name="org::bcom::xpcf::IGrpcService" description="xpcf GrpcService interface"/>
@@ -10,14 +10,14 @@
         </module>
 
         <!-- Modules used by the map update pipeline -->
-        <module uuid="af90f957-90a4-437e-8436-5dd276d782c8" name="SolARPipelineMapUpdate" description="SolARPipelineMapUpdate" path="$XPCF_MODULE_ROOT/SolARBuild/SolARPipelineMapUpdate/0.9.3/lib/x86_64/shared">
+        <module uuid="af90f957-90a4-437e-8436-5dd276d782c8" name="SolARPipelineMapUpdate" description="SolARPipelineMapUpdate" path="$XPCF_MODULE_ROOT/SolARBuild/SolARPipelineMapUpdate/0.10.0/lib/x86_64/shared">
                 <component uuid="7eb960b3-862f-4921-bd7c-a67222d0bf82" name="PipelineMapUpdateProcessing" description="PipelineMapUpdateProcessing">
                         <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                         <interface uuid="49cbd32c-6dfa-4155-b151-7261dd13f552" name="IMapUpdatePipeline" description="IMapUpdatePipeline"/>
                 </component>
         </module>
 
-        <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/0.9.3/lib/x86_64/shared">
+        <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/0.10.0/lib/x86_64/shared">
                 <component uuid="e81c7e4e-7da6-476a-8eba-078b43071272" name="SolARKeypointDetectorOpencv" description="SolARKeypointDetectorOpencv">
                         <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                         <interface uuid="0eadc8b7-1265-434c-a4c6-6da8a028e06e" name="IKeypointDetector" description="IKeypointDetector"/>
@@ -130,7 +130,7 @@
                 </component>
         </module>
 
-        <module uuid="28b89d39-41bd-451d-b19e-d25a3d7c5797" name="SolARModuleTools"  description="SolARModuleTools"  path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleTools/0.9.3/lib/x86_64/shared">
+        <module uuid="28b89d39-41bd-451d-b19e-d25a3d7c5797" name="SolARModuleTools"  description="SolARModuleTools"  path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleTools/0.10.0/lib/x86_64/shared">
                 <component uuid="ad59a5ba-beb8-11e8-a355-529269fb1459" name="SolARKeyframeSelector" description="SolARKeyframeSelector">
                         <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                         <interface uuid="4d5f2abe-beb7-11e8-a355-529269fb1459" name="IKeyframeSelector" description="IKeyframeSelector"/>
@@ -209,14 +209,14 @@
                 </component>
         </module>
 
-        <module uuid="b81f0b90-bdbc-11e8-a355-529269fb1459" name="SolARModuleFBOW" description="SolARModuleFBOW" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleFBOW/0.9.3/lib/x86_64/shared">
+        <module uuid="b81f0b90-bdbc-11e8-a355-529269fb1459" name="SolARModuleFBOW" description="SolARModuleFBOW" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleFBOW/0.10.0/lib/x86_64/shared">
                 <component uuid="9d1b1afa-bdbc-11e8-a355-529269fb1459" name="SolARKeyframeRetrieverFBOW" description="SolARKeyframeRetrieverFBOW">
                         <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                         <interface uuid="f60980ce-bdbd-11e8-a355-529269fb1459" name="IKeyframeRetriever" description="IKeyframeRetriever"/>
                 </component>
         </module>
 
-        <module uuid="8f94a3c5-79ed-4851-9502-98033eae3a3b" name="SolARModuleG2O" description="SolARModuleG2O" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleG2O/0.9.3/lib/x86_64/shared">
+        <module uuid="8f94a3c5-79ed-4851-9502-98033eae3a3b" name="SolARModuleG2O" description="SolARModuleG2O" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleG2O/0.10.0/lib/x86_64/shared">
                 <component uuid="870d89ba-bb5f-460a-a817-1fcb6473df70" name="SolAROptimizationG2O" description="SolAROptimizationG2O">
                         <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                         <interface uuid="35b9bdb7-d23c-4909-984f-ae7f9a292e6c" name="IBundler" description="IBundler"/>

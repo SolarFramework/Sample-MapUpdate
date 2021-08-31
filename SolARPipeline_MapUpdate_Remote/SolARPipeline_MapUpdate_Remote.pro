@@ -1,8 +1,10 @@
 ## global defintions : target lib name, version
 TARGET = SolARPipeline_MapUpdate_Remote
-VERSION = 0.9.3
+VERSION = 0.10.0
 
 ## remove Qt dependencies
+QT     -= core gui
+CONFIG -= app_bundle qt
 CONFIG += c++1z
 CONFIG += console
 CONFIG += verbose
@@ -41,6 +43,10 @@ SOURCES += \
     GrpcServerManager.cpp\
     SolARPipeline_MapUpdate_Remote.cpp
 
+unix {
+    LIBS += -ldl
+    QMAKE_CXXFLAGS += -DBOOST_LOG_DYN_LINK
+}
 
 linux {
     LIBS += -ldl
@@ -75,7 +81,8 @@ DISTFILES += \
     SolARPipeline_MapUpdate_Remote_modules.xml \
     SolARPipeline_MapUpdate_Remote_properties.xml \
     SolARPipeline_MapUpdate_Remote_properties.xml \
-    packagedependencies.txt
+    packagedependencies.txt \
+    start_mapupdate_service.sh
 
 xml_files.path = $${TARGETDEPLOYDIR}
 xml_files.files =  SolARPipeline_MapUpdate_Remote_modules.xml \

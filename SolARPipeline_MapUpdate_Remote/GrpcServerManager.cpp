@@ -41,7 +41,7 @@ void GrpcServerManager::registerService(grpc::Service * service)
     m_builder.RegisterService(service);
 }
 
-void GrpcServerManager::registerService(const grpc::string & host, grpc::Service * service)
+void GrpcServerManager::registerService(const std::string & host, grpc::Service * service)
 {
     m_builder.RegisterService(host, service);
 }
@@ -51,7 +51,7 @@ void GrpcServerManager::registerService(SRef<IGrpcService> service)
     registerService(service->getService());
 }
 
-void GrpcServerManager::registerService(const grpc::string & host, SRef<IGrpcService> service)
+void GrpcServerManager::registerService(const std::string & host, SRef<IGrpcService> service)
 {
     registerService(host, service->getService());
 }

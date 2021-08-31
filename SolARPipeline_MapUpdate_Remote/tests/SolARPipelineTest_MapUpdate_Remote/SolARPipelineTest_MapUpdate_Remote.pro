@@ -1,6 +1,10 @@
 ## global defintions : target lib name, version
 TARGET = SolARPipelineTest_MapUpdate_Remote
-VERSION=0.9.3
+VERSION=0.10.0
+
+## remove Qt dependencies
+QT       -= core gui
+CONFIG -= qt
 
 CONFIG += c++1z
 CONFIG += console
@@ -38,6 +42,10 @@ include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/templateappconf
 SOURCES += \
     SolARPipelineTest_MapUpdate_Remote.cpp
 
+unix {
+    LIBS += -ldl
+    QMAKE_CXXFLAGS += -DBOOST_LOG_DYN_LINK
+}
 
 linux {
     LIBS += -ldl
