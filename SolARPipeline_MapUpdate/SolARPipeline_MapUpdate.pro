@@ -2,6 +2,8 @@
 QT       -= core gui
 CONFIG -= app_bundle qt
 
+QMAKE_PROJECT_DEPTH = 0
+
 ## global defintions : target lib name, version
 INSTALLSUBDIR = SolARBuild
 TARGET = SolARPipeline_MapUpdate
