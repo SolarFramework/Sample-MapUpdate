@@ -18,7 +18,7 @@
 #define PIPELINEMAPUPDATEPROCESSING_H
 
 #if _WIN32
-#ifdef SolARPipeline_MapUpdate_API_DLLEXPORT
+#ifdef SolARPipelineMapUpdate_API_DLLEXPORT
 #define SOLARPIPELINE_MAPUPDATE_EXPORT_API __declspec(dllexport)
 #else // SolARPipeline_MapUpdate_API_DLLEXPORT
 #define SOLARPIPELINE_MAPUPDATE_EXPORT_API __declspec(dllimport)

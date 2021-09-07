@@ -1,74 +1,41 @@
 node("master") {
 
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="MapExtension/SolARSample_Mapping_MapExtension_Mono"
-    android=false
-} 
+    /*
+     *  Pipelines
+     */
+    SolArModulePipeline {
+        moduleName="SolARPipelineMapUpdate"
+        dirName="SolARBuild"
+        buildDir="Sample-MapUpdate/SolARPipeline_MapUpdate"
+        android=true
+        makeTarget="install install_deps"
+    }
 
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="MapFusion/SolARSample_Mapping_FloatingMapFusion_Mono"
-    android=false
-}    
+    SolArModulePipeline {
+        moduleName="SolARPipeline_MapUpdate_Remote"
+        dirName="SolARBuild"
+        buildDir="Sample-MapUpdate/SolARPipeline_MapUpdate_Remote"
+        android=true
+        makeTarget="install install_deps"
+    }
 
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="MapFusion/SolARSample_Mapping_LocalMapFusion_Mono"
-    android=false
-}
 
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARSample_Mapping_Mono"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARSample_Mapping_Multi"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARPipeline_Mapping_Mono"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARPipeline_Mapping_Mono/tests/SolARPipelineTest_Mapping_Mono"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARPipeline_Mapping_Multi"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARPipeline_Mapping_Multi/tests/SolARPipelineTest_Mapping_Multi"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="MapViz"
-    android=false
-}
+    /*
+     *  Samples
+     */
+    SolArModulePipeline {
+        moduleName="SolARSample_MapUpdate"
+        dirName="SolARBuild"
+        buildDir= \
+        "Sample-MapUpdate/SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate,\
+         Sample-MapUpdate/SolARPipeline_MapUpdate_Remote/tests/SolARPipelineTest_MapUpdate_Remote,\
+         Sample-MapUpdate/SolARSample_MapUpdate_FloatingMapFusion,\
+         Sample-MapUpdate/SolARSample_MapUpdate_LocalMapFusion,\
+         Sample-MapUpdate/SolARSample_MapUpdate_Standalone"
+        makeTarget="install install_deps"
+        android=false
+        packageScripts="bundleSamples"
+    }
 
 }
 
