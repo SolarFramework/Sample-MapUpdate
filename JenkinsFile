@@ -6,7 +6,7 @@ node("master") {
     SolArModulePipeline {
         moduleName="SolARPipelineMapUpdate"
         dirName="SolARBuild"
-        buildDir="Sample-MapUpdate/SolARPipeline_MapUpdate"
+        buildDir="SolARPipeline_MapUpdate"
         android=true
         makeTarget="install install_deps"
     }
@@ -14,7 +14,7 @@ node("master") {
     SolArModulePipeline {
         moduleName="SolARPipeline_MapUpdate_Remote"
         dirName="SolARBuild"
-        buildDir="Sample-MapUpdate/SolARPipeline_MapUpdate_Remote"
+        buildDir="SolARPipeline_MapUpdate_Remote"
         android=true
         makeTarget="install install_deps"
     }
@@ -27,11 +27,11 @@ node("master") {
         moduleName="SolARSample_MapUpdate"
         dirName="SolARBuild"
         buildDir= \
-        "Sample-MapUpdate/SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate,\
-         Sample-MapUpdate/SolARPipeline_MapUpdate_Remote/tests/SolARPipelineTest_MapUpdate_Remote,\
-         Sample-MapUpdate/SolARSample_MapUpdate_FloatingMapFusion,\
-         Sample-MapUpdate/SolARSample_MapUpdate_LocalMapFusion,\
-         Sample-MapUpdate/SolARSample_MapUpdate_Standalone"
+        "SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate,\
+         SolARPipeline_MapUpdate_Remote/tests/SolARPipelineTest_MapUpdate_Remote,\
+         SolARSample_MapUpdate_FloatingMapFusion,\
+         SolARSample_MapUpdate_LocalMapFusion,\
+         SolARSample_MapUpdate_Standalone"
         makeTarget="install install_deps"
         android=false
         packageScripts="bundleSamples"
