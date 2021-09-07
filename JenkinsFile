@@ -15,7 +15,7 @@ node("master") {
         moduleName="SolARPipeline_MapUpdate_Remote"
         dirName="SolARBuild"
         buildDir="SolARPipeline_MapUpdate_Remote"
-        android=true
+        android=false
         makeTarget="install install_deps"
     }
 
