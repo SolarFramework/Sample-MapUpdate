@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
 
         auto gViewer3D = componentManager->resolve<display::I3DPointsViewer>();
 
-        LOG_INFO("Try to get global map from Map Update remote pipeline");
+        LOG_INFO("Try to get initial global map from Map Update remote pipeline");
 
         SRef<Map> globalMap;
         std::vector<SRef<Keyframe>> globalKeyframes;
@@ -148,28 +148,26 @@ int main(int argc, char* argv[])
             for (const auto &it : globalKeyframes)
                 globalKeyframesPoses.push_back(it->getPose());
 
-            LOG_INFO("==> Display global map: press Ctrl+C to stop ");
+            LOG_INFO("\n==> Display initial global map: press Ctrl+C to go on\n");
 
             while (!interruption_signal) {
                 gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
             }
 
-//            interruption_signal = false;
+            interruption_signal = false;
         }
         else {
             LOG_INFO("Initial global map is empty!");
         }
 
-//        std::this_thread::sleep_for(std::chrono::seconds(3));
-/*
-        LOG_INFO("Load 1st map");
+        LOG_INFO("Load local map");
 
         if (gMapManager1->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
-            LOG_INFO("Cannot load local map 1");
+            LOG_INFO("Cannot load local map");
             return -1;
         }
 
-        LOG_INFO("Send map request for map 1");
+        LOG_INFO("Send map request for local map");
 
         SRef<Map> map;
         gMapManager1->getMap(map);
@@ -177,7 +175,7 @@ int main(int argc, char* argv[])
         mapUpdatePipeline->mapUpdateRequest(map);
         std::this_thread::sleep_for(std::chrono::seconds(10));
 
-        // Display the intermediate global map
+        // Display the new global map
         mapUpdatePipeline->getMapRequest(globalMap);
         globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
         globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
@@ -187,7 +185,7 @@ int main(int argc, char* argv[])
             for (const auto &it : globalKeyframes)
                 globalKeyframesPoses.push_back(it->getPose());
 
-            LOG_INFO("==> Display intermediate global map (after Map1 processing): press Ctrl+C to go on");
+            LOG_INFO("\n==> Display new global map (after local map processing): press Ctrl+C to stop test\n");
 
             while (!interruption_signal)
             {
@@ -197,9 +195,8 @@ int main(int argc, char* argv[])
             interruption_signal = false;
         }
         else {
-            LOG_INFO("Intermediate global map is empty!");
+            LOG_INFO("New global map is empty!");
         }
-
 
         LOG_INFO("Load 2nd map");
 
@@ -235,7 +232,7 @@ int main(int argc, char* argv[])
         else {
             LOG_INFO("Final global map is empty!");
         }
-*/
+
         LOG_INFO("Stop map update pipeline");
 
         mapUpdatePipeline->stop();

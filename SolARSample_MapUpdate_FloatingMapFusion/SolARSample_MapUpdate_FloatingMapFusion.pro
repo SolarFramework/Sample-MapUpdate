@@ -2,6 +2,8 @@
 QT       -= core gui
 CONFIG -= qt
 
+QMAKE_PROJECT_DEPTH = 0
+
 ## global defintions : target lib name, version
 TARGET = SolARSample_MapUpdate_FloatingMapFusion
 VERSION=0.10.0
@@ -89,6 +91,7 @@ linux {
 }
 
 DISTFILES += \
+    SolARSample_MapUpdate_FloatingMapFusion_conf.xml \
     packagedependencies.txt
 
 #NOTE : Must be placed at the end of the .pro

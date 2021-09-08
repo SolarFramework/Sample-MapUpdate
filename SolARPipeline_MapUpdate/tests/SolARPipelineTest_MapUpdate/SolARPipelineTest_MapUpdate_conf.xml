@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xpcf-registry autoAlias="true">
-	<module uuid="af90f957-90a4-437e-8436-5dd276d782c8" name="SolARPipeline_MapUpdate" description="SolARPipeline_MapUpdate" path="$XPCF_MODULE_ROOT/SolARBuild/SolARPipeline_MapUpdate/0.10.0/lib/x86_64/shared">
+	<module uuid="af90f957-90a4-437e-8436-5dd276d782c8" name="SolARPipelineMapUpdate" description="SolARPipelineMapUpdate" path="$XPCF_MODULE_ROOT/SolARBuild/SolARPipelineMapUpdate/0.10.0/lib/x86_64/shared">
 		<component uuid="7eb960b3-862f-4921-bd7c-a67222d0bf82" name="PipelineMapUpdateProcessing" description="PipelineMapUpdateProcessing">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="49cbd32c-6dfa-4155-b151-7261dd13f552" name="IMapUpdatePipeline" description="IMapUpdatePipeline"/>
@@ -31,14 +31,6 @@
 		<component uuid="7823dac8-1597-41cf-bdef-59aa22f3d40a" name="SolARDescriptorMatcherKNNOpencv" description="SolARDescriptorMatcherKNNOpencv">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
-		</component>
-		<component uuid="389ece8b-9e29-45ae-bd60-de1784ff0931" name="SolARDescriptorMatcherGeometricOpencv" description="SolARDescriptorMatcherGeometricOpencv">
-			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-			<interface uuid="2ed445a6-32f3-44a1-9dc5-3b0cfec778db" name="IDescriptorMatcherGeometric" description="IDescriptorMatcherGeometric"/>
-		</component>
-		<component uuid="a12a8706-299b-4981-b12b-60717ef3b160" name="SolARDescriptorMatcherRegionOpencv" description="SolARDescriptorMatcherRegionOpencv">
-			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-			<interface uuid="bdef063d-96de-4425-83c5-fec7b7e448c8" name="IDescriptorMatcherRegion" description="IDescriptorMatcherRegion"/>
 		</component>
 		<component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9" name="SolARDescriptorMatcherHammingBruteForceOpencv" description="SolARDescriptorMatcherHammingBruteForceOpencv">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
@@ -212,7 +204,7 @@
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="f60980ce-bdbd-11e8-a355-529269fb1459" name="IKeyframeRetriever" description="IKeyframeRetriever"/>
 		</component>
-	</module>
+	</module>   
 	
 	<module uuid="8f94a3c5-79ed-4851-9502-98033eae3a3b" name="SolARModuleG2O" description="SolARModuleG2O" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleG2O/0.10.0/lib/x86_64/shared">
 		<component uuid="870d89ba-bb5f-460a-a817-1fcb6473df70" name="SolAROptimizationG2O" description="SolAROptimizationG2O">
@@ -221,31 +213,22 @@
 		</component>
 	</module>
 	
-	<module uuid="6e960df6-9a36-11e8-9eb6-529269fb1459" name="SolARModuleOpenGL" description="SolARModuleOpenGL" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenGL/0.10.0/lib/x86_64/shared">
-		<component uuid="afd38ea0-9a46-11e8-9eb6-529269fb1459" name="SolAR3DPointsViewerOpengl" description="SolAR3DPointsViewerOpengl">
-			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-			<interface uuid="575d365a-9a27-11e8-9eb6-529269fb1459" name="I3DPointsViewer" description="I3DPointsViewer"/>
-		</component>
-	</module>
-	
 	<factory>
 		<bindings>
 			<bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorAKAZE2Opencv"/>
 			<bind interface="IDescriptorMatcher" to="SolARDescriptorMatcherKNNOpencv"/>
 			<bind interface="IBundler" range="default|all" to="SolAROptimizationG2O"/>
-			<bind interface="IMapManager" to="SolARMapManager" range="all" name="Map1" properties="Map1"/>
-			<bind interface="IMapManager" to="SolARMapManager" range="all" name="Map2" properties="Map2"/>
+			<bind interface="IMapManager" to="SolARMapManager" scope="Singleton"/>
+			<bind interface="IPointCloudManager" to="SolARPointCloudManager" scope="Singleton"/>
+			<bind interface="IKeyframesManager" to="SolARKeyframesManager" scope="Singleton"/>
+			<bind interface="ICovisibilityGraphManager" to="SolARCovisibilityGraphManager" scope="Singleton"/>
+			<bind interface="IKeyframeRetriever" to="SolARKeyframeRetrieverFBOW" scope="Singleton"/>
 		</bindings>
-		<injects>
-			<inject to="PipelineMapUpdateProcessing">
-				<bind interface="IMapManager" to="SolARMapManager" range="all" properties="globalMap"/>
-			</inject>			
-		</injects>
 	</factory>
 
 	<properties>
-		<configure component="SolARMapManager" name="globalMap">
-			<property name="directory" type="string" value="output/pipeline-update-map"/>
+		<configure component="SolARMapManager">
+			<property name="directory" type="string" value="../../data/maps/globalMap"/>
 			<property name="identificationFileName" type="string" value="identification.bin"/>
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
@@ -253,29 +236,7 @@
 			<property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
 			<property name="keyframeRetrieverFileName" type="string" value="keyframe_retriever.bin"/>
 			<property name="reprojErrorThreshold" type="float" value="10.0"/>
-			<property name="thresConfidence" type="float" value="0.03"/>
-		</configure>
-		<configure component="SolARMapManager" name="Map1">
-			<property name="directory" type="string" value="../../data/maps/mapA"/>
-			<property name="identificationFileName" type="string" value="identification.bin"/>
-			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
-			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
-			<property name="keyframesManagerFileName" type="string" value="keyframes.bin"/>
-			<property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
-			<property name="keyframeRetrieverFileName" type="string" value="keyframe_retriever.bin"/>
-			<property name="reprojErrorThreshold" type="float" value="10.0"/>
-			<property name="thresConfidence" type="float" value="0.03"/>
-		</configure>
-		<configure component="SolARMapManager" name="Map2">
-			<property name="directory" type="string" value="../../data/maps/mapB"/>
-			<property name="identificationFileName" type="string" value="identification.bin"/>
-			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
-			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
-			<property name="keyframesManagerFileName" type="string" value="keyframes.bin"/>
-			<property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
-			<property name="keyframeRetrieverFileName" type="string" value="keyframe_retriever.bin"/>
-			<property name="reprojErrorThreshold" type="float" value="10.0"/>
-			<property name="thresConfidence" type="float" value="0.03"/>
+			<property name="thresConfidence" type="float" value="0.1"/>
 		</configure>
 		<configure component="SolAROverlapDetector">
 			<property name="minNbInliers" type="int" value="50"/>
@@ -295,16 +256,8 @@
 		</configure>
 		<configure component="SolARDescriptorMatcherKNNOpencv">
 			<property name="distanceRatio" type="float" value="0.8"/>
-		</configure>
-		<configure component="SolARDescriptorMatcherRegionOpencv">
-			<property name="distanceRatio" type="float" value="0.8"/>
 			<property name="radius" type="float" value="15"/>
 			<property name="matchingDistanceMax" type="float" value="800"/>
-		</configure>
-		<configure component="SolARDescriptorMatcherGeometricOpencv">
-			<property name="distanceRatio" type="float" value="0.7"/>
-			<property name="paddingRatio" type="float" value="0.003"/>
-			<property name="matchingDistanceMax" type="float" value="500"/>
 		</configure>
 		<configure component="SolARGeometricMatchesFilterOpencv">
 			<property name="confidence" type="float" value="0.99"/>
@@ -334,56 +287,6 @@
 			<property name="isRobust" type="int" value="0"/>
 			<property name="fixedMap" type="int" value="0"/>
 			<property name="fixedKeyframes" type="int" value="0"/>
-		</configure>
-		<configure component="SolAR3DPointsViewerOpengl">
-			<property name="title" type="string" value="Global Map"/>
-			<property name="width" type="uint" value="1280"/>
-			<property name="height" type="uint" value="960"/>
-			<property name="backgroundColor" type="uint">
-				<value>0</value>
-				<value>0</value>
-				<value>0</value>
-			</property>
-			<property name="fixedPointsColor" type="uint" value="0"/>
-			<property name="pointsColor" type="uint">
-				<value>0</value>
-				<value>255</value>
-				<value>0</value>
-			</property>
-			<property name="points2Color" type="uint">
-				<value>255</value>
-				<value>0</value>
-				<value>0</value>
-			</property>
-			<property name="cameraColor" type="uint">
-				<value>255</value>
-				<value>255</value>
-				<value>255</value>
-			</property>
-			<property name="drawCameraAxis" type="uint" value="0"/>
-			<property name="drawSceneAxis" type="uint" value="0"/>
-			<property name="drawWorldAxis" type="uint" value="0"/>
-			<property name="axisScale" type="float" value="0.01"/>
-			<property name="pointSize" type="float" value="1.0"/>
-			<property name="cameraScale" type="float" value="0.075"/>
-			<property name="keyframeAsCamera" type="uint" value="1"/>
-			<property name="framesColor" type="uint">
-				<value>255</value>
-				<value>255</value>
-				<value>255</value>
-			</property>
-			<property name="keyframesColor" type="uint">
-				<value>255</value>
-				<value>0</value>
-				<value>0</value>
-			</property>
-			<property name="keyframes2Color" type="uint">
-				<value>0</value>
-				<value>0</value>
-				<value>255</value>
-			</property>
-			<property name="zoomSensitivity" type="float" value="10.0"/>
-			<property name="exitKey" type="int" value="27"/>
 		</configure>		
 	</properties>
 </xpcf-registry>
