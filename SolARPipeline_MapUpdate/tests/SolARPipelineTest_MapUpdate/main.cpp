@@ -17,6 +17,7 @@
 #include <xpcf/xpcf.h>
 #include "core/Log.h"
 #include "api/pipeline/IMapUpdatePipeline.h"
+#include "api/input/devices/IARDevice.h"
 #include "api/storage/IMapManager.h"
 #include "api/display/I3DPointsViewer.h"
 
@@ -38,6 +39,8 @@ int main(int argc, char ** argv)
 #endif
 
 	LOG_ADD_LOG_TO_CONSOLE();
+    LOG_SET_DEBUG_LEVEL();
+
 	try {
         SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 		std::string configxml = std::string("SolARPipelineTest_MapUpdate_conf.xml");
@@ -49,21 +52,17 @@ int main(int argc, char ** argv)
 		}
 		// Load components of the map update processing	
 		LOG_INFO("Start creating components");
-		auto gMapUpdatePipeline = xpcfComponentManager->resolve<pipeline::IMapUpdatePipeline>();
-		std::vector<SRef<storage::IMapManager>> gMapManagers(2);
+        auto gMapUpdatePipeline = xpcfComponentManager->resolve<pipeline::IMapUpdatePipeline>();
+        auto gARDevice = xpcfComponentManager->resolve<input::devices::IARDevice>();
+        std::vector<SRef<storage::IMapManager>> gMapManagers(2);
 		gMapManagers[0] = xpcfComponentManager->resolve<storage::IMapManager>("Map1");
 		gMapManagers[1] = xpcfComponentManager->resolve<storage::IMapManager>("Map2");
 		auto gViewer3D = xpcfComponentManager->resolve<display::I3DPointsViewer>();
 		LOG_INFO("All components loaded");
 
 		// Load camera intrinsics parameters
-		std::string calibFilePath = "../../data/calibrations/hololens_calibration.json";
-		CameraRigParameters camRigParams;
-		if (!loadFromFile(camRigParams, calibFilePath)) {
-			LOG_ERROR("Cannot load calibration file");
-			return -1;
-		}
-		CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
+        CameraRigParameters camRigParams = gARDevice->getCameraParameters();
+        CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
 
 		// Init map update pipeline
         if (gMapUpdatePipeline->init() != FrameworkReturnCode::_SUCCESS)

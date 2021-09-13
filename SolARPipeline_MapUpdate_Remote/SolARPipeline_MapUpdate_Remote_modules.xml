@@ -42,14 +42,14 @@
                         <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                         <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
                 </component>
-				<component uuid="389ece8b-9e29-45ae-bd60-de1784ff0931" name="SolARDescriptorMatcherGeometricOpencv" description="SolARDescriptorMatcherGeometricOpencv">
-						<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-						<interface uuid="2ed445a6-32f3-44a1-9dc5-3b0cfec778db" name="IDescriptorMatcherGeometric" description="IDescriptorMatcherGeometric"/>
-				</component>
-				<component uuid="a12a8706-299b-4981-b12b-60717ef3b160" name="SolARDescriptorMatcherRegionOpencv" description="SolARDescriptorMatcherRegionOpencv">
-						<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-						<interface uuid="bdef063d-96de-4425-83c5-fec7b7e448c8" name="IDescriptorMatcherRegion" description="IDescriptorMatcherRegion"/>
-				</component>
+                <component uuid="389ece8b-9e29-45ae-bd60-de1784ff0931" name="SolARDescriptorMatcherGeometricOpencv" description="SolARDescriptorMatcherGeometricOpencv">
+                        <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                        <interface uuid="2ed445a6-32f3-44a1-9dc5-3b0cfec778db" name="IDescriptorMatcherGeometric" description="IDescriptorMatcherGeometric"/>
+                </component>
+                <component uuid="a12a8706-299b-4981-b12b-60717ef3b160" name="SolARDescriptorMatcherRegionOpencv" description="SolARDescriptorMatcherRegionOpencv">
+                        <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                        <interface uuid="bdef063d-96de-4425-83c5-fec7b7e448c8" name="IDescriptorMatcherRegion" description="IDescriptorMatcherRegion"/>
+                </component>
                 <component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9" name="SolARDescriptorMatcherHammingBruteForceOpencv" description="SolARDescriptorMatcherHammingBruteForceOpencv">
                         <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                         <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>

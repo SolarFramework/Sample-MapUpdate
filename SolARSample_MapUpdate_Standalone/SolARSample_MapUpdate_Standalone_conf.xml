@@ -233,7 +233,11 @@
 			<bind interface="IMapManager" to="SolARMapManager" name="globalMapper" range="default|all" properties="globalMapper"/>
 			<bind interface="IMapManager" to="SolARMapManager" name="localMapper" range="default|all" properties="localMapper"/>
 			<bind interface="IMapManager" to="SolARMapManager" name="fusionMapper" range="default|all" properties="fusionMapper"/>
-		</bindings>
+                        <bind interface="IPointCloudManager" to="SolARPointCloudManager" scope="Singleton"/>
+                        <bind interface="IKeyframesManager" to="SolARKeyframesManager" scope="Singleton"/>
+                        <bind interface="ICovisibilityGraphManager" to="SolARCovisibilityGraphManager" scope="Singleton"/>
+                        <bind interface="IKeyframeRetriever" to="SolARKeyframeRetrieverFBOW" scope="Singleton"/>
+                </bindings>
 	</factory>
 
 	<properties>

@@ -84,6 +84,39 @@ int main(int argc, char* argv[])
 
     try {
 
+        // Check if log level is defined in environment variable SOLAR_LOG_LEVEL
+        char * log_level = getenv("SOLAR_LOG_LEVEL");
+        std::string str_log_level = "INFO(default)";
+
+        if (log_level != nullptr) {
+            str_log_level = std::string(log_level);
+
+            if (str_log_level == "DEBUG"){
+                LOG_SET_DEBUG_LEVEL();
+            }
+            else if (str_log_level == "CRITICAL"){
+                LOG_SET_CRITICAL_LEVEL();
+            }
+            else if (str_log_level == "ERROR"){
+                LOG_SET_ERROR_LEVEL();
+            }
+            else if (str_log_level == "INFO"){
+                LOG_SET_INFO_LEVEL();
+            }
+            else if (str_log_level == "TRACE"){
+                LOG_SET_TRACE_LEVEL();
+            }
+            else if (str_log_level == "WARNING"){
+                LOG_SET_WARNING_LEVEL();
+            }
+            else {
+                LOG_ERROR ("'SOLAR_LOG_LEVEL' environment variable: invalid value");
+                LOG_ERROR ("Expected values are: DEBUG, CRITICAL, ERROR, INFO, TRACE or WARNING");
+            }
+
+            LOG_DEBUG("Environment variable SOLAR_LOG_LEVEL={}", str_log_level);
+        }
+
         LOG_INFO("Get component manager instance");
         SRef<xpcf::IComponentManager> componentManager = xpcf::getComponentManagerInstance();
 
@@ -92,7 +125,7 @@ int main(int argc, char* argv[])
 
         if (componentManager->load(file.c_str()) != org::bcom::xpcf::_SUCCESS)
         {
-            LOG_INFO("Failed to load Client Remote Map Update Pipeline configuration file: {}", file);
+            LOG_ERROR("Failed to load Client Remote Map Update Pipeline configuration file: {}", file);
             return -1;
         }
 
@@ -100,32 +133,33 @@ int main(int argc, char* argv[])
         SRef<pipeline::IMapUpdatePipeline> mapUpdatePipeline = componentManager->resolve<SolAR::api::pipeline::IMapUpdatePipeline>();
 
         LOG_INFO("Resolve other components");
-        auto gArDevice = componentManager->resolve<input::devices::IARDevice>();
+        auto gARDevice = componentManager->resolve<input::devices::IARDevice>();
         auto gMapManager1 = componentManager->resolve<storage::IMapManager>("Map1");
         auto gMapManager2 = componentManager->resolve<storage::IMapManager>("Map2");
         LOG_INFO("Client components loaded");
 
-        CameraParameters gCamParams = gArDevice->getParameters(INDEX_USE_CAMERA);
+        CameraRigParameters camRigParams = gARDevice->getCameraParameters();
+        CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
 
         LOG_INFO("Initialize map update pipeline");
 
         if (mapUpdatePipeline->init() != FrameworkReturnCode::_SUCCESS)
         {
-            LOG_INFO("Cannot init map update pipeline");
+            LOG_ERROR("Cannot init map update pipeline");
             return -1;
         }
 
         LOG_INFO("Set camera parameters");
 
-        if (mapUpdatePipeline->setCameraParameters(gCamParams) != FrameworkReturnCode::_SUCCESS) {
-            LOG_INFO("Cannot set camera parameters for map update pipeline");
+        if (mapUpdatePipeline->setCameraParameters(camParams) != FrameworkReturnCode::_SUCCESS) {
+            LOG_ERROR("Cannot set camera parameters for map update pipeline");
             return -1;
         }
 
         LOG_INFO("Start map update pipeline");
 
         if (mapUpdatePipeline->start() != FrameworkReturnCode::_SUCCESS) {
-            LOG_INFO("Cannot start map update pipeline");
+            LOG_ERROR("Cannot start map update pipeline");
             return -1;
         }
 
@@ -163,7 +197,7 @@ int main(int argc, char* argv[])
         LOG_INFO("Load local map");
 
         if (gMapManager1->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
-            LOG_INFO("Cannot load local map");
+            LOG_ERROR("Cannot load local map");
             return -1;
         }
 
@@ -185,7 +219,7 @@ int main(int argc, char* argv[])
             for (const auto &it : globalKeyframes)
                 globalKeyframesPoses.push_back(it->getPose());
 
-            LOG_INFO("\n==> Display new global map (after local map processing): press Ctrl+C to stop test\n");
+            LOG_INFO("\n==> Display new global map (after local map processing): press Ctrl+C to go on\n");
 
             while (!interruption_signal)
             {
@@ -201,7 +235,7 @@ int main(int argc, char* argv[])
         LOG_INFO("Load 2nd map");
 
         if (gMapManager2->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
-            LOG_INFO("Cannot load local map 2");
+            LOG_ERROR("Cannot load local map 2");
             return -1;
         }
 
