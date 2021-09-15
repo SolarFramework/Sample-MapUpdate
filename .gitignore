@@ -100,3 +100,4 @@ data*
 bin/*
 */build*
 run.sh
+start_service.sh

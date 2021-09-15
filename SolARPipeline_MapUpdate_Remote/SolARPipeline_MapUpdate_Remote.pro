@@ -76,13 +76,24 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
+linux {
+  start_service_install.path = $${TARGETDEPLOYDIR}
+  start_service_install.files = $${PWD}/../start_service.sh
+  CONFIG(release,debug|release) {
+    start_service_install.extra = cp $$files($${PWD}/../start_serviceRelease.sh) $${PWD}/../start_service.sh
+  }
+  CONFIG(debug,debug|release) {
+    start_service_install.extra = cp $$files($${PWD}/../start_serviceDebug.sh) $${PWD}/../start_service.sh
+  }
+  INSTALLS += start_service_install
+}
+
 DISTFILES += \
     SolARPipeline_MapUpdate_Remote_modules.xml \
     SolARPipeline_MapUpdate_Remote_modules.xml \
     SolARPipeline_MapUpdate_Remote_properties.xml \
     SolARPipeline_MapUpdate_Remote_properties.xml \
-    packagedependencies.txt \
-    start_mapupdate_service.sh
+    packagedependencies.txt
 
 xml_files.path = $${TARGETDEPLOYDIR}
 xml_files.files =  SolARPipeline_MapUpdate_Remote_modules.xml \
