@@ -60,7 +60,7 @@
 
     <properties>
         <!-- gRPC proxy configuration-->
-        <configure component="d9da863c-c9ff-4562-a3a2-329ac1f44008">
+        <configure component="IMapUpdatePipeline_grpcProxy">
             <property name="channelUrl" access="rw" type="string" value="0.0.0.0:50053"/>
             <property name="channelCredentials" access="rw" type="uint" value="0"/>
         </configure>

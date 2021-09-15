@@ -6,7 +6,7 @@ QMAKE_PROJECT_DEPTH = 0
 
 ## global defintions : target lib name, version
 INSTALLSUBDIR = SolARBuild
-TARGET = SolARPipelineMapUpdate
+TARGET = SolARPipeline_MapUpdate
 FRAMEWORK = $${TARGET}
 VERSION=0.10.0
 
