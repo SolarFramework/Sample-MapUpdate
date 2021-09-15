@@ -81,7 +81,7 @@ Currently, the services run only on Linux platform.
 
 The map udpate service will update a shared global map hosted on the Map Update service from a local map built with the images captured by a dedicated AR device.
  
-A test client is available to simulate a mapping service. It loads from the data folder a local map previously built by a mapping service and send it to the map update service which will merge it with the hosted global map. 
+A test client is available to simulate a mapping service. It loads from the data folder a local map previously built by a mapping service and send it to the map update service which will merge it with the hosted global map. In return, it recieves the merged global map and displays it in a 3D window.
 
 > #### Start Linux service
 	./start_service.sh MapUpdate
