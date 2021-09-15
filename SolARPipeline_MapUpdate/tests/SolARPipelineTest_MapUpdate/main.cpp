@@ -39,7 +39,7 @@ int main(int argc, char ** argv)
 #endif
 
 	LOG_ADD_LOG_TO_CONSOLE();
-    LOG_SET_DEBUG_LEVEL();
+    //LOG_SET_DEBUG_LEVEL();
 
 	try {
         SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
