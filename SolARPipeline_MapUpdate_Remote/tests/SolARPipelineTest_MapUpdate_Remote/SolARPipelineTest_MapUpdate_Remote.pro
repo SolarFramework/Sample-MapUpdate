@@ -49,7 +49,6 @@ unix {
 
 linux {
     LIBS += -ldl
-    INCLUDEPATH += /home/christophe/Dev/xpcf/libs/cppast/external/cxxopts/include
     LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
 }
 
@@ -59,7 +58,6 @@ macx {
     QMAKE_CFLAGS += -mmacosx-version-min=10.7 #-x objective-c++
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.7  -std=c++17 -fPIC#-x objective-c++
     QMAKE_LFLAGS += -mmacosx-version-min=10.7 -v -lstdc++
-    INCLUDEPATH += ../../libs/cppast/external/cxxopts/include
     LIBS += -lstdc++ -lc -lpthread
     LIBS += -L/usr/local/lib
     INCLUDEPATH += $${REMAKENDEPSFOLDER}/$${BCOM_TARGET_PLATFORM}/xpcfSampleComponent/$$VERSION/interfaces
