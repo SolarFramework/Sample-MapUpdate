@@ -87,7 +87,7 @@ A test client is available to simulate a mapping service. It loads from the data
 	./start_service.sh MapUpdate
 
 > #### Run Linux test client
-        ./run.sh ./SolARPipelineTest_MapUpdate_Remote -f SolARPipelineTest_MapUpdate_Remote_conf.xml
+	./run.sh ./SolARPipelineTest_MapUpdate_Remote -f SolARPipelineTest_MapUpdate_Remote_conf.xml
 
 To change the IP address of your service, update the start\_service.sh script (XPCF\_GRPC\_SERVER\_URL variable), as well as the SolARPipelineTest\_MapUdate\_Remote\_conf.xml file (property channel\_Url of the IMapUpdatePipeline\_grpcProxy component).
 	
