@@ -39,7 +39,7 @@ int main(int argc, char ** argv)
 #endif
 
 	LOG_ADD_LOG_TO_CONSOLE();
-    LOG_SET_DEBUG_LEVEL();
+//    LOG_SET_DEBUG_LEVEL();
 
 	try {
         SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
@@ -111,7 +111,8 @@ int main(int argc, char ** argv)
 				map->getConstPointCloud()->getNbPoints(), map->getConstKeyframeCollection()->getNbKeyframes());
 			gMapUpdatePipeline->mapUpdateRequest(map);
 			std::this_thread::sleep_for(std::chrono::seconds(10));
-			// Display the global map after merging map						
+            // Display the global map after merging map
+            globalMap.reset();
 			gMapUpdatePipeline->getMapRequest(globalMap);
 			getDataForVisualization(globalMap, globalPointCloud, globalKeyframesPoses);
 			gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);			
