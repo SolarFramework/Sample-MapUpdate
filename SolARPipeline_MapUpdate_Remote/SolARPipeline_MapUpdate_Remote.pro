@@ -2,6 +2,8 @@
 TARGET = SolARPipeline_MapUpdate_Remote
 VERSION = 0.10.0
 
+QMAKE_PROJECT_DEPTH = 0
+
 ## remove Qt dependencies
 QT     -= core gui
 CONFIG -= app_bundle qt
@@ -51,7 +53,6 @@ unix {
 linux {
     LIBS += -ldl
     LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
-    INCLUDEPATH += /home/christophe/Dev/xpcf/libs/cppast/external/cxxopts/include
 }
 
 
@@ -61,7 +62,6 @@ macx {
     QMAKE_CFLAGS += -mmacosx-version-min=10.7 #-x objective-c++
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.7  -std=c++17 -fPIC#-x objective-c++
     QMAKE_LFLAGS += -mmacosx-version-min=10.7 -v -lstdc++
-    INCLUDEPATH += ../../libs/cppast/external/cxxopts/include
     LIBS += -lstdc++ -lc -lpthread
     LIBS += -L/usr/local/lib
 }
@@ -76,13 +76,24 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
+linux {
+  start_service_install.path = $${TARGETDEPLOYDIR}
+  start_service_install.files = $${PWD}/../start_service.sh
+  CONFIG(release,debug|release) {
+    start_service_install.extra = cp $$files($${PWD}/../start_serviceRelease.sh) $${PWD}/../start_service.sh
+  }
+  CONFIG(debug,debug|release) {
+    start_service_install.extra = cp $$files($${PWD}/../start_serviceDebug.sh) $${PWD}/../start_service.sh
+  }
+  INSTALLS += start_service_install
+}
+
 DISTFILES += \
     SolARPipeline_MapUpdate_Remote_modules.xml \
     SolARPipeline_MapUpdate_Remote_modules.xml \
     SolARPipeline_MapUpdate_Remote_properties.xml \
     SolARPipeline_MapUpdate_Remote_properties.xml \
-    packagedependencies.txt \
-    start_mapupdate_service.sh
+    packagedependencies.txt
 
 xml_files.path = $${TARGETDEPLOYDIR}
 xml_files.files =  SolARPipeline_MapUpdate_Remote_modules.xml \

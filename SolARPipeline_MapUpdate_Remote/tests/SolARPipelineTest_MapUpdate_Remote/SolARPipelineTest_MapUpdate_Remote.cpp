@@ -27,9 +27,6 @@ namespace xpcf=org::bcom::xpcf;
 
 #define INDEX_USE_CAMERA 0
 
-// Global var for interruption signal
-bool interruption_signal = false;
-
 // print help options
 void print_help(const cxxopts::Options& options)
 {
@@ -42,12 +39,6 @@ void print_error(const string& msg)
     cerr << msg << std::endl;
 }
 
-// Function called when interruption signal is triggered
-static void SigInt(int signo) {
-
-    interruption_signal = true;
-}
-
 int main(int argc, char* argv[])
 {
     #if NDEBUG
@@ -55,9 +46,6 @@ int main(int argc, char* argv[])
     #endif
 
     LOG_ADD_LOG_TO_CONSOLE();
-
-    // Signal interruption function (Ctrl + C)
-    signal(SIGINT, SigInt);
 
     cxxopts::Options option_list("SolARPipelineTest_MapUpdate_Remote",
                                  "SolARPipelineTest_MapUpdate_Remote - The commandline interface to the xpcf grpc client test application.\n");
@@ -182,57 +170,54 @@ int main(int argc, char* argv[])
             for (const auto &it : globalKeyframes)
                 globalKeyframesPoses.push_back(it->getPose());
 
-            LOG_INFO("\n==> Display initial global map: press Ctrl+C to go on\n");
+            LOG_INFO("\n==> Display initial global map\n");
 
-            while (!interruption_signal) {
-                gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
-            }
-
-            interruption_signal = false;
+            gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
         }
         else {
             LOG_INFO("Initial global map is empty!");
         }
 
-        LOG_INFO("Load local map");
+        LOG_INFO("Load local map 1");
 
         if (gMapManager1->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
-            LOG_ERROR("Cannot load local map");
+            LOG_ERROR("Cannot load local map 1");
             return -1;
         }
 
-        LOG_INFO("Send map request for local map");
+        LOG_INFO("Send map request for local map 1");
 
-        SRef<Map> map;
-        gMapManager1->getMap(map);
-        LOG_INFO("Nb points: {}", map->getConstPointCloud()->getNbPoints());
-        mapUpdatePipeline->mapUpdateRequest(map);
-        std::this_thread::sleep_for(std::chrono::seconds(10));
+        SRef<Map> map1;
+        SRef<Map> globalMap1;
+        std::vector<SRef<Keyframe>> globalKeyframes1;
+        std::vector<SRef<CloudPoint>> globalPointCloud1;
+        std::vector<Transform3Df> globalKeyframesPoses1;
+
+        gMapManager1->getMap(map1);
+        LOG_INFO("Nb points: {}", map1->getConstPointCloud()->getNbPoints());
+        mapUpdatePipeline->mapUpdateRequest(map1);
+        std::this_thread::sleep_for(std::chrono::seconds(20));
 
         // Display the new global map
-        mapUpdatePipeline->getMapRequest(globalMap);
-        globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
-        globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
+        LOG_INFO("Request to get new global map");
+        mapUpdatePipeline->getMapRequest(globalMap1);
+        globalMap1->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes1);
+        globalMap1->getConstPointCloud()->getAllPoints(globalPointCloud1);
 
-        if (globalPointCloud.size() > 0) {
-            globalKeyframesPoses.clear();
-            for (const auto &it : globalKeyframes)
-                globalKeyframesPoses.push_back(it->getPose());
+        if (globalPointCloud1.size() > 0) {
+            globalKeyframesPoses1.clear();
+            for (const auto &it : globalKeyframes1)
+                globalKeyframesPoses1.push_back(it->getPose());
 
-            LOG_INFO("\n==> Display new global map (after local map processing): press Ctrl+C to go on\n");
+            LOG_INFO("\n==> Display new global map (after local map 1 processing)\n");
 
-            while (!interruption_signal)
-            {
-                gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
-            }
-
-            interruption_signal = false;
+            gViewer3D->display(globalPointCloud1, {}, {}, {}, {}, globalKeyframesPoses1);
         }
         else {
             LOG_INFO("New global map is empty!");
         }
 
-        LOG_INFO("Load 2nd map");
+        LOG_INFO("Load local map 2");
 
         if (gMapManager2->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
             LOG_ERROR("Cannot load local map 2");
@@ -241,26 +226,34 @@ int main(int argc, char* argv[])
 
         LOG_INFO("Send map request for map 2");
 
-        gMapManager2->getMap(map);
-        LOG_INFO("Nb points: {}", map->getConstPointCloud()->getNbPoints());
-        mapUpdatePipeline->mapUpdateRequest(map);
-        std::this_thread::sleep_for(std::chrono::seconds(10));
+        SRef<Map> map2;
+        SRef<Map> globalMap2;
+        std::vector<SRef<Keyframe>> globalKeyframes2;
+        std::vector<SRef<CloudPoint>> globalPointCloud2;
+        std::vector<Transform3Df> globalKeyframesPoses2;
+
+        gMapManager2->getMap(map2);
+        LOG_INFO("Nb points: {}", map2->getConstPointCloud()->getNbPoints());
+        mapUpdatePipeline->mapUpdateRequest(map2);
+        std::this_thread::sleep_for(std::chrono::seconds(20));
 
         // Display the final global map
-        mapUpdatePipeline->getMapRequest(globalMap);
-        globalMap->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes);
-        globalMap->getConstPointCloud()->getAllPoints(globalPointCloud);
+        LOG_INFO("Request to get new global map");
+        mapUpdatePipeline->getMapRequest(globalMap2);
+        globalMap2->getConstKeyframeCollection()->getAllKeyframes(globalKeyframes2);
+        globalMap2->getConstPointCloud()->getAllPoints(globalPointCloud2);
 
-        if (globalPointCloud.size() > 0) {
-            globalKeyframesPoses.clear();
-            for (const auto &it : globalKeyframes)
-                globalKeyframesPoses.push_back(it->getPose());
+        if (globalPointCloud2.size() > 0) {
+            globalKeyframesPoses2.clear();
+            for (const auto &it : globalKeyframes2)
+                globalKeyframesPoses2.push_back(it->getPose());
 
-            LOG_INFO("==> Display final global map (after Map2 processing): press Ctrl+C to end test");
+            LOG_INFO("==> Display final global map (after map 2 processing): press ESC on the map display window to end test");
 
-            while (!interruption_signal)
+            while (true)
             {
-                gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
+                if (gViewer3D->display(globalPointCloud2, {}, {}, {}, {}, globalKeyframesPoses2) == FrameworkReturnCode::_STOP)
+                    break;
             }
         }
         else {
