@@ -2,6 +2,8 @@
 TARGET = SolARPipeline_MapUpdate_Remote
 VERSION = 0.10.0
 
+QMAKE_PROJECT_DEPTH = 0
+
 ## remove Qt dependencies
 QT     -= core gui
 CONFIG -= app_bundle qt
