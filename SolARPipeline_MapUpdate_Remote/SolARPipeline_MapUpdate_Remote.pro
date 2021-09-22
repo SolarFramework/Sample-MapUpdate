@@ -93,7 +93,18 @@ DISTFILES += \
     SolARPipeline_MapUpdate_Remote_modules.xml \
     SolARPipeline_MapUpdate_Remote_properties.xml \
     SolARPipeline_MapUpdate_Remote_properties.xml \
-    packagedependencies.txt
+    docker/SolARPipelineMapUpdateRemote.dockerfile \
+    docker/build.sh \
+    docker/launch.bat \
+    docker/launch.sh \
+    docker/mapupdate-service-manifest.yaml \
+    docker/start_server.sh \
+    packagedependencies.txt \
+    tests/SolARPipelineTest_MapUpdate_Remote/docker/SolARPipelineMapUpdateClient.dockerfile \
+    tests/SolARPipelineTest_MapUpdate_Remote/docker/build.sh \
+    tests/SolARPipelineTest_MapUpdate_Remote/docker/launch.bat \
+    tests/SolARPipelineTest_MapUpdate_Remote/docker/launch.sh \
+    tests/SolARPipelineTest_MapUpdate_Remote/docker/start_client.sh
 
 xml_files.path = $${TARGETDEPLOYDIR}
 xml_files.files =  SolARPipeline_MapUpdate_Remote_modules.xml \
