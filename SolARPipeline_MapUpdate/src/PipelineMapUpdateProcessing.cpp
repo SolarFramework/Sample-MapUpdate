@@ -57,7 +57,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::setCameraParameters(const Camer
 
 	m_cameraParams = cameraParams;
 	m_mapOverlapDetector->setCameraParameters(cameraParams.intrinsic, cameraParams.distortion);
-	m_mapUpdate->setCameraParameters(cameraParams.intrinsic, cameraParams.distortion);
+    m_mapUpdate->setCameraParameters(cameraParams);
     return FrameworkReturnCode::_SUCCESS;
 }
 

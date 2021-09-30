@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: map-update-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: map-update-pipeline
+  template:
+    metadata:
+      labels:
+        app: map-update-pipeline
+    spec:
+      imagePullSecrets:
+      - name: regcredsupra
+      containers:
+      - name: map-update-pipeline
+        image: solar-docker-local.artifact.b-com.com/mapupdate/0.10.0/mapupdate-remote:latest
+        env:
+        - name: XPCF_GRPC_SERVER_LOG_LEVEL
+          value: INFO
+        - name: XPCF_GRPC_MAX_RECV_MSG_SIZE
+          value: "-1"
+        - name: XPCF_GRPC_MAX_SEND_MSG_SIZE
+          value: "-1"
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: map-update-pipeline
+  labels:
+    app: map-update-pipeline
+spec:
+  type: NodePort
+  selector:
+    app: map-update-pipeline
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+    nodePort: 31888
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: map-update-pipeline
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: map-update-pipeline-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: map-update-pipeline
+  namespace: map-update-pipeline.artwin.b-com.com:q
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+  name:
+    map-update-pipeline
+spec:
+  tls:
+  - hosts:
+      - map-update-pipeline.artwin.b-com.com
+  rules:
+  - host: map-update-pipeline.artwin.b-com.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: map-update-pipeline
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

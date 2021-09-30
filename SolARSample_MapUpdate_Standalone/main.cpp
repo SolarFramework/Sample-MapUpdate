@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 		CameraRigParameters camRigParams = arDevice->getCameraParameters();
 		CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
 		mapOverlapDetector->setCameraParameters(camParams.intrinsic, camParams.distortion);
-		mapUpdate->setCameraParameters(camParams.intrinsic, camParams.distortion);
+        mapUpdate->setCameraParameters(camParams);
 
 		if (globalMapManager->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
 			LOG_INFO("Cannot load global map");
