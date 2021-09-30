@@ -1,73 +1,20 @@
 node("master") {
 
 SolArModulePipeline {
-    moduleName="Mapping"
+    moduleName="SolARPipelineMapUpdate"
     dirName="SolARBuild"
-    buildDir="MapExtension/SolARSample_Mapping_MapExtension_Mono"
-    android=false
-} 
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="MapFusion/SolARSample_Mapping_FloatingMapFusion_Mono"
-    android=false
+    buildDir="SolARPipeline_MapUpdate"
+    makeTarget="install install_deps" 
+    android=true
 }    
 
 SolArModulePipeline {
-    moduleName="Mapping"
+    moduleName="SolARSample_MapUpdate"
     dirName="SolARBuild"
-    buildDir="MapFusion/SolARSample_Mapping_LocalMapFusion_Mono"
+    buildDir="SolARSample_MapUpdate_FloatingMapFusion,SolARSample_MapUpdate_LocalMapFusion,SolARSample_MapUpdate_Standalone,SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate"
+    makeTarget="install install_deps"
     android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARSample_Mapping_Mono"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARSample_Mapping_Multi"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARPipeline_Mapping_Mono"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARPipeline_Mapping_Mono/tests/SolARPipelineTest_Mapping_Mono"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARPipeline_Mapping_Multi"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="Mapping/SolARPipeline_Mapping_Multi/tests/SolARPipelineTest_Mapping_Multi"
-    android=false
-}
-
-SolArModulePipeline {
-    moduleName="Mapping"
-    dirName="SolARBuild"
-    buildDir="MapViz"
-    android=false
+    packageScripts="bundleSamples"
 }
 
 }
