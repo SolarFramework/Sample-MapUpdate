@@ -67,8 +67,8 @@ if [ -f "$PWD/$1_Viewer_conf.xml" ]; then
 fi
 
 
-echo "LD_LIBRARY_PATH=$ld_library_path $1 $2 $3"
-LD_LIBRARY_PATH=$ld_library_path $1 $2 $3
+echo "LD_LIBRARY_PATH=$ld_library_path $@"
+LD_LIBRARY_PATH=$ld_library_path $@
 
 
 
