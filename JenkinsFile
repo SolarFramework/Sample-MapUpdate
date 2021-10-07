@@ -4,7 +4,7 @@ SolArModulePipeline {
     moduleName="SolARPipelineMapUpdate"
     dirName="SolARBuild"
     buildDir="SolARPipeline_MapUpdate"
-    makeTarget="install install_deps" 
+    makeTarget="install" 
     android=true
 }    
 
