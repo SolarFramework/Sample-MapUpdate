@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: map-update-pipeline
+  name: map-update-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: map-update-pipeline
+      app: map-update-service
   template:
     metadata:
       labels:
-        app: map-update-pipeline
+        app: map-update-service
     spec:
       imagePullSecrets:
       - name: regcredsupra
       containers:
-      - name: map-update-pipeline
+      - name: map-update-service
         image: solar-docker-local.artifact.b-com.com/mapupdate/0.10.0/mapupdate-remote:latest
         env:
         - name: XPCF_GRPC_SERVER_LOG_LEVEL
@@ -29,13 +29,13 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: map-update-pipeline
+  name: map-update-service
   labels:
-    app: map-update-pipeline
+    app: map-update-service
 spec:
   type: NodePort
   selector:
-    app: map-update-pipeline
+    app: map-update-service
   ports:
   - name: http
     port: 80
@@ -47,22 +47,22 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: map-update-pipeline
+  name: map-update-service
 
 ---
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: map-update-pipeline-rolebinding
+  name: map-update-service-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: cluster-admin
 subjects:
 - kind: ServiceAccount
-  name: map-update-pipeline
-  namespace: map-update-pipeline.artwin.b-com.com:q
+  name: map-update-service
+  namespace: map-update-service.artwin.b-com.com:q
 
 ---
 
@@ -74,18 +74,18 @@ metadata:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
   name:
-    map-update-pipeline
+    map-update-service
 spec:
   tls:
   - hosts:
-      - map-update-pipeline.artwin.b-com.com
+      - map-update-service.artwin.b-com.com
   rules:
-  - host: map-update-pipeline.artwin.b-com.com
+  - host: map-update-service.artwin.b-com.com
     http:
       paths:
       - backend:
           service:
-            name: map-update-pipeline
+            name: map-update-service
             port:
               number: 80
         path: /

@@ -1,5 +1,5 @@
 ## global defintions : target lib name, version
-TARGET = SolARPipeline_MapUpdate_Remote
+TARGET = SolARService_MapUpdate
 VERSION = 0.10.0
 
 QMAKE_PROJECT_DEPTH = 0
@@ -43,7 +43,7 @@ HEADERS += \
 
 SOURCES += \
     GrpcServerManager.cpp\
-    SolARPipeline_MapUpdate_Remote.cpp
+    SolARService_MapUpdate.cpp
 
 unix {
     LIBS += -ldl
@@ -89,26 +89,19 @@ linux {
 }
 
 DISTFILES += \
-    SolARPipeline_MapUpdate_Remote_modules.xml \
-    SolARPipeline_MapUpdate_Remote_modules.xml \
-    SolARPipeline_MapUpdate_Remote_properties.xml \
-    SolARPipeline_MapUpdate_Remote_properties.xml \
-    docker/SolARPipelineMapUpdateRemote.dockerfile \
+    SolARService_MapUpdate_modules.xml \
+    SolARService_MapUpdate_properties.xml \
+    docker/SolARServiceMapUpdate.dockerfile \
     docker/build.sh \
     docker/launch.bat \
     docker/launch.sh \
     docker/mapupdate-service-manifest.yaml \
     docker/start_server.sh \
     packagedependencies.txt \
-    tests/SolARPipelineTest_MapUpdate_Remote/docker/SolARPipelineMapUpdateClient.dockerfile \
-    tests/SolARPipelineTest_MapUpdate_Remote/docker/build.sh \
-    tests/SolARPipelineTest_MapUpdate_Remote/docker/launch.bat \
-    tests/SolARPipelineTest_MapUpdate_Remote/docker/launch.sh \
-    tests/SolARPipelineTest_MapUpdate_Remote/docker/start_client.sh
 
 xml_files.path = $${TARGETDEPLOYDIR}
-xml_files.files =  SolARPipeline_MapUpdate_Remote_modules.xml \
-                   SolARPipeline_MapUpdate_Remote_properties.xml
+xml_files.files =  SolARService_MapUpdate_modules.xml \
+                   SolARService_MapUpdate_properties.xml
 
 INSTALLS += xml_files
 

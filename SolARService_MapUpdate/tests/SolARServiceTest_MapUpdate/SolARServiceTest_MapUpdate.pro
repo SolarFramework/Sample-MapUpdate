@@ -1,5 +1,5 @@
 ## global defintions : target lib name, version
-TARGET = SolARPipelineTest_MapUpdate_Remote
+TARGET = SolARServiceTest_MapUpdate
 VERSION=0.10.0
 
 ## remove Qt dependencies
@@ -40,7 +40,7 @@ PROJECTCONFIG = QTVS
 include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/templateappconfig.pri)))  # Shell_quote & shell_path required for visual on windows
 
 SOURCES += \
-    SolARPipelineTest_MapUpdate_Remote.cpp
+    SolARServiceTest_MapUpdate.cpp
 
 unix {
     LIBS += -ldl
@@ -90,11 +90,17 @@ linux {
 }
 
 DISTFILES += \
-    SolARPipelineTest_MapUpdate_Remote_conf.xml \
-    packagedependencies.txt
+    SolARServiceTest_MapUpdate_conf.xml \
+    packagedependencies.txt \
+    docker/build.sh \
+    docker/launch.bat \
+    docker/launch.sh \
+    docker/launch_vm.sh \
+    docker/SolARServiceMapUpdateClient.dockerfile \
+    docker/start_client.sh
 
 xml_files.path = $${TARGETDEPLOYDIR}
-xml_files.files =  SolARPipelineTest_MapUpdate_Remote_conf.xml
+xml_files.files =  SolARServiceTest_MapUpdate_conf.xml
 
 INSTALLS += xml_files
 

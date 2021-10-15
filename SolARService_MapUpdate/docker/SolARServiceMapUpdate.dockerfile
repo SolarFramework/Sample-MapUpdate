@@ -7,23 +7,23 @@ RUN apt-get install -y libgtk-3-0
 RUN apt-get install -y libva-dev
 RUN apt-get install -y libvdpau-dev
 
-## Copy SolARPipelineMapUpdateRemote app files
-RUN mkdir SolARPipelineMapUpdateRemote
+## Copy SolARServiceMapUpdate app files
+RUN mkdir SolARServiceMapUpdate
 
 ## Data files (fbow vocabulary)
-RUN mkdir SolARPipelineMapUpdateRemote/data
-RUN mkdir SolARPipelineMapUpdateRemote/data/fbow_voc
-ADD data/fbow_voc/* /SolARPipelineMapUpdateRemote/data/fbow_voc/
-RUN mkdir SolARPipelineMapUpdateRemote/data/maps
-RUN mkdir SolARPipelineMapUpdateRemote/data/maps/globalMap
+RUN mkdir SolARServiceMapUpdate/data
+RUN mkdir SolARServiceMapUpdate/data/fbow_voc
+ADD data/fbow_voc/* /SolARServiceMapUpdate/data/fbow_voc/
+RUN mkdir SolARServiceMapUpdate/data/maps
+RUN mkdir SolARServiceMapUpdate/data/maps/globalMap
 
 ## Libraries and modules
-RUN mkdir SolARPipelineMapUpdateRemote/modules
-ADD modules/* /SolARPipelineMapUpdateRemote/modules/
+RUN mkdir SolARServiceMapUpdate/modules
+ADD modules/* /SolARServiceMapUpdate/modules/
 
 ## Project files
-ADD SolARPipeline_MapUpdate_Remote /SolARPipelineMapUpdateRemote/
-RUN chmod +x /SolARPipelineMapUpdateRemote/SolARPipeline_MapUpdate_Remote
+ADD SolARService_MapUpdate /SolARServiceMapUpdate/
+RUN chmod +x /SolARServiceMapUpdate/SolARService_MapUpdate
 RUN mkdir .xpcf
 ADD *.xml /.xpcf
 ADD docker/start_server.sh .

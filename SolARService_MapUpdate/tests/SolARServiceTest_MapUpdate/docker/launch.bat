@@ -26,7 +26,7 @@ REM Set application log level
 REM Log level expected: DEBUG, CRITICAL, ERROR, INFO, TRACE, WARNING
 SET SOLAR_LOG_LEVEL=INFO
 
-docker rm -f solarpipelinemapupdateclient
-docker run -it -d -e DISPLAY -e MAPUPDATE_SERVICE_URL -e SOLAR_LOG_LEVEL -e "SERVICE_NAME=SolARPipelineMapUpdateClient" -v /tmp/.X11-unix:/tmp/.X11-unix --net=host --log-opt max-size=50m -e "SERVICE_TAGS=SolAR" --name solarpipelinemapupdateclient artwin/solar/pipeline/map-update-client:latest
+docker rm -f solarservicemapupdateclient
+docker run -it -d -e DISPLAY -e MAPUPDATE_SERVICE_URL -e SOLAR_LOG_LEVEL -e "SERVICE_NAME=SolARServiceMapUpdateClient" -v /tmp/.X11-unix:/tmp/.X11-unix --net=host --log-opt max-size=50m -e "SERVICE_TAGS=SolAR" --name solarservicemapupdateclient artwin/solar/services/map-update-client:latest
 
 :end

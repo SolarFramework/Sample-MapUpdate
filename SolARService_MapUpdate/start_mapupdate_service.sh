@@ -11,5 +11,5 @@ export XPCF_GRPC_MAX_SEND_MSG_SIZE=-1
 ## Log level expected: DEBUG, CRITICAL, ERROR, INFO, TRACE, WARNING
 export SOLAR_LOG_LEVEL=INFO
 
-./SolARPipeline_MapUpdate_Remote -m SolARPipeline_MapUpdate_Remote_modules.xml -p SolARPipeline_MapUpdate_Remote_properties.xml
+./SolARService_MapUpdate -m SolARService_MapUpdate_modules.xml -p SolARService_MapUpdate_properties.xml
 
