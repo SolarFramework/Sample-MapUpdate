@@ -3,7 +3,7 @@ TARGET = SolARServiceTest_MapUpdate
 VERSION=0.10.0
 
 ## remove Qt dependencies
-QT       -= core gui
+QT     -= core gui
 CONFIG -= qt
 
 CONFIG += c++1z
@@ -17,7 +17,7 @@ include(findremakenrules.pri)
 
 CONFIG(debug,debug|release) {
     TARGETDEPLOYDIR = $${PWD}/../../../bin/Debug
-    DEFINES += _DEBUG=
+    DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
 
@@ -33,7 +33,6 @@ win32:CONFIG += shared
 QMAKE_TARGET.arch = x86_64 #must be defined prior to include
 
 DEPENDENCIESCONFIG = shared install_recurse
-
 PROJECTCONFIG = QTVS
 
 #NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
@@ -74,7 +73,7 @@ win32 {
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $$files($${PWD}/SolARSample_MapUpdate_FloatingMapFusion_conf.xml)
+configfile.files = $$files($${PWD}/SolARServiceTest_MapUpdate_conf.xml)
 INSTALLS += configfile
 
 linux {

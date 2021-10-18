@@ -16,9 +16,9 @@ spec:
       - name: regcredsupra
       containers:
       - name: map-update-service
-        image: solar-docker-local.artifact.b-com.com/mapupdate/0.10.0/mapupdate-remote:latest
+        image: solar-docker-local.artifact.b-com.com/mapupdate/0.10.0/mapupdate-service:latest
         env:
-        - name: XPCF_GRPC_SERVER_LOG_LEVEL
+        - name: SOLAR_LOG_LEVEL
           value: INFO
         - name: XPCF_GRPC_MAX_RECV_MSG_SIZE
           value: "-1"

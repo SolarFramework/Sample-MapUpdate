@@ -25,6 +25,7 @@ CONFIG(debug,debug|release) {
 
 CONFIG(release,debug|release) {
     TARGETDEPLOYDIR = $${PWD}/../bin/Release
+    DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
 }
 
@@ -77,15 +78,15 @@ win32 {
 }
 
 linux {
-  start_service_install.path = $${TARGETDEPLOYDIR}
-  start_service_install.files = $${PWD}/../start_service.sh
-  CONFIG(release,debug|release) {
-    start_service_install.extra = cp $$files($${PWD}/../start_serviceRelease.sh) $${PWD}/../start_service.sh
-  }
-  CONFIG(debug,debug|release) {
-    start_service_install.extra = cp $$files($${PWD}/../start_serviceDebug.sh) $${PWD}/../start_service.sh
-  }
-  INSTALLS += start_service_install
+    run_install.path = $${TARGETDEPLOYDIR}
+    run_install.files = $${PWD}/start_mapupdate_service.sh
+    CONFIG(release,debug|release) {
+        run_install.extra = cp $$files($${PWD}/start_mapupdate_service_release.sh) $${PWD}/start_mapupdate_service.sh
+    }
+    CONFIG(debug,debug|release) {
+        run_install.extra = cp $$files($${PWD}/start_mapupdate_service_debug.sh) $${PWD}/start_mapupdate_service.sh
+    }
+    INSTALLS += run_install
 }
 
 DISTFILES += \
@@ -98,6 +99,8 @@ DISTFILES += \
     docker/mapupdate-service-manifest.yaml \
     docker/start_server.sh \
     packagedependencies.txt \
+    start_mapupdate_service_debug.sh \
+    start_mapupdate_service_release.sh
 
 xml_files.path = $${TARGETDEPLOYDIR}
 xml_files.files =  SolARService_MapUpdate_modules.xml \
