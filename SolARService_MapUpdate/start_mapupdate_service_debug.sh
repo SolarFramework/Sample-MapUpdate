@@ -31,5 +31,5 @@ fi
 
 echo LD_LIBRARY_PATH $ld_library_path
 
-LD_LIBRARY_PATH=$ld_library_path ./SolARServiceMapUpdate -m SolARService_MapUpdate_modules.xml -p SolARService_MapUpdate_properties.xml
+LD_LIBRARY_PATH=$ld_library_path ./SolARServic_eMapUpdate -m SolARService_MapUpdate_modules.xml -p SolARService_MapUpdate_properties.xml
 
