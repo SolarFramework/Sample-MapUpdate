@@ -32,7 +32,7 @@ ADD modules/* /SolARServiceMapUpdateClient/modules/
 ADD SolARServiceTest_MapUpdate /SolARServiceMapUpdateClient/
 RUN chmod +x /SolARServiceMapUpdateClient/SolARServiceTest_MapUpdate
 RUN mkdir .xpcf
-ADD *.xml /.xpcf
+ADD *.xml /.xpcf/
 ADD docker/start_client.sh .
 RUN chmod +x start_client.sh
 

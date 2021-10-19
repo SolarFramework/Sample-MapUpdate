@@ -25,7 +25,7 @@ ADD modules/* /SolARServiceMapUpdate/modules/
 ADD SolARService_MapUpdate /SolARServiceMapUpdate/
 RUN chmod +x /SolARServiceMapUpdate/SolARService_MapUpdate
 RUN mkdir .xpcf
-ADD *.xml /.xpcf
+ADD *.xml /.xpcf/
 ADD docker/start_server.sh .
 RUN chmod +x start_server.sh
 
