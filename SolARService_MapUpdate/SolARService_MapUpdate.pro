@@ -1,13 +1,15 @@
 ## global defintions : target lib name, version
-TARGET = SolARPipelineTest_MapUpdate_Remote
-VERSION=0.10.0
+TARGET = SolARService_MapUpdate
+VERSION = 0.10.0
+
+QMAKE_PROJECT_DEPTH = 0
 
 ## remove Qt dependencies
-QT       -= core gui
-CONFIG -= qt
-
+QT     -= core gui
+CONFIG -= app_bundle qt
 CONFIG += c++1z
 CONFIG += console
+CONFIG += verbose
 CONFIG -= qt
 
 DEFINES += MYVERSION=\"\\\"$${VERSION}\\\"\"
@@ -16,31 +18,33 @@ DEFINES += WITHREMOTING
 include(findremakenrules.pri)
 
 CONFIG(debug,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}/../../../bin/Debug
-    DEFINES += _DEBUG=
+    TARGETDEPLOYDIR = $${PWD}/../bin/Debug
+    DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
 
 CONFIG(release,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}/../../../bin/Release
+    TARGETDEPLOYDIR = $${PWD}/../bin/Release
     DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
 }
 
 win32:CONFIG -= static
 win32:CONFIG += shared
-
 QMAKE_TARGET.arch = x86_64 #must be defined prior to include
-
 DEPENDENCIESCONFIG = shared install_recurse
-
 PROJECTCONFIG = QTVS
 
-#NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
+#NOTE : CONFIG as staticlib or sharedlib,  DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
 include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/templateappconfig.pri)))  # Shell_quote & shell_path required for visual on windows
 
+HEADERS += \
+    GrpcServerManager.h
+
+
 SOURCES += \
-    SolARPipelineTest_MapUpdate_Remote.cpp
+    GrpcServerManager.cpp\
+    SolARService_MapUpdate.cpp
 
 unix {
     LIBS += -ldl
@@ -52,6 +56,7 @@ linux {
     LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
 }
 
+
 macx {
     DEFINES += _MACOS_TARGET_
     QMAKE_MAC_SDK= macosx
@@ -60,7 +65,6 @@ macx {
     QMAKE_LFLAGS += -mmacosx-version-min=10.7 -v -lstdc++
     LIBS += -lstdc++ -lc -lpthread
     LIBS += -L/usr/local/lib
-    INCLUDEPATH += $${REMAKENDEPSFOLDER}/$${BCOM_TARGET_PLATFORM}/xpcfSampleComponent/$$VERSION/interfaces
 }
 
 win32 {
@@ -73,29 +77,34 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
-configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $$files($${PWD}/SolARSample_MapUpdate_FloatingMapFusion_conf.xml)
-INSTALLS += configfile
-
 linux {
-  run_install.path = $${TARGETDEPLOYDIR}
-  run_install.files = $${PWD}/../../../run.sh
-  CONFIG(release,debug|release) {
-    run_install.extra = cp $$files($${PWD}/../../../runRelease.sh) $${PWD}/../../../run.sh
-  }
-  CONFIG(debug,debug|release) {
-    run_install.extra = cp $$files($${PWD}/../../../runDebug.sh) $${PWD}/../../../run.sh
-  }
-  INSTALLS += run_install
+    run_install.path = $${TARGETDEPLOYDIR}
+    run_install.files = $${PWD}/start_mapupdate_service.sh
+    CONFIG(release,debug|release) {
+        run_install.extra = cp $$files($${PWD}/start_mapupdate_service_release.sh) $${PWD}/start_mapupdate_service.sh
+    }
+    CONFIG(debug,debug|release) {
+        run_install.extra = cp $$files($${PWD}/start_mapupdate_service_debug.sh) $${PWD}/start_mapupdate_service.sh
+    }
+    INSTALLS += run_install
 }
 
 DISTFILES += \
-    SolARPipelineTest_MapUpdate_Remote_conf.xml \
-    packagedependencies.txt
+    SolARService_MapUpdate_modules.xml \
+    SolARService_MapUpdate_properties.xml \
+    docker/SolARServiceMapUpdate.dockerfile \
+    docker/build.sh \
+    docker/launch.bat \
+    docker/launch.sh \
+    docker/mapupdate-service-manifest.yaml \
+    docker/start_server.sh \
+    packagedependencies.txt \
+    start_mapupdate_service_debug.sh \
+    start_mapupdate_service_release.sh
 
 xml_files.path = $${TARGETDEPLOYDIR}
-xml_files.files =  SolARPipelineTest_MapUpdate_Remote_conf.xml
+xml_files.files =  SolARService_MapUpdate_modules.xml \
+                   SolARService_MapUpdate_properties.xml
 
 INSTALLS += xml_files
-
 

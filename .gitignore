@@ -101,3 +101,5 @@ bin/*
 */build*/
 run.sh
 start_service.sh
+
+SolARService_MapUpdate/start_mapupdate_service.sh

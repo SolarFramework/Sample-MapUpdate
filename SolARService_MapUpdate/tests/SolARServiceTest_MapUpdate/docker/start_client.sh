@@ -3,7 +3,7 @@
 ## Detect MAPUPDATE_SERVICE_URL var and use its value 
 ## to set the Map Update service URL in XML configuration file
 
-cd /SolARPipelineMapUpdateClient
+cd /SolARServiceMapUpdateClient
 
 if [ -z "$MAPUPDATE_SERVICE_URL" ]
 then
@@ -15,7 +15,7 @@ fi
 
 echo "Try to replace the MapUpdate Service URL in the XML configuration file..."
 
-sed -i -e "s/MAPUPDATE_SERVICE_URL/$MAPUPDATE_SERVICE_URL/g" /.xpcf/SolARPipelineTest_MapUpdate_Remote_conf.xml
+sed -i -e "s/MAPUPDATE_SERVICE_URL/$MAPUPDATE_SERVICE_URL/g" /.xpcf/SolARServiceTest_MapUpdate_conf.xml
 
 echo "XML configuration file ready"
 
@@ -26,5 +26,5 @@ export SOLAR_LOG_LEVEL=INFO
 export LD_LIBRARY_PATH=.:./modules/
 
 ## Start client
-./SolARPipelineTest_MapUpdate_Remote -f /.xpcf/SolARPipelineTest_MapUpdate_Remote_conf.xml
+./SolARServiceTest_MapUpdate -f /.xpcf/SolARServiceTest_MapUpdate_conf.xml
 

@@ -47,8 +47,8 @@ int main(int argc, char* argv[])
 
     LOG_ADD_LOG_TO_CONSOLE();
 
-    cxxopts::Options option_list("SolARPipelineTest_MapUpdate_Remote",
-                                 "SolARPipelineTest_MapUpdate_Remote - The commandline interface to the xpcf grpc client test application.\n");
+    cxxopts::Options option_list("SolARServiceTest_MapUpdate",
+                                 "SolARServiceTest_MapUpdate - The commandline interface to the xpcf grpc client test application.\n");
     option_list.add_options()
             ("h,help", "display this help and exit")
             ("v,version", "display version information and exit")
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
     }
     else if (options.count("version"))
     {
-        std::cout << "SolARPipelineTest_MapUpdate_Remote version " << MYVERSION << std::endl << std::endl;
+        std::cout << "SolARServiceTest_MapUpdate version " << MYVERSION << std::endl << std::endl;
         return 0;
     }
     else if (!options.count("file") || options["file"].as<string>().empty()) {
