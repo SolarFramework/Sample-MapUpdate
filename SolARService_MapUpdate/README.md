@@ -17,12 +17,12 @@ This package includes:
 
 * the **Kubernetes manifest file** to deploy the service on your own Cloud architecture ( https://artifact.b-com.com/webapp/#/artifacts/browse/tree/General/solar-helm-virtual/mapupdate-service-manifest.yaml)
 
-* **two test client applications**, grouped in a compressed file (https://artifact.b-com.com/webapp/#/artifacts/browse/tree/General/solar-generic-local/mapupdate-service-tests/mapupdate_service_test_sample.tar.gz) which contains:
+* **a test client applications**, grouped in a compressed file (https://artifact.b-com.com/webapp/#/artifacts/browse/tree/General/solar-generic-local/mapupdate-service-tests/mapupdate_service_test_sample.tar.gz) which contains:
 
-  * the **Producer client application** : _SolARServiceTest_MapUpdate_
-  * the **Producer client configuration** : _SolARServiceTest_MapUpdate_conf.xml_
-  * a **script to launch the producer application**: _start_client.sh_
-  * all the **libraries needed by the two test applications**, stored in the _modules_ folder
+  * the **client application** : _SolARServiceTest_MapUpdate_
+  * the **client configuration** : _SolARServiceTest_MapUpdate_conf.xml_
+  * a **script to launch the client application**: _start_client.sh_
+  * all the **libraries needed by the test application**, stored in the _modules_ folder
   * a **script to install the data** needed by the two test applications: _install_data.sh_
 
 > :information_source: The complete projects of these two test applications are available on the **SolAR Framework GitHub**:
