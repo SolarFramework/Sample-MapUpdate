@@ -28,7 +28,7 @@ node("master") {
         dirName="SolARBuild"
         buildDir= \
         "SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate,\
-         SolARService_MapUpdate\tests\SolARServiceTest_MapUpdate,\
+         SolARService_MapUpdate/tests/SolARServiceTest_MapUpdate,\
          SolARSample_MapUpdate_FloatingMapFusion,\
          SolARSample_MapUpdate_LocalMapFusion,\
          SolARSample_MapUpdate_Standalone"
