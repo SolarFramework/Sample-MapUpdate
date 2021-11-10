@@ -18,6 +18,6 @@ del mapB.zip
 
 :: Download calibration file
 echo Download calibration file
-curl https://artifact.b-com.com/solar-generic-local/captures/hololens/hololens_calibration.yml -L -o hololens_calibration.yml
+curl https://artifact.b-com.com/solar-generic-local/captures/hololens/hololens_calibration.json -L -o hololens_calibration.json
 md .\data\calibrations
-move hololens_calibration.yml .\data\calibrations\hololens_calibration.yml
+move hololens_calibration.json .\data\calibrations\hololens_calibration.json

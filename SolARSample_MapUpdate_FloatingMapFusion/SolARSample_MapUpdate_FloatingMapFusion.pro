@@ -43,7 +43,7 @@ DEFINES += BOOST_AUTO_LINK_NOMANGLE
 DEFINES += BOOST_LOG_DYN_LINK
 
 SOURCES += \
-    SolARPipeline_MapUpdate_Remote.cpp
+    main.cpp
 
 unix {
     LIBS += -ldl

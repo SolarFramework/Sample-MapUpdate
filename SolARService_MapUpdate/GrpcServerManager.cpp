@@ -62,11 +62,22 @@ void GrpcServerManager::runServer()
         m_builder.SetMaxReceiveMessageSize(m_receiveMessageMaxSize);
         LOG_DEBUG("SetMaxReceiveMessageSize: {}", m_receiveMessageMaxSize);
     }
+    else if (m_receiveMessageMaxSize < 0) {
+        // Set message size to max value
+        m_builder.SetMaxReceiveMessageSize(LONG_MAX);
+        LOG_DEBUG("SetMaxReceiveMessageSize: {}", LONG_MAX);
+    }
 
     if (m_sendMessageMaxSize > 0) {
         m_builder.SetMaxSendMessageSize(m_sendMessageMaxSize);
         LOG_DEBUG("SetMaxSendMessageSize: {}", m_sendMessageMaxSize);
     }
+    else if (m_sendMessageMaxSize < 0) {
+        // Set message size to max value
+        m_builder.SetMaxSendMessageSize(LONG_MAX);
+        LOG_DEBUG("SetMaxSendMessageSize: {}", LONG_MAX);
+    }
+
     m_builder.AddListeningPort(m_serverAddress, GrpcHelper::getServerCredentials(static_cast<grpcCredentials>(m_serverCredentials)));
     for (auto service: *m_services) {
         LOG_DEBUG("Registering IGrpcService #  {}", service->getServiceName());

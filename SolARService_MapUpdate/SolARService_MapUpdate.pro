@@ -1,6 +1,8 @@
 ## global defintions : target lib name, version
-TARGET = SolARPipeline_MapUpdate_Remote
+TARGET = SolARService_MapUpdate
 VERSION = 0.10.0
+
+QMAKE_PROJECT_DEPTH = 0
 
 ## remove Qt dependencies
 QT     -= core gui
@@ -23,6 +25,7 @@ CONFIG(debug,debug|release) {
 
 CONFIG(release,debug|release) {
     TARGETDEPLOYDIR = $${PWD}/../bin/Release
+    DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
 }
 
@@ -41,7 +44,7 @@ HEADERS += \
 
 SOURCES += \
     GrpcServerManager.cpp\
-    SolARPipeline_MapUpdate_Remote.cpp
+    SolARService_MapUpdate.cpp
 
 unix {
     LIBS += -ldl
@@ -51,7 +54,6 @@ unix {
 linux {
     LIBS += -ldl
     LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
-    INCLUDEPATH += /home/christophe/Dev/xpcf/libs/cppast/external/cxxopts/include
 }
 
 
@@ -61,7 +63,6 @@ macx {
     QMAKE_CFLAGS += -mmacosx-version-min=10.7 #-x objective-c++
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.7  -std=c++17 -fPIC#-x objective-c++
     QMAKE_LFLAGS += -mmacosx-version-min=10.7 -v -lstdc++
-    INCLUDEPATH += ../../libs/cppast/external/cxxopts/include
     LIBS += -lstdc++ -lc -lpthread
     LIBS += -L/usr/local/lib
 }
@@ -76,17 +77,34 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
+linux {
+    run_install.path = $${TARGETDEPLOYDIR}
+    run_install.files = $${PWD}/start_mapupdate_service.sh
+    CONFIG(release,debug|release) {
+        run_install.extra = cp $$files($${PWD}/start_mapupdate_service_release.sh) $${PWD}/start_mapupdate_service.sh
+    }
+    CONFIG(debug,debug|release) {
+        run_install.extra = cp $$files($${PWD}/start_mapupdate_service_debug.sh) $${PWD}/start_mapupdate_service.sh
+    }
+    INSTALLS += run_install
+}
+
 DISTFILES += \
-    SolARPipeline_MapUpdate_Remote_modules.xml \
-    SolARPipeline_MapUpdate_Remote_modules.xml \
-    SolARPipeline_MapUpdate_Remote_properties.xml \
-    SolARPipeline_MapUpdate_Remote_properties.xml \
+    SolARService_MapUpdate_modules.xml \
+    SolARService_MapUpdate_properties.xml \
+    docker/SolARServiceMapUpdate.dockerfile \
+    docker/build.sh \
+    docker/launch.bat \
+    docker/launch.sh \
+    docker/mapupdate-service-manifest.yaml \
+    docker/start_server.sh \
     packagedependencies.txt \
-    start_mapupdate_service.sh
+    start_mapupdate_service_debug.sh \
+    start_mapupdate_service_release.sh
 
 xml_files.path = $${TARGETDEPLOYDIR}
-xml_files.files =  SolARPipeline_MapUpdate_Remote_modules.xml \
-                   SolARPipeline_MapUpdate_Remote_properties.xml
+xml_files.files =  SolARService_MapUpdate_modules.xml \
+                   SolARService_MapUpdate_properties.xml
 
 INSTALLS += xml_files
 

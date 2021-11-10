@@ -57,7 +57,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::setCameraParameters(const Camer
 
 	m_cameraParams = cameraParams;
 	m_mapOverlapDetector->setCameraParameters(cameraParams.intrinsic, cameraParams.distortion);
-	m_mapUpdate->setCameraParameters(cameraParams.intrinsic, cameraParams.distortion);
+    m_mapUpdate->setCameraParameters(cameraParams);
     return FrameworkReturnCode::_SUCCESS;
 }
 
@@ -188,9 +188,9 @@ void PipelineMapUpdateProcessing::processMapUpdate()
 	// Map update
 	m_mapUpdate->update(m_globalMap, newKeyframeIds);
 
-	// global bundle adjustment
+    // global bundle adjustment
 	m_bundler->setMap(m_globalMap);
-	double error_bundle = m_bundler->bundleAdjustment(m_cameraParams.intrinsic, m_cameraParams.distortion);
+    double error_bundle = m_bundler->bundleAdjustment(m_cameraParams.intrinsic, m_cameraParams.distortion);
 	LOG_INFO("Error after bundler: {}", error_bundle);
 
 	// pruning

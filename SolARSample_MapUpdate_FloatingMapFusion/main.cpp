@@ -67,8 +67,9 @@ int main(int argc, char *argv[])
 		auto globalBundler = xpcfComponentManager->resolve<api::solver::map::IBundler>();
 
 		// Load camera intrinsics parameters
-		CameraParameters camParams = arDevice->getParameters(INDEX_USE_CAMERA);
-
+		CameraRigParameters camRigParams = arDevice->getCameraParameters();
+		CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
+		mapOverlapDetector->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		if (globalMapManager->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
 			LOG_INFO("Cannot load global map");
 			return -1;

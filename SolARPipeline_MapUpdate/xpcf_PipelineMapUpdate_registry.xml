@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xpcf-registry autoAlias="true">
 
-        <module uuid="af90f957-90a4-437e-8436-5dd276d782c8" name="SolARPipeline_MapUpdate" description="SolARPipeline_MapUpdate" path="$XPCF_MODULE_ROOT/SolARBuild/SolARPipeline_MapUpdate/0.10.0/lib/x86_64/shared">
+        <module uuid="af90f957-90a4-437e-8436-5dd276d782c8" name="SolARPipelineMapUpdate" description="SolARPipelineMapUpdate" path="$XPCF_MODULE_ROOT/SolARBuild/SolARPipeline_MapUpdate/0.10.0/lib/x86_64/shared">
 		<component uuid="7eb960b3-862f-4921-bd7c-a67222d0bf82" name="PipelineMapUpdateProcessing" description="PipelineMapUpdateProcessing">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="49cbd32c-6dfa-4155-b151-7261dd13f552" name="IMapUpdatePipeline" description="IMapUpdatePipeline"/>
@@ -33,7 +33,15 @@
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
 		</component>
-		<component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9" name="SolARDescriptorMatcherHammingBruteForceOpencv" description="SolARDescriptorMatcherHammingBruteForceOpencv">
+                <component uuid="389ece8b-9e29-45ae-bd60-de1784ff0931" name="SolARDescriptorMatcherGeometricOpencv" description="SolARDescriptorMatcherGeometricOpencv">
+                        <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                        <interface uuid="2ed445a6-32f3-44a1-9dc5-3b0cfec778db" name="IDescriptorMatcherGeometric" description="IDescriptorMatcherGeometric"/>
+                </component>
+                <component uuid="a12a8706-299b-4981-b12b-60717ef3b160" name="SolARDescriptorMatcherRegionOpencv" description="SolARDescriptorMatcherRegionOpencv">
+                        <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                        <interface uuid="bdef063d-96de-4425-83c5-fec7b7e448c8" name="IDescriptorMatcherRegion" description="IDescriptorMatcherRegion"/>
+                </component>
+                <component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9" name="SolARDescriptorMatcherHammingBruteForceOpencv" description="SolARDescriptorMatcherHammingBruteForceOpencv">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
 		</component>
@@ -119,7 +127,7 @@
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="eb9b9921-b063-42a8-8282-9ed53ee21d96" name="IMapFusion" description="IMapFusion"/>
 		</component>
-    </module>
+        </module>
 	
         <module uuid="28b89d39-41bd-451d-b19e-d25a3d7c5797" name="SolARModuleTools"  description="SolARModuleTools"  path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleTools/0.10.0/lib/x86_64/shared">
 		<component uuid="ad59a5ba-beb8-11e8-a355-529269fb1459" name="SolARKeyframeSelector" description="SolARKeyframeSelector">
@@ -220,11 +228,11 @@
 			<bind interface="IDescriptorMatcher" to="SolARDescriptorMatcherKNNOpencv"/>
 			<bind interface="IBundler" range="default|all" to="SolAROptimizationG2O"/>
 			<bind interface="IMapManager" to="SolARMapManager" scope="Singleton"/>
-			<bind interface="IPointCloudManager" to="SolARPointCloudManager" scope="Singleton"/>
-			<bind interface="IKeyframesManager" to="SolARKeyframesManager" scope="Singleton"/>
-			<bind interface="ICovisibilityGraphManager" to="SolARCovisibilityGraphManager" scope="Singleton"/>
-			<bind interface="IKeyframeRetriever" to="SolARKeyframeRetrieverFBOW" scope="Singleton"/>
-		</bindings>
+                        <bind interface="IPointCloudManager" to="SolARPointCloudManager" scope="Singleton"/>
+                        <bind interface="IKeyframesManager" to="SolARKeyframesManager" scope="Singleton"/>
+                        <bind interface="ICovisibilityGraphManager" to="SolARCovisibilityGraphManager" scope="Singleton"/>
+                        <bind interface="IKeyframeRetriever" to="SolARKeyframeRetrieverFBOW" scope="Singleton"/>
+                </bindings>
 	</factory>
 
 	<properties>
@@ -237,7 +245,7 @@
 			<property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
 			<property name="keyframeRetrieverFileName" type="string" value="keyframe_retriever.bin"/>
 			<property name="reprojErrorThreshold" type="float" value="10.0"/>
-			<property name="thresConfidence" type="float" value="0.1"/>
+                        <property name="thresConfidence" type="float" value="0.03"/>
 		</configure>
 		<configure component="SolAROverlapDetector">
 			<property name="minNbInliers" type="int" value="50"/>
@@ -255,12 +263,20 @@
 			<property name="confidence" type="float" value="0.9"/>
 			<property name="minNbInliers" type="int" value="30"/>
 		</configure>
-		<configure component="SolARDescriptorMatcherKNNOpencv">
-			<property name="distanceRatio" type="float" value="0.8"/>
-			<property name="radius" type="float" value="15"/>
-			<property name="matchingDistanceMax" type="float" value="800"/>
-		</configure>
-		<configure component="SolARGeometricMatchesFilterOpencv">
+                <configure component="SolARDescriptorMatcherKNNOpencv">
+                        <property name="distanceRatio" type="float" value="0.8"/>
+                </configure>
+                <configure component="SolARDescriptorMatcherRegionOpencv">
+                        <property name="distanceRatio" type="float" value="0.8"/>
+                        <property name="radius" type="float" value="15"/>
+                        <property name="matchingDistanceMax" type="float" value="800"/>
+                </configure>
+                <configure component="SolARDescriptorMatcherGeometricOpencv">
+                        <property name="distanceRatio" type="float" value="0.7"/>
+                        <property name="paddingRatio" type="float" value="0.003"/>
+                        <property name="matchingDistanceMax" type="float" value="500"/>
+                </configure>
+                <configure component="SolARGeometricMatchesFilterOpencv">
 			<property name="confidence" type="float" value="0.99"/>
 			<property name="outlierDistanceRatio" type="float" value="0.005"/>
 			<property name="epilinesDistance" type="float" value="3.0"/>

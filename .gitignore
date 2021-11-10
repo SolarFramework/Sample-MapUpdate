@@ -9,7 +9,7 @@ bin/
 *-release.bat
 *_debug.bat
 *_release.bat
-**/build*
+**/build*/
 
 # Prerequisites
 *.d
@@ -98,5 +98,8 @@ data*
 *.sln
 *aps
 bin/*
-*/build*
+*/build*/
 run.sh
+start_service.sh
+
+SolARService_MapUpdate/start_mapupdate_service.sh

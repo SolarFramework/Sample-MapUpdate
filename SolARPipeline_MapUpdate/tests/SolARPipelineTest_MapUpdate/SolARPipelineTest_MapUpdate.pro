@@ -64,8 +64,7 @@ win32 {
 }
 
 config_files.path = $${TARGETDEPLOYDIR}
-config_files.files= $$files($${PWD}/SolARPipelineTest_MapUpdate_Producer_conf.xml)\
-                    $$files($${PWD}/SolARPipelineTest_MapUpdate_Processing_conf.xml)
+config_files.files= $$files($${PWD}/SolARPipelineTest_MapUpdate_conf.xml)
 INSTALLS += config_files
 
 linux {

@@ -1,9 +1,9 @@
 ## global defintions : target lib name, version
-TARGET = SolARPipelineTest_MapUpdate_Remote
+TARGET = SolARServiceTest_MapUpdate
 VERSION=0.10.0
 
 ## remove Qt dependencies
-QT       -= core gui
+QT     -= core gui
 CONFIG -= qt
 
 CONFIG += c++1z
@@ -17,7 +17,7 @@ include(findremakenrules.pri)
 
 CONFIG(debug,debug|release) {
     TARGETDEPLOYDIR = $${PWD}/../../../bin/Debug
-    DEFINES += _DEBUG=
+    DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
 
@@ -33,14 +33,13 @@ win32:CONFIG += shared
 QMAKE_TARGET.arch = x86_64 #must be defined prior to include
 
 DEPENDENCIESCONFIG = shared install_recurse
-
 PROJECTCONFIG = QTVS
 
 #NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
 include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/templateappconfig.pri)))  # Shell_quote & shell_path required for visual on windows
 
 SOURCES += \
-    SolARPipelineTest_MapUpdate_Remote.cpp
+    SolARServiceTest_MapUpdate.cpp
 
 unix {
     LIBS += -ldl
@@ -49,7 +48,6 @@ unix {
 
 linux {
     LIBS += -ldl
-    INCLUDEPATH += /home/christophe/Dev/xpcf/libs/cppast/external/cxxopts/include
     LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
 }
 
@@ -59,7 +57,6 @@ macx {
     QMAKE_CFLAGS += -mmacosx-version-min=10.7 #-x objective-c++
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.7  -std=c++17 -fPIC#-x objective-c++
     QMAKE_LFLAGS += -mmacosx-version-min=10.7 -v -lstdc++
-    INCLUDEPATH += ../../libs/cppast/external/cxxopts/include
     LIBS += -lstdc++ -lc -lpthread
     LIBS += -L/usr/local/lib
     INCLUDEPATH += $${REMAKENDEPSFOLDER}/$${BCOM_TARGET_PLATFORM}/xpcfSampleComponent/$$VERSION/interfaces
@@ -75,12 +72,34 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
+configfile.path = $${TARGETDEPLOYDIR}/
+configfile.files = $$files($${PWD}/SolARServiceTest_MapUpdate_conf.xml)
+INSTALLS += configfile
+
+linux {
+  run_install.path = $${TARGETDEPLOYDIR}
+  run_install.files = $${PWD}/../../../run.sh
+  CONFIG(release,debug|release) {
+    run_install.extra = cp $$files($${PWD}/../../../runRelease.sh) $${PWD}/../../../run.sh
+  }
+  CONFIG(debug,debug|release) {
+    run_install.extra = cp $$files($${PWD}/../../../runDebug.sh) $${PWD}/../../../run.sh
+  }
+  INSTALLS += run_install
+}
+
 DISTFILES += \
-    SolARPipelineTest_MapUpdate_Remote_conf.xml \
-    packagedependencies.txt
+    SolARServiceTest_MapUpdate_conf.xml \
+    packagedependencies.txt \
+    docker/build.sh \
+    docker/launch.bat \
+    docker/launch.sh \
+    docker/launch_vm.sh \
+    docker/SolARServiceMapUpdateClient.dockerfile \
+    docker/start_client.sh
 
 xml_files.path = $${TARGETDEPLOYDIR}
-xml_files.files =  SolARPipelineTest_MapUpdate_Remote_conf.xml
+xml_files.files =  SolARServiceTest_MapUpdate_conf.xml
 
 INSTALLS += xml_files
 

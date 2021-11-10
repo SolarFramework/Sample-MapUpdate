@@ -12,9 +12,9 @@ node("master") {
     }
 
     SolArModulePipeline {
-        moduleName="SolARPipeline_MapUpdate_Remote"
+        moduleName="SolARService_MapUpdate"
         dirName="SolARBuild"
-        buildDir="SolARPipeline_MapUpdate_Remote"
+        buildDir="SolARService_MapUpdate"
         android=false
         makeTarget="install install_deps"
     }
@@ -28,7 +28,7 @@ node("master") {
         dirName="SolARBuild"
         buildDir= \
         "SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate,\
-         SolARPipeline_MapUpdate_Remote/tests/SolARPipelineTest_MapUpdate_Remote,\
+         SolARService_MapUpdate\tests\SolARServiceTest_MapUpdate,\
          SolARSample_MapUpdate_FloatingMapFusion,\
          SolARSample_MapUpdate_LocalMapFusion,\
          SolARSample_MapUpdate_Standalone"

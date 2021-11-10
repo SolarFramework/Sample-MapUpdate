@@ -1,2 +1,2 @@
-xpcf|2.5.0|xpcf|github|https://github.com/
 SolARFramework|0.10.0|SolARFramework|SolARBuild@github|https://github.com/SolarFramework/SolarFramework/releases/download
+cxxopts|2.2.1|cxxopts|conan|conan-center|na|
