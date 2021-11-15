@@ -28,13 +28,23 @@ node("master") {
         dirName="SolARBuild"
         buildDir= \
         "SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate,\
-         SolARService_MapUpdate,\
-         SolARService_MapUpdate/tests/SolARServiceTest_MapUpdate,\
          SolARSample_MapUpdate_FloatingMapFusion,\
          SolARSample_MapUpdate_LocalMapFusion,\
          SolARSample_MapUpdate_Standalone"
         makeTarget="install install_deps"
         android=false
+        packageScripts="bundleSamples"
+    }
+
+    SolArModulePipeline {
+        moduleName="SolARSample_MapUpdate_Service"
+        dirName="SolARBuild"
+        buildDir= \
+         "SolARService_MapUpdate,\
+          SolARService_MapUpdate/tests/SolARServiceTest_MapUpdate"
+        makeTarget="install install_deps"
+        android=false
+        windows=false
         packageScripts="bundleSamples"
     }
 
