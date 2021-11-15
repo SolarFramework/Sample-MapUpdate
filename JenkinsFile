@@ -36,7 +36,7 @@ node("master") {
           SolARService_MapUpdate/tests/SolARServiceTest_MapUpdate"
         makeTarget="install install_deps"
         android=false
-        windows=false
+        win=false
         packageScripts="bundleSamples"
     }
 
