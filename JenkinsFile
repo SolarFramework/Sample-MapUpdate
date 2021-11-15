@@ -11,14 +11,6 @@ node("master") {
         makeTarget="install install_deps"
     }
 
-    SolArModulePipeline {
-        moduleName="SolARService_MapUpdate"
-        dirName="SolARBuild"
-        buildDir="SolARService_MapUpdate"
-        android=false
-        makeTarget="install install_deps"
-    }
-
 
     /*
      *  Samples
