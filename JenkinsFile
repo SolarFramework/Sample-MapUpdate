@@ -1,21 +1,45 @@
 node("master") {
 
-SolArModulePipeline {
-    moduleName="SolARPipelineMapUpdate"
-    dirName="SolARBuild"
-    buildDir="SolARPipeline_MapUpdate"
-    makeTarget="install" 
-    android=true
-}    
+    /*
+     *  Pipelines
+     */
+    SolArModulePipeline {
+        moduleName="SolARPipelineMapUpdate"
+        dirName="SolARBuild"
+        buildDir="SolARPipeline_MapUpdate"
+        android=true
+        makeTarget="install install_deps"
+    }
 
-SolArModulePipeline {
-    moduleName="SolARSample_MapUpdate"
-    dirName="SolARBuild"
-    buildDir="SolARSample_MapUpdate_FloatingMapFusion,SolARSample_MapUpdate_LocalMapFusion,SolARSample_MapUpdate_Standalone,SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate"
-    makeTarget="install install_deps"
-    android=false
-    packageScripts="bundleSamples"
-}
+
+    /*
+     *  Samples
+     */
+    SolArModulePipeline {
+        moduleName="SolARSample_MapUpdate"
+        dirName="SolARBuild"
+        buildDir= \
+        "SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate,\
+         SolARSample_MapUpdate_FloatingMapFusion,\
+         SolARSample_MapUpdate_LocalMapFusion,\
+         SolARSample_MapUpdate_Standalone"
+        makeTarget="install install_deps"
+        android=false
+        packageScripts="bundleSamples"
+    }
+
+    SolArModulePipeline {
+        moduleName="SolARSample_MapUpdate_Service"
+        dirName="SolARBuild"
+        buildDir= \
+         "SolARService_MapUpdate,\
+          SolARService_MapUpdate/tests/SolARServiceTest_MapUpdate,\
+          SolARService_MapUpdate/tests/SolARServiceTest_MapUpdate_DisplayMap"
+        makeTarget="install install_deps"
+        android=false
+        win=false
+        packageScripts="bundleSamples"
+    }
 
 }
 
