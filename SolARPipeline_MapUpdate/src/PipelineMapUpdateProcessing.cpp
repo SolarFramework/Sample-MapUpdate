@@ -74,7 +74,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::start()
     if (!m_startedOK) {
         // create and start map update thread
         auto getMapUpdateThread = [this]() { processMapUpdate(); };
-        m_mapUpdateTask = new xpcf::DelegateTask(getMapUpdateThread);
+        m_mapUpdateTask = new xpcf::DelegateTask(getMapUpdateThread, false);
         m_mapUpdateTask->start();
         LOG_INFO("Map update thread started");
         m_startedOK = true;
