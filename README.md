@@ -72,22 +72,3 @@ The two samples allow to fuse two maps previoulsy built:
 > #### Linux
 >
 	./run.sh ./SolARSample_MapUpdate_Standalone
-
-## Run the remote services
-
-Currently, the services run only on Linux platform.
-
-### Map Update service
-
-The map udpate service will update a shared global map hosted on the Map Update service from a local map built with the images captured by a dedicated AR device.
- 
-A test client is available to simulate a mapping service. It loads from the data folder a local map previously built by a mapping service and send it to the map update service which will merge it with the hosted global map. In return, it recieves the merged global map and displays it in a 3D window.
-
-> #### Start Linux service
-	./start_service.sh MapUpdate
-
-> #### Run Linux test client
-	./run.sh ./SolARPipelineTest_MapUpdate_Remote -f SolARPipelineTest_MapUpdate_Remote_conf.xml
-
-To change the IP address of your service, update the start\_service.sh script (XPCF\_GRPC\_SERVER\_URL variable), as well as the SolARPipelineTest\_MapUdate\_Remote\_conf.xml file (property channel\_Url of the IMapUpdatePipeline\_grpcProxy component).
-	
