@@ -13,6 +13,8 @@ CONFIG += console
 
 include(findremakenrules.pri)
 
+include(../../../manualincludepath.pri)
+
 CONFIG(debug,debug|release) {
     TARGETDEPLOYDIR = $${PWD}/../../../bin/Debug
     DEFINES += _DEBUG=1

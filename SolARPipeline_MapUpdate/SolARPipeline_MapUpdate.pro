@@ -16,6 +16,8 @@ CONFIG += c++1z
 
 include(findremakenrules.pri)
 
+include(../manualincludepath.pri)
+
 CONFIG(debug,debug|release) {
     DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
