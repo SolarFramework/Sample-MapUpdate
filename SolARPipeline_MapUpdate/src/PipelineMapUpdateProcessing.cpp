@@ -83,8 +83,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::start()
     if (!m_startedOK) {
 
         // start map update thread
-        if (!m_mapUpdateTask->started())
-            m_mapUpdateTask->start();
+        m_mapUpdateTask->start();
 
         LOG_INFO("Map update thread started");
 
@@ -107,7 +106,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
 		return FrameworkReturnCode::_ERROR_;
 	}
     else {
-        if ((m_mapUpdateTask != nullptr) && (m_mapUpdateTask->started()))
+        if (m_mapUpdateTask != nullptr)
             m_mapUpdateTask->stop();
 
         m_startedOK = false;
