@@ -135,12 +135,6 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getMapRequest(SRef<SolAR::datas
 {
     LOG_DEBUG("PipelineMapUpdateProcessing getMapRequest");
 
-    if (!m_init)
-    {
-        LOG_WARNING("Try to use a pipeline that has not been initialized");
-        return FrameworkReturnCode::_ERROR_;
-    }
-
     // Load current map from file
     if (m_mapManager->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
         LOG_DEBUG("No current map saved");
