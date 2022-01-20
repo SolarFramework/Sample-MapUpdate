@@ -100,9 +100,9 @@ namespace PIPELINES {
 
     private:
         bool										m_init = false;
-		bool										m_startedOK;
+        bool                                        m_setCameraParameters = false;
+        bool										m_startedOK = false;
 		datastructure::CameraParameters				m_cameraParams;
-		SRef<datastructure::Map>					m_globalMap;
 		// Injected components
 		SRef<api::storage::IMapManager>				m_mapManager;
 		SRef<api::loop::IOverlapDetector>			m_mapOverlapDetector;

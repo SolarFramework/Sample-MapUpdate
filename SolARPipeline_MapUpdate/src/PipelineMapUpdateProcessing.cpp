@@ -29,6 +29,10 @@ PipelineMapUpdateProcessing::PipelineMapUpdateProcessing():ConfigurableBase(xpcf
 	declareInjectable<api::solver::map::IMapUpdate>(m_mapUpdate);
 	declareInjectable<api::solver::map::IBundler>(m_bundler);	
 	LOG_DEBUG("PipelineMapUpdateProcessing constructor");
+
+    // create map update thread
+    auto getMapUpdateThread = [this]() { processMapUpdate(); };
+    m_mapUpdateTask = new xpcf::DelegateTask(getMapUpdateThread, false);
 }
 
 PipelineMapUpdateProcessing::~PipelineMapUpdateProcessing() 
@@ -42,10 +46,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::init()
     LOG_DEBUG("PipelineMapUpdateProcessing init");
 
     if (!m_init) {
-        m_mapManager->loadFromFile();
-        m_mapManager->getMap(m_globalMap);
         m_init = true;
-        m_startedOK = false;
     }
 
     return FrameworkReturnCode::_SUCCESS;
@@ -58,6 +59,8 @@ FrameworkReturnCode PipelineMapUpdateProcessing::setCameraParameters(const Camer
 	m_cameraParams = cameraParams;
 	m_mapOverlapDetector->setCameraParameters(cameraParams.intrinsic, cameraParams.distortion);
     m_mapUpdate->setCameraParameters(cameraParams);
+    m_setCameraParameters = true;
+
     return FrameworkReturnCode::_SUCCESS;
 }
 
@@ -71,12 +74,20 @@ FrameworkReturnCode PipelineMapUpdateProcessing::start()
         return FrameworkReturnCode::_ERROR_;
 	}
 
+    if (!m_setCameraParameters)
+    {
+        LOG_WARNING("Must set camera parameters before starting");
+        return FrameworkReturnCode::_ERROR_;
+    }
+
     if (!m_startedOK) {
-        // create and start map update thread
-        auto getMapUpdateThread = [this]() { processMapUpdate(); };
-        m_mapUpdateTask = new xpcf::DelegateTask(getMapUpdateThread, false);
-        m_mapUpdateTask->start();
+
+        // start map update thread
+        if (!m_mapUpdateTask->started())
+            m_mapUpdateTask->start();
+
         LOG_INFO("Map update thread started");
+
         m_startedOK = true;
     }
     else {
@@ -96,7 +107,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
 		return FrameworkReturnCode::_ERROR_;
 	}
     else {
-        if (m_mapUpdateTask != nullptr)
+        if ((m_mapUpdateTask != nullptr) && (m_mapUpdateTask->started()))
             m_mapUpdateTask->stop();
 
         m_startedOK = false;
@@ -111,7 +122,10 @@ FrameworkReturnCode PipelineMapUpdateProcessing::mapUpdateRequest(const SRef<dat
     LOG_DEBUG("PipelineMapUpdateProcessing mapUpdateRequest");
 
     if (!m_startedOK)
-		return FrameworkReturnCode::_ERROR_;
+    {
+        LOG_WARNING("Try to use a pipeline that has not been started");
+        return FrameworkReturnCode::_ERROR_;
+    }
 
 	m_inputMapBuffer.push(map);
 
@@ -122,7 +136,20 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getMapRequest(SRef<SolAR::datas
 {
     LOG_DEBUG("PipelineMapUpdateProcessing getMapRequest");
 
-    map = m_globalMap;
+    if (!m_init)
+    {
+        LOG_WARNING("Try to use a pipeline that has not been initialized");
+        return FrameworkReturnCode::_ERROR_;
+    }
+
+    // Load current map from file
+    if (m_mapManager->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
+        LOG_DEBUG("No current map saved");
+
+        return FrameworkReturnCode::_ERROR_;
+    }
+
+    m_mapManager->getMap(map);
 
     return FrameworkReturnCode::_SUCCESS;
 }
@@ -140,20 +167,23 @@ void PipelineMapUpdateProcessing::processMapUpdate()
 	if (map == nullptr)
 		return;
 
-	if (m_globalMap->getConstPointCloud()->getNbPoints() == 0) {
+    // Load current map from file
+    if (m_mapManager->loadFromFile() == FrameworkReturnCode::_ERROR_) {
 		LOG_INFO("Initialize global map from scratch");
 		m_mapManager->setMap(map);
-		m_mapManager->getMap(m_globalMap);
 		m_mapManager->saveToFile();
 		return;
 	}
+
+    SRef<datastructure::Map> current_map;
+    m_mapManager->getMap(current_map);
 
 	const SRef<CoordinateSystem>& localMapCoordinateSystem = map->getConstCoordinateSystem();
 	Transform3Df sim3Transform;
 	if (localMapCoordinateSystem->isFloating()) {
 		std::vector<std::pair<uint32_t, uint32_t>>overlapsIndices;
 		LOG_INFO("Try to overlap detection");
-		if (m_mapOverlapDetector->detect(m_globalMap, map, sim3Transform, overlapsIndices) == FrameworkReturnCode::_SUCCESS) {
+        if (m_mapOverlapDetector->detect(current_map, map, sim3Transform, overlapsIndices) == FrameworkReturnCode::_SUCCESS) {
 			LOG_INFO("Number of overlap cloud points: {}", overlapsIndices.size());
 			localMapCoordinateSystem->setParentTransform(sim3Transform);
 		}
@@ -169,7 +199,7 @@ void PipelineMapUpdateProcessing::processMapUpdate()
 	// map fusion
 	uint32_t nbMatches;
 	float error;
-	if (m_mapFusion->merge(map, m_globalMap, sim3Transform, nbMatches, error) == FrameworkReturnCode::_ERROR_) {
+    if (m_mapFusion->merge(map, current_map, sim3Transform, nbMatches, error) == FrameworkReturnCode::_ERROR_) {
 		LOG_INFO("Cannot merge two maps");
 		return;
 	}
@@ -186,10 +216,10 @@ void PipelineMapUpdateProcessing::processMapUpdate()
 	LOG_INFO("Number of new keyframes: {}", newKeyframeIds.size());
 
 	// Map update
-	m_mapUpdate->update(m_globalMap, newKeyframeIds);
+    m_mapUpdate->update(current_map, newKeyframeIds);
 
     // global bundle adjustment
-	m_bundler->setMap(m_globalMap);
+    m_bundler->setMap(current_map);
     double error_bundle = m_bundler->bundleAdjustment(m_cameraParams.intrinsic, m_cameraParams.distortion);
 	LOG_INFO("Error after bundler: {}", error_bundle);
 
