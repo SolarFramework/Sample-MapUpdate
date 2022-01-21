@@ -135,6 +135,8 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getMapRequest(SRef<SolAR::datas
 {
     LOG_DEBUG("PipelineMapUpdateProcessing getMapRequest");
 
+	std::unique_lock<std::mutex> lock(m_mutex);
+
     // Load current map from file
     if (m_mapManager->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
         LOG_DEBUG("No current map saved");
@@ -159,6 +161,8 @@ void PipelineMapUpdateProcessing::processMapUpdate()
 
 	if (map == nullptr)
 		return;
+
+	std::unique_lock<std::mutex> lock(m_mutex);
 
     // Load current map from file
     if (m_mapManager->loadFromFile() == FrameworkReturnCode::_ERROR_) {
