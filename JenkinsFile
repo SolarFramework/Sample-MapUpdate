@@ -8,7 +8,6 @@ node("master") {
         dirName="SolARBuild"
         buildDir="SolARPipeline_MapUpdate"
         android=true
-        makeTarget="install install_deps"
     }
 
 
@@ -23,7 +22,6 @@ node("master") {
          SolARSample_MapUpdate_FloatingMapFusion,\
          SolARSample_MapUpdate_LocalMapFusion,\
          SolARSample_MapUpdate_Standalone"
-        makeTarget="install install_deps"
         android=false
         packageScripts="bundleSamples"
     }
