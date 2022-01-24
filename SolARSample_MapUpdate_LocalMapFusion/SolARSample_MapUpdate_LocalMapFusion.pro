@@ -15,7 +15,7 @@ CONFIG += console
 include(findremakenrules.pri)
 
 CONFIG(debug,debug|release) {
-        TARGETDEPLOYDIR = $${PWD}/../bin/Debug
+    TARGETDEPLOYDIR = $${PWD}/../bin/Debug
     DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
@@ -91,6 +91,7 @@ linux {
   CONFIG(debug,debug|release) {
     run_install.extra = cp $$files($${PWD}/../runDebug.sh) $${PWD}/../run.sh
   }
+  run_install.CONFIG += nostrip
   INSTALLS += run_install
 }
 
