@@ -48,6 +48,9 @@ FrameworkReturnCode PipelineMapUpdateProcessing::init()
     if (!m_init) {
         m_init = true;
     }
+    else {
+        LOG_DEBUG("Pipeline Map Update already initialized");
+    }
 
     return FrameworkReturnCode::_SUCCESS;
 }
@@ -102,17 +105,17 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
 
 	if (!m_startedOK)
 	{
-        LOG_WARNING("Try to stop a pipeline that has not been started");
-		return FrameworkReturnCode::_ERROR_;
-	}
+        LOG_DEBUG("Pipeline Map Update already stopped");
+    }
     else {
         if (m_mapUpdateTask != nullptr)
             m_mapUpdateTask->stop();
 
         m_startedOK = false;
+
+        LOG_INFO("Map update pipeline has stopped");
     }
 
-	LOG_INFO("Map update pipeline has stopped");
     return FrameworkReturnCode::_SUCCESS;
 }
 
@@ -145,6 +148,8 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getMapRequest(SRef<SolAR::datas
     }
 
     m_mapManager->getMap(map);
+
+    lock.unlock();
 
     return FrameworkReturnCode::_SUCCESS;
 }
@@ -224,6 +229,9 @@ void PipelineMapUpdateProcessing::processMapUpdate()
 	m_mapManager->pointCloudPruning();
 	m_mapManager->keyframePruning();
 	m_mapManager->saveToFile();
+
+    lock.unlock();
+
 }
 
 }
