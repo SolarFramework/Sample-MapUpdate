@@ -27,7 +27,8 @@ PipelineMapUpdateProcessing::PipelineMapUpdateProcessing():ConfigurableBase(xpcf
 	declareInjectable<api::loop::IOverlapDetector>(m_mapOverlapDetector);
 	declareInjectable<api::solver::map::IMapFusion>(m_mapFusion);
 	declareInjectable<api::solver::map::IMapUpdate>(m_mapUpdate);
-	declareInjectable<api::solver::map::IBundler>(m_bundler);	
+	declareInjectable<api::solver::map::IBundler>(m_bundler);
+	declareInjectable<api::reloc::IKeyframeRetriever>(m_kfRetriever);
 	LOG_DEBUG("PipelineMapUpdateProcessing constructor");
 
     // create map update thread
@@ -152,6 +153,28 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getMapRequest(SRef<SolAR::datas
     lock.unlock();
 
     return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode PipelineMapUpdateProcessing::getSubmapRequest(const SRef<SolAR::datastructure::Frame> frame, SRef<SolAR::datastructure::Map>& map) const
+{
+	LOG_DEBUG("PipelineMapUpdateProcessing getSubmapRequest");
+
+	std::unique_lock<std::mutex> lock(m_mutex);
+
+	// Load current map from file
+	if (m_mapManager->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
+		LOG_DEBUG("No current map saved");
+		return FrameworkReturnCode::_ERROR_;
+	}
+
+	// keyframes retrieval
+	std::vector <uint32_t> retKeyframesId;
+	if (m_kfRetriever->retrieve(frame, retKeyframesId) == FrameworkReturnCode::_SUCCESS) {
+		// get submap
+		m_mapManager->getSubmap(retKeyframesId[0], 100, map);
+		return FrameworkReturnCode::_SUCCESS;
+	}
+	return FrameworkReturnCode::_ERROR_;
 }
 
 void PipelineMapUpdateProcessing::processMapUpdate()

@@ -93,6 +93,13 @@ namespace PIPELINES {
         /// @return FrameworkReturnCode::_SUCCESS if the global map is available, else FrameworkReturnCode::_ERROR_
         FrameworkReturnCode getMapRequest(SRef<SolAR::datastructure::Map> & map) const override;
 
+		/// @brief Request to the map update pipeline to get a submap based on a query frame.
+		/// @param[in] frame the query frame
+		/// @param[out] map the output submap
+		/// @return FrameworkReturnCode::_SUCCESS if submap is found, else FrameworkReturnCode::_ERROR_
+		FrameworkReturnCode getSubmapRequest(const SRef<SolAR::datastructure::Frame> frame,
+											 SRef<SolAR::datastructure::Map> & map) const override;
+
 	private:
 		/// @brief method that implementes the full maping processing
 		void processMapUpdate();
@@ -109,6 +116,7 @@ namespace PIPELINES {
 		SRef<api::solver::map::IMapFusion>			m_mapFusion;
 		SRef<api::solver::map::IMapUpdate>			m_mapUpdate;
 		SRef<api::solver::map::IBundler>			m_bundler;
+		SRef<api::reloc::IKeyframeRetriever>        m_kfRetriever;
         
         // Delegate task dedicated to asynchronous map update processing
         xpcf::DelegateTask *						m_mapUpdateTask;
