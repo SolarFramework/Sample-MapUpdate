@@ -108,10 +108,11 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
         LOG_DEBUG("Pipeline Map Update already stopped");
     }
     else {
-        if (m_mapUpdateTask != nullptr)
-            m_mapUpdateTask->stop();
 
         m_startedOK = false;
+
+        if (m_mapUpdateTask != nullptr)
+            m_mapUpdateTask->stop();
 
         LOG_INFO("Map update pipeline has stopped");
     }
