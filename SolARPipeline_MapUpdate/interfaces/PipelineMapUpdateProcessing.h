@@ -110,6 +110,7 @@ namespace PIPELINES {
         bool										m_startedOK = false;
 		datastructure::CameraParameters				m_cameraParams;
 		mutable std::mutex							m_mutex;
+		int											m_nbKeyframeSubmap = 100;
 		// Injected components
 		SRef<api::storage::IMapManager>				m_mapManager;
 		SRef<api::loop::IOverlapDetector>			m_mapOverlapDetector;

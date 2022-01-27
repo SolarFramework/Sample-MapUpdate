@@ -29,6 +29,7 @@ PipelineMapUpdateProcessing::PipelineMapUpdateProcessing():ConfigurableBase(xpcf
 	declareInjectable<api::solver::map::IMapUpdate>(m_mapUpdate);
 	declareInjectable<api::solver::map::IBundler>(m_bundler);
 	declareInjectable<api::reloc::IKeyframeRetriever>(m_kfRetriever);
+	declareProperty("nbKeyframeSubmap", m_nbKeyframeSubmap);
 	LOG_DEBUG("PipelineMapUpdateProcessing constructor");
 
     // create map update thread
@@ -171,7 +172,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getSubmapRequest(const SRef<Sol
 	std::vector <uint32_t> retKeyframesId;
 	if (m_kfRetriever->retrieve(frame, retKeyframesId) == FrameworkReturnCode::_SUCCESS) {
 		// get submap
-		m_mapManager->getSubmap(retKeyframesId[0], 100, map);
+		m_mapManager->getSubmap(retKeyframesId[0], m_nbKeyframeSubmap, map);
 		return FrameworkReturnCode::_SUCCESS;
 	}
 	return FrameworkReturnCode::_ERROR_;
