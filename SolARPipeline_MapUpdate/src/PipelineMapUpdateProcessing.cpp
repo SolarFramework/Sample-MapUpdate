@@ -224,6 +224,12 @@ void PipelineMapUpdateProcessing::processMapUpdate()
     m_bundler->setMap(current_map);
     double error_bundle = m_bundler->bundleAdjustment(m_cameraParams.intrinsic, m_cameraParams.distortion);
 	LOG_INFO("Error after bundler: {}", error_bundle);
+	
+	// check error of global BA to discard noisy map
+	if (error_bundle > 5) {
+		LOG_INFO("Map update failed");
+		return;
+	}
 
 	// pruning
 	m_mapManager->pointCloudPruning();
