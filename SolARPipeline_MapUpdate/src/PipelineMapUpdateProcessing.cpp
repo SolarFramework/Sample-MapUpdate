@@ -227,7 +227,7 @@ void PipelineMapUpdateProcessing::processMapUpdate()
 	LOG_INFO("Error after bundler: {}", error_bundle);
 	
 	// check error of global BA to discard noisy map
-    if (error_bundle > 10) {
+	if (error_bundle > 10) {
 		LOG_INFO("Map update failed");
 		return;
 	}
