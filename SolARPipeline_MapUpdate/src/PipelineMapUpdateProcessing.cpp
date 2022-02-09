@@ -110,10 +110,11 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
         LOG_DEBUG("Pipeline Map Update already stopped");
     }
     else {
-        if (m_mapUpdateTask != nullptr)
-            m_mapUpdateTask->stop();
 
         m_startedOK = false;
+
+        if (m_mapUpdateTask != nullptr)
+            m_mapUpdateTask->stop();
 
         LOG_INFO("Map update pipeline has stopped");
     }
@@ -248,6 +249,12 @@ void PipelineMapUpdateProcessing::processMapUpdate()
     m_bundler->setMap(current_map);
     double error_bundle = m_bundler->bundleAdjustment(m_cameraParams.intrinsic, m_cameraParams.distortion);
 	LOG_INFO("Error after bundler: {}", error_bundle);
+	
+	// check error of global BA to discard noisy map
+	if (error_bundle > 10) {
+		LOG_INFO("Map update failed");
+		return;
+	}
 
 	// pruning
 	m_mapManager->pointCloudPruning();
