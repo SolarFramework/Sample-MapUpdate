@@ -102,7 +102,8 @@ namespace PIPELINES {
         bool                                        m_setCameraParameters = false;
         bool										m_startedOK = false;
 		datastructure::CameraParameters				m_cameraParams;
-		mutable std::mutex							m_mutex;
+        // Mutex to avoid concurrent access
+        mutable std::mutex							m_mutex;
 		// Injected components
 		SRef<api::storage::IMapManager>				m_mapManager;
 		SRef<api::loop::IOverlapDetector>			m_mapOverlapDetector;
