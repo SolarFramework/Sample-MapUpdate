@@ -47,6 +47,8 @@ FrameworkReturnCode PipelineMapUpdateProcessing::init()
 {
     LOG_DEBUG("PipelineMapUpdateProcessing init");
 
+    std::unique_lock<std::mutex> lock(m_mutex);
+
     if (!m_init) {
         m_init = true;
     }
@@ -61,7 +63,9 @@ FrameworkReturnCode PipelineMapUpdateProcessing::setCameraParameters(const Camer
 
     LOG_DEBUG("PipelineMapUpdateProcessing setCameraParameters");
 
-	m_cameraParams = cameraParams;
+    std::unique_lock<std::mutex> lock(m_mutex);
+
+    m_cameraParams = cameraParams;
 	m_mapOverlapDetector->setCameraParameters(cameraParams.intrinsic, cameraParams.distortion);
     m_mapUpdate->setCameraParameters(cameraParams);
     m_setCameraParameters = true;
@@ -87,6 +91,8 @@ FrameworkReturnCode PipelineMapUpdateProcessing::start()
 
     if (!m_startedOK) {
 
+        std::unique_lock<std::mutex> lock(m_mutex);
+
         // start map update thread
         m_mapUpdateTask->start();
 
@@ -110,6 +116,8 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
         LOG_DEBUG("Pipeline Map Update already stopped");
     }
     else {
+
+        std::unique_lock<std::mutex> lock(m_mutex);
 
         m_startedOK = false;
 
