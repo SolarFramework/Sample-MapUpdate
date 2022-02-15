@@ -1,1 +1,0 @@
-SolARFrameworkGRPCRemote|0.11.0|SolARFrameworkGRPCRemote|SolARBuild@github|https://github.com/SolarFramework/SolARFrameworkGRPCRemote/releases/download
