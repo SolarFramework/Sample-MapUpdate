@@ -83,15 +83,17 @@ FrameworkReturnCode PipelineMapUpdateProcessing::start()
         return FrameworkReturnCode::_ERROR_;
 	}
 
-    if (!m_setCameraParameters)
-    {
-        LOG_WARNING("Must set camera parameters before starting");
-        return FrameworkReturnCode::_ERROR_;
-    }
-
     if (!m_startedOK) {
 
         std::unique_lock<std::mutex> lock(m_mutex);
+
+        // Load current map from file
+        if (m_mapManager->loadFromFile() == FrameworkReturnCode::_ERROR_) {
+            LOG_INFO("Initialize global map from scratch");
+            m_emptyMap = true;
+        }
+        else
+            m_emptyMap = false;
 
         // start map update thread
         m_mapUpdateTask->start();
@@ -124,6 +126,9 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
         if (m_mapUpdateTask != nullptr)
             m_mapUpdateTask->stop();
 
+        // Unload current map
+// Comment vider la carte globale en mémoire ???
+
         LOG_INFO("Map update pipeline has stopped");
     }
 
@@ -133,6 +138,12 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
 FrameworkReturnCode PipelineMapUpdateProcessing::mapUpdateRequest(const SRef<datastructure::Map> map)
 {
     LOG_DEBUG("PipelineMapUpdateProcessing mapUpdateRequest");
+
+    if (!m_setCameraParameters)
+    {
+        LOG_WARNING("Must set camera parameters before starting");
+        return FrameworkReturnCode::_ERROR_;
+    }
 
     if (!m_startedOK)
     {
@@ -149,18 +160,15 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getMapRequest(SRef<SolAR::datas
 {
     LOG_DEBUG("PipelineMapUpdateProcessing getMapRequest");
 
-	std::unique_lock<std::mutex> lock(m_mutex);
-
-    // Load current map from file
-    if (m_mapManager->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
-        LOG_DEBUG("No current map saved");
-
+    if (!m_startedOK)
+    {
+        LOG_WARNING("Try to use a pipeline that has not been started");
         return FrameworkReturnCode::_ERROR_;
     }
 
-    m_mapManager->getMap(map);
+    std::unique_lock<std::mutex> lock(m_mutex);
 
-    lock.unlock();
+    m_mapManager->getMap(map);
 
     return FrameworkReturnCode::_SUCCESS;
 }
@@ -169,13 +177,13 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getSubmapRequest(const SRef<Sol
 {
 	LOG_DEBUG("PipelineMapUpdateProcessing getSubmapRequest");
 
-	std::unique_lock<std::mutex> lock(m_mutex);
+    if (!m_startedOK)
+    {
+        LOG_WARNING("Try to use a pipeline that has not been started");
+        return FrameworkReturnCode::_ERROR_;
+    }
 
-	// Load current map from file
-	if (m_mapManager->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
-		LOG_DEBUG("No current map saved");
-		return FrameworkReturnCode::_ERROR_;
-	}
+    std::unique_lock<std::mutex> lock(m_mutex);
 
 	// keyframes retrieval
 	std::vector <uint32_t> retKeyframesId;
@@ -184,6 +192,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getSubmapRequest(const SRef<Sol
 		m_mapManager->getSubmap(retKeyframesId[0], m_nbKeyframeSubmap, map);
 		return FrameworkReturnCode::_SUCCESS;
 	}
+
 	return FrameworkReturnCode::_ERROR_;
 }
 
@@ -202,13 +211,13 @@ void PipelineMapUpdateProcessing::processMapUpdate()
 
 	std::unique_lock<std::mutex> lock(m_mutex);
 
-    // Load current map from file
-    if (m_mapManager->loadFromFile() == FrameworkReturnCode::_ERROR_) {
-		LOG_INFO("Initialize global map from scratch");
-		m_mapManager->setMap(map);
-		m_mapManager->saveToFile();
-		return;
-	}
+    if (m_emptyMap) {
+        LOG_INFO("Initialize global map from scratch");
+        m_mapManager->setMap(map);
+        m_mapManager->saveToFile();
+        m_emptyMap = false;
+        return;
+    }
 
     SRef<datastructure::Map> current_map;
     m_mapManager->getMap(current_map);

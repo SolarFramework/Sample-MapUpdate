@@ -108,6 +108,7 @@ namespace PIPELINES {
         bool										m_init = false;
         bool                                        m_setCameraParameters = false;
         bool										m_startedOK = false;
+        bool                                        m_emptyMap = false;
 		datastructure::CameraParameters				m_cameraParams;
 		mutable std::mutex							m_mutex;
 		int											m_nbKeyframeSubmap = 100;
