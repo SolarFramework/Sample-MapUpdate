@@ -113,9 +113,10 @@ int main(int argc, char ** argv)
 			std::this_thread::sleep_for(std::chrono::seconds(10));
             // Display the global map after merging map
             globalMap.reset();
-			gMapUpdatePipeline->getMapRequest(globalMap);
-			getDataForVisualization(globalMap, globalPointCloud, globalKeyframesPoses);
-			gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);			
+            if (gMapUpdatePipeline->getMapRequest(globalMap) == FrameworkReturnCode::_SUCCESS) {
+                getDataForVisualization(globalMap, globalPointCloud, globalKeyframesPoses);
+                gViewer3D->display(globalPointCloud, {}, {}, {}, {}, globalKeyframesPoses);
+            }
 		}
 		// display final global map		
 		while (true) {

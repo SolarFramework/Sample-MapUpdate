@@ -31,7 +31,6 @@
 #include "xpcf/threading/DropBuffer.h"
 #include "xpcf/threading/BaseTask.h"
 #include <mutex>
-#include <shared_mutex>
 
 #include "api/pipeline/IMapUpdatePipeline.h"
 #include "api/storage/IMapManager.h"
@@ -100,9 +99,11 @@ namespace PIPELINES {
 
     private:
         bool										m_init = false;
-		bool										m_startedOK;
+        bool                                        m_setCameraParameters = false;
+        bool										m_startedOK = false;
 		datastructure::CameraParameters				m_cameraParams;
-		SRef<datastructure::Map>					m_globalMap;
+        // Mutex to avoid concurrent access
+        mutable std::mutex							m_mutex;
 		// Injected components
 		SRef<api::storage::IMapManager>				m_mapManager;
 		SRef<api::loop::IOverlapDetector>			m_mapOverlapDetector;
