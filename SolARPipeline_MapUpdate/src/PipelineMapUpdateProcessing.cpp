@@ -126,8 +126,10 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
         if (m_mapUpdateTask != nullptr)
             m_mapUpdateTask->stop();
 
-        // Unload current map
-// Comment vider la carte globale en mémoire ???
+        LOG_DEBUG("Remove map data in memory");
+
+        // Unload current map (free memory)
+        m_mapManager->setMap(xpcf::utils::make_shared<Map>());
 
         LOG_INFO("Map update pipeline has stopped");
     }
