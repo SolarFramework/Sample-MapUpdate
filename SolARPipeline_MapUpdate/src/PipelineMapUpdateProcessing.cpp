@@ -27,7 +27,9 @@ PipelineMapUpdateProcessing::PipelineMapUpdateProcessing():ConfigurableBase(xpcf
 	declareInjectable<api::loop::IOverlapDetector>(m_mapOverlapDetector);
 	declareInjectable<api::solver::map::IMapFusion>(m_mapFusion);
 	declareInjectable<api::solver::map::IMapUpdate>(m_mapUpdate);
-	declareInjectable<api::solver::map::IBundler>(m_bundler);	
+	declareInjectable<api::solver::map::IBundler>(m_bundler);
+	declareInjectable<api::reloc::IKeyframeRetriever>(m_kfRetriever);
+	declareProperty("nbKeyframeSubmap", m_nbKeyframeSubmap);
 	LOG_DEBUG("PipelineMapUpdateProcessing constructor");
 
     // create map update thread
@@ -81,15 +83,17 @@ FrameworkReturnCode PipelineMapUpdateProcessing::start()
         return FrameworkReturnCode::_ERROR_;
 	}
 
-    if (!m_setCameraParameters)
-    {
-        LOG_WARNING("Must set camera parameters before starting");
-        return FrameworkReturnCode::_ERROR_;
-    }
-
     if (!m_startedOK) {
 
         std::unique_lock<std::mutex> lock(m_mutex);
+
+        // Load current map from file
+        if (m_mapManager->loadFromFile() == FrameworkReturnCode::_ERROR_) {
+            LOG_INFO("Initialize global map from scratch");
+            m_emptyMap = true;
+        }
+        else
+            m_emptyMap = false;
 
         // start map update thread
         m_mapUpdateTask->start();
@@ -122,6 +126,11 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
         if (m_mapUpdateTask != nullptr)
             m_mapUpdateTask->stop();
 
+        LOG_DEBUG("Remove map data in memory");
+
+        // Unload current map (free memory)
+        m_mapManager->setMap(xpcf::utils::make_shared<Map>());
+
         LOG_INFO("Map update pipeline has stopped");
     }
 
@@ -131,6 +140,12 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
 FrameworkReturnCode PipelineMapUpdateProcessing::mapUpdateRequest(const SRef<datastructure::Map> map)
 {
     LOG_DEBUG("PipelineMapUpdateProcessing mapUpdateRequest");
+
+    if (!m_setCameraParameters)
+    {
+        LOG_WARNING("Must set camera parameters before starting");
+        return FrameworkReturnCode::_ERROR_;
+    }
 
     if (!m_startedOK)
     {
@@ -147,20 +162,40 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getMapRequest(SRef<SolAR::datas
 {
     LOG_DEBUG("PipelineMapUpdateProcessing getMapRequest");
 
-	std::unique_lock<std::mutex> lock(m_mutex);
-
-    // Load current map from file
-    if (m_mapManager->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
-        LOG_DEBUG("No current map saved");
-
+    if (!m_startedOK)
+    {
+        LOG_WARNING("Try to use a pipeline that has not been started");
         return FrameworkReturnCode::_ERROR_;
     }
 
+    std::unique_lock<std::mutex> lock(m_mutex);
+
     m_mapManager->getMap(map);
 
-    lock.unlock();
-
     return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode PipelineMapUpdateProcessing::getSubmapRequest(const SRef<SolAR::datastructure::Frame> frame, SRef<SolAR::datastructure::Map>& map) const
+{
+	LOG_DEBUG("PipelineMapUpdateProcessing getSubmapRequest");
+
+    if (!m_startedOK)
+    {
+        LOG_WARNING("Try to use a pipeline that has not been started");
+        return FrameworkReturnCode::_ERROR_;
+    }
+
+    std::unique_lock<std::mutex> lock(m_mutex);
+
+	// keyframes retrieval
+	std::vector <uint32_t> retKeyframesId;
+	if (m_kfRetriever->retrieve(frame, retKeyframesId) == FrameworkReturnCode::_SUCCESS) {
+		// get submap
+		m_mapManager->getSubmap(retKeyframesId[0], m_nbKeyframeSubmap, map);
+		return FrameworkReturnCode::_SUCCESS;
+	}
+
+	return FrameworkReturnCode::_ERROR_;
 }
 
 void PipelineMapUpdateProcessing::processMapUpdate()
@@ -178,13 +213,13 @@ void PipelineMapUpdateProcessing::processMapUpdate()
 
 	std::unique_lock<std::mutex> lock(m_mutex);
 
-    // Load current map from file
-    if (m_mapManager->loadFromFile() == FrameworkReturnCode::_ERROR_) {
-		LOG_INFO("Initialize global map from scratch");
-		m_mapManager->setMap(map);
-		m_mapManager->saveToFile();
-		return;
-	}
+    if (m_emptyMap) {
+        LOG_INFO("Initialize global map from scratch");
+        m_mapManager->setMap(map);
+        m_mapManager->saveToFile();
+        m_emptyMap = false;
+        return;
+    }
 
     SRef<datastructure::Map> current_map;
     m_mapManager->getMap(current_map);
