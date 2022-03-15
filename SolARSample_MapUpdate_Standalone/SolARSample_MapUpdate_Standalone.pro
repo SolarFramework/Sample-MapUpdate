@@ -17,13 +17,13 @@ include(findremakenrules.pri)
 QT += opengl
 
 CONFIG(debug,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}/../bin/Debug
+    PROJECTDEPLOYDIR = $${PWD}/..
     DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
 
 CONFIG(release,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}/../bin/Release
+    PROJECTDEPLOYDIR = $${PWD}/..
     DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
 }

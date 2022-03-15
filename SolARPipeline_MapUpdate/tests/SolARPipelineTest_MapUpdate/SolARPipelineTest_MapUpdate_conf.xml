@@ -249,12 +249,12 @@
 
 	<properties>
 		<configure component="SolARDeviceDataLoader">
-			<property name="calibrationFile" type="string" value="../../data/calibrations/hololens_calibration.json"/>
+			<property name="calibrationFile" type="string" value="../../../../data/calibrations/hololens_calibration.json"/>
 			<property name="pathToData" type="string" value="path to data"/>
 			<property name="delayTime" type="int" value="200"/>
 		</configure>
 		<configure component="SolARMapManager">
-			<property name="directory" type="string" value="../../data/maps/globalMap"/>
+			<property name="directory" type="string" value="../../../../data/maps/globalMap"/>
 			<property name="identificationFileName" type="string" value="identification.bin"/>
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
@@ -265,7 +265,7 @@
 			<property name="thresConfidence" type="float" value="0.03"/>
 		</configure>
 		<configure component="SolARMapManager" name="Map1">
-			<property name="directory" type="string" value="../../data/maps/mapA"/>
+			<property name="directory" type="string" value="../../../../data/maps/mapA"/>
 			<property name="identificationFileName" type="string" value="identification.bin"/>
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
@@ -276,7 +276,7 @@
 			<property name="thresConfidence" type="float" value="0.03"/>
 		</configure>
 		<configure component="SolARMapManager" name="Map2">
-			<property name="directory" type="string" value="../../data/maps/mapB"/>
+			<property name="directory" type="string" value="../../../../data/maps/mapB"/>
 			<property name="identificationFileName" type="string" value="identification.bin"/>
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
@@ -327,7 +327,7 @@
 			<property name="minNbInliers" type="int" value="40"/>
 		</configure>		
 		<configure component="SolARKeyframeRetrieverFBOW">
-			<property name="VOCpath" type="String" value="../../data/fbow_voc/akaze.fbow"/>
+			<property name="VOCpath" type="String" value="../../../../data/fbow_voc/akaze.fbow"/>
 			<property name="threshold" type="float" value="0.02"/>
 			<property name="level" type="int" value="3"/>
 			<property name="matchingDistanceRatio" type="float" value="0.8"/>

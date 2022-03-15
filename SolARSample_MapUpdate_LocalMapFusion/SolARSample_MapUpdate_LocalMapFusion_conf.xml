@@ -230,10 +230,10 @@
 
 	<properties>
 		<configure component="SolARDeviceDataLoader">
-			<property name="calibrationFile" type="string" value="../../data/calibrations/hololens_calibration.json"/>
+			<property name="calibrationFile" type="string" value="../../../../data/calibrations/hololens_calibration.json"/>
 		</configure>
 		<configure component="SolARMapManager" name="globalMapper">
-			<property name="directory" type="string" value="../../data/maps/mapA"/>
+			<property name="directory" type="string" value="../../../../data/maps/mapA"/>
 			<property name="identificationFileName" type="string" value="identification.bin"/>
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
@@ -244,7 +244,7 @@
 			<property name="thresConfidence" type="float" value="0.03"/>
 		</configure>
 		<configure component="SolARMapManager" name="localMapper">
-			<property name="directory" type="string" value="../../data/maps/mapB"/>
+			<property name="directory" type="string" value="../../../../data/maps/mapB"/>
 			<property name="identificationFileName" type="string" value="identification.bin"/>
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
@@ -282,7 +282,7 @@
 			<property name="epilinesDistance" type="float" value="3.0"/>
 		</configure>
 		<configure component="SolARKeyframeRetrieverFBOW">
-			<property name="VOCpath" type="String" value="../../data/fbow_voc/akaze.fbow"/>
+			<property name="VOCpath" type="String" value="../../../../data/fbow_voc/akaze.fbow"/>
 			<property name="threshold" type="float" value="0.02"/>
 			<property name="level" type="int" value="3"/>
 			<property name="matchingDistanceRatio" type="float" value="0.8"/>
