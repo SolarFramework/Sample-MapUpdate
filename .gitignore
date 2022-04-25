@@ -9,7 +9,7 @@ bin/
 *-release.bat
 *_debug.bat
 *_release.bat
-**/build*/
+*build*
 
 # Prerequisites
 *.d
