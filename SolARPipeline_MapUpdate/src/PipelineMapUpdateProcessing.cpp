@@ -198,6 +198,21 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getSubmapRequest(const SRef<Sol
 	return FrameworkReturnCode::_ERROR_;
 }
 
+FrameworkReturnCode PipelineMapUpdateProcessing::resetMap()
+{
+    LOG_DEBUG("PipelineMapUpdateProcessing resetMap");
+
+    if (m_startedOK)
+    {
+        LOG_WARNING("Try to reset map while pipeline is started");
+        return FrameworkReturnCode::_ERROR_;
+    }
+
+    std::unique_lock<std::mutex> lock(m_mutex);
+
+    return m_mapManager->deleteFile();
+}
+
 void PipelineMapUpdateProcessing::processMapUpdate()
 {
     if (!m_startedOK || m_inputMapBuffer.empty()) {
