@@ -100,6 +100,10 @@ namespace PIPELINES {
 		FrameworkReturnCode getSubmapRequest(const SRef<SolAR::datastructure::Frame> frame,
 											 SRef<SolAR::datastructure::Map> & map) const override;
 
+        /// @brief Reset the map stored by the map update pipeline
+        /// @return FrameworkReturnCode::_SUCCESS if the map is correctly reset, else FrameworkReturnCode::_ERROR_
+        FrameworkReturnCode resetMap() override;
+
 	private:
 		/// @brief method that implementes the full maping processing
 		void processMapUpdate();
