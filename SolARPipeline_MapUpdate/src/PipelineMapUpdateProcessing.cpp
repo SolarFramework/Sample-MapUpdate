@@ -59,17 +59,9 @@ FrameworkReturnCode PipelineMapUpdateProcessing::init()
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode PipelineMapUpdateProcessing::setCameraParameters(const CameraParameters & cameraParams) {
-
+FrameworkReturnCode PipelineMapUpdateProcessing::setCameraParameters(const CameraParameters & cameraParams)
+{
     LOG_DEBUG("PipelineMapUpdateProcessing setCameraParameters");
-
-    std::unique_lock<std::mutex> lock(m_mutex);
-
-    m_cameraParams = cameraParams;
-	m_mapOverlapDetector->setCameraParameters(cameraParams.intrinsic, cameraParams.distortion);
-    m_mapUpdate->setCameraParameters(cameraParams);
-    m_setCameraParameters = true;
-
     return FrameworkReturnCode::_SUCCESS;
 }
 
@@ -140,13 +132,6 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
 FrameworkReturnCode PipelineMapUpdateProcessing::mapUpdateRequest(const SRef<datastructure::Map> map)
 {
     LOG_DEBUG("PipelineMapUpdateProcessing mapUpdateRequest");
-
-    if (!m_setCameraParameters)
-    {
-        LOG_WARNING("Must set camera parameters before starting");
-        return FrameworkReturnCode::_ERROR_;
-    }
-
     if (!m_startedOK)
     {
         LOG_WARNING("Try to use a pipeline that has not been started");
@@ -281,7 +266,7 @@ void PipelineMapUpdateProcessing::processMapUpdate()
 
     // global bundle adjustment
     m_bundler->setMap(current_map);
-    double error_bundle = m_bundler->bundleAdjustment(m_cameraParams.intrinsic, m_cameraParams.distortion);
+    double error_bundle = m_bundler->bundleAdjustment();
 	LOG_INFO("Error after bundler: {}", error_bundle);
 	
 	// check error of global BA to discard noisy map
