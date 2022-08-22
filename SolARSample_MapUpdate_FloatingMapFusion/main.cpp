@@ -69,7 +69,6 @@ int main(int argc, char *argv[])
 		// Load camera intrinsics parameters
 		CameraRigParameters camRigParams = arDevice->getCameraParameters();
 		CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
-		mapOverlapDetector->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		if (globalMapManager->loadFromFile() != FrameworkReturnCode::_SUCCESS) {
 			LOG_INFO("Cannot load global map");
 			return -1;
@@ -109,7 +108,7 @@ int main(int argc, char *argv[])
 
 			// global bundle adjustment
 			globalBundler->setMap(globalMap);
-			double error_bundle  = globalBundler->bundleAdjustment(camParams.intrinsic, camParams.distortion);
+			double error_bundle  = globalBundler->bundleAdjustment();
 			LOG_INFO("Error after bundler: {}", error_bundle);
 
 			// pruning

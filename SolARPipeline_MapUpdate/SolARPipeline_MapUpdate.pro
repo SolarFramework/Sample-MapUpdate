@@ -8,15 +8,13 @@ QMAKE_PROJECT_DEPTH = 0
 INSTALLSUBDIR = SolARBuild
 TARGET = SolARPipelineMapUpdate
 FRAMEWORK = $${TARGET}
-VERSION=0.11.0
+VERSION=1.0.0
 
 DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
 CONFIG += c++1z
 
 include(findremakenrules.pri)
-
-include(../manualincludepath.pri)
 
 CONFIG(debug,debug|release) {
     DEFINES += _DEBUG=1
