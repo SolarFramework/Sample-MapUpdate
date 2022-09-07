@@ -49,6 +49,9 @@ FrameworkReturnCode PipelineMapUpdateProcessing::init()
 
     std::unique_lock<std::mutex> lock(m_mutex);
 
+    if (m_startedOK)
+        stop();
+
     if (!m_init) {
         m_init = true;
     }
