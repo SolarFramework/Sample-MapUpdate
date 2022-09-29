@@ -110,7 +110,6 @@ namespace PIPELINES {
 
     private:
         bool										m_init = false;
-        bool										m_startedOK = false;
         bool                                        m_emptyMap = false;
 		int											m_nbKeyframeSubmap = 100;
 
@@ -126,7 +125,7 @@ namespace PIPELINES {
 		SRef<api::reloc::IKeyframeRetriever>        m_kfRetriever;
         
         // Delegate task dedicated to asynchronous map update processing
-        xpcf::DelegateTask *						m_mapUpdateTask;
+        xpcf::DelegateTask *						m_mapUpdateTask = nullptr;
 
         // Drop buffer containing maps sent by client
         xpcf::SharedFifo<SRef<datastructure::Map>>	m_inputMapBuffer;

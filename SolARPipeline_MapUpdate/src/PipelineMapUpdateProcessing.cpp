@@ -33,31 +33,35 @@ PipelineMapUpdateProcessing::PipelineMapUpdateProcessing():ConfigurableBase(xpcf
 	LOG_DEBUG("PipelineMapUpdateProcessing constructor");
 
     // create map update thread
-    auto getMapUpdateThread = [this]() { processMapUpdate(); };
-    m_mapUpdateTask = new xpcf::DelegateTask(getMapUpdateThread, false);
+    if (m_mapUpdateTask == nullptr) {
+        auto fnMapUpdateProcessing = [&]() {
+            processMapUpdate();
+        };
+
+        m_mapUpdateTask = new xpcf::DelegateTask(fnMapUpdateProcessing);
+    }
 }
 
 PipelineMapUpdateProcessing::~PipelineMapUpdateProcessing() 
 {
-    LOG_DEBUG("Remove map data in memory");
     LOG_DEBUG("PipelineMapUpdateProcessing destructor");
-    delete m_mapUpdateTask;
+
+    if (m_mapUpdateTask != nullptr) {
+        m_mapUpdateTask->stop();
+        delete m_mapUpdateTask;
+    }
 
     std::unique_lock<std::mutex> lock(m_map_mutex);
 
+    LOG_DEBUG("Remove map data from memory");
+
     // Unload current map (free memory)
     m_mapManager->setMap(xpcf::utils::make_shared<Map>());
-
-    LOG_DEBUG("PipelineMapUpdateProcessing destructor");
-    delete m_mapUpdateTask;
 }
 
 FrameworkReturnCode PipelineMapUpdateProcessing::init()
 {
     LOG_DEBUG("PipelineMapUpdateProcessing init");
-
-    if (m_startedOK)
-        stop();
 
     if (!m_init) {
 
@@ -70,6 +74,10 @@ FrameworkReturnCode PipelineMapUpdateProcessing::init()
         }
         else
             m_emptyMap = false;
+
+        // start map update thread
+        if (m_mapUpdateTask != nullptr)
+            m_mapUpdateTask->start();
 
         m_init = true;
     }
@@ -96,19 +104,6 @@ FrameworkReturnCode PipelineMapUpdateProcessing::start()
         return FrameworkReturnCode::_ERROR_;
 	}
 
-    if (!m_startedOK) {
-
-        // start map update thread
-        m_mapUpdateTask->start();
-
-        LOG_DEBUG("Map update thread started");
-
-        m_startedOK = true;
-    }
-    else {
-        LOG_DEBUG("Pipeline Map Update already started");
-    }
-
     return FrameworkReturnCode::_SUCCESS;
 }
 
@@ -116,29 +111,16 @@ FrameworkReturnCode PipelineMapUpdateProcessing::stop()
 {
     LOG_DEBUG("PipelineMapUpdateProcessing stop");
 
-	if (!m_startedOK)
-	{
-        LOG_DEBUG("Pipeline Map Update already stopped");
-    }
-    else {
-
-        m_startedOK = false;
-
-        if (m_mapUpdateTask != nullptr)
-            m_mapUpdateTask->stop();
-
-        LOG_DEBUG("Map update pipeline has stopped");
-    }
-
     return FrameworkReturnCode::_SUCCESS;
 }
 
 FrameworkReturnCode PipelineMapUpdateProcessing::mapUpdateRequest(const SRef<datastructure::Map> map)
 {
     LOG_DEBUG("PipelineMapUpdateProcessing mapUpdateRequest");
-    if (!m_startedOK)
+
+    if (!m_init)
     {
-        LOG_WARNING("Try to use a pipeline that has not been started");
+        LOG_WARNING("Try to use a pipeline that has not been initialized");
         return FrameworkReturnCode::_ERROR_;
     }
 
@@ -151,6 +133,12 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getMapRequest(SRef<SolAR::datas
 {
     LOG_DEBUG("PipelineMapUpdateProcessing getMapRequest");
 
+    if (!m_init)
+    {
+        LOG_WARNING("Try to use a pipeline that has not been initialized");
+        return FrameworkReturnCode::_ERROR_;
+    }
+
     std::unique_lock<std::mutex> lock(m_map_mutex);
 
     m_mapManager->getMap(map);
@@ -162,8 +150,15 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getSubmapRequest(const SRef<Sol
 {
 	LOG_DEBUG("PipelineMapUpdateProcessing getSubmapRequest");
 
-	// keyframes retrieval
+    if (!m_init)
+    {
+        LOG_WARNING("Try to use a pipeline that has not been initialized");
+        return FrameworkReturnCode::_ERROR_;
+    }
+
+    // keyframes retrieval
 	std::vector <uint32_t> retKeyframesId;
+
 	if (m_kfRetriever->retrieve(frame, retKeyframesId) == FrameworkReturnCode::_SUCCESS) {
 
         std::unique_lock<std::mutex> lock(m_map_mutex);
@@ -180,12 +175,6 @@ FrameworkReturnCode PipelineMapUpdateProcessing::getSubmapRequest(const SRef<Sol
 FrameworkReturnCode PipelineMapUpdateProcessing::resetMap()
 {
     LOG_DEBUG("PipelineMapUpdateProcessing resetMap");
-
-    if (m_startedOK)
-    {
-        LOG_WARNING("Try to reset map while pipeline is started");
-        return FrameworkReturnCode::_ERROR_;
-    }
 
     std::unique_lock<std::mutex> lock(m_map_mutex);
 
@@ -209,7 +198,7 @@ FrameworkReturnCode PipelineMapUpdateProcessing::resetMap()
 
 void PipelineMapUpdateProcessing::processMapUpdate()
 {
-    if (!m_startedOK || m_inputMapBuffer.empty()) {
+    if (!m_init || m_inputMapBuffer.empty()) {
 		xpcf::DelegateTask::yield();
 		return;
 	}
