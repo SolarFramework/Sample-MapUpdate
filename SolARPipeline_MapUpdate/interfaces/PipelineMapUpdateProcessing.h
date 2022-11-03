@@ -110,11 +110,13 @@ namespace PIPELINES {
 
     private:
         bool										m_init = false;
-        bool										m_startedOK = false;
         bool                                        m_emptyMap = false;
-		mutable std::mutex							m_mutex;
 		int											m_nbKeyframeSubmap = 100;
-		// Injected components
+
+        mutable std::mutex							m_map_mutex;      // Mutex to protect map access
+        mutable std::mutex							m_process_mutex;  // Mutex to protect map processing
+
+        // Injected components
 		SRef<api::storage::IMapManager>				m_mapManager;
 		SRef<api::loop::IOverlapDetector>			m_mapOverlapDetector;
 		SRef<api::solver::map::IMapFusion>			m_mapFusion;
@@ -123,7 +125,7 @@ namespace PIPELINES {
 		SRef<api::reloc::IKeyframeRetriever>        m_kfRetriever;
         
         // Delegate task dedicated to asynchronous map update processing
-        xpcf::DelegateTask *						m_mapUpdateTask;
+        xpcf::DelegateTask *						m_mapUpdateTask = nullptr;
 
         // Drop buffer containing maps sent by client
         xpcf::SharedFifo<SRef<datastructure::Map>>	m_inputMapBuffer;

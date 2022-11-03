@@ -161,6 +161,10 @@
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="2c147595-6c74-4f69-b63d-91e162c311ed" name="IKeyframesManager" description="IPointCloudManager"/>
 		</component>
+                <component uuid="e046cf87-d0a4-4c6f-af3d-18dc70881a34" name="SolARCameraParametersManager" description="SolARCameraParametersManager">
+                        <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                        <interface uuid="31f151fc-326d-11ed-a261-0242ac120002" name="ICameraParametersManager" description="ICameraParametersManager"/>
+                </component>
 		<component uuid="17c7087f-3394-4b4b-8e6d-3f8639bb00ea" name="SolARCovisibilityGraphManager" description="SolARCovisibilityGraphManager">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="15455f5a-0e99-49e5-a3fb-39de3eeb5b9b" name="ICovisibilityGraphManager" description="ICovisibilityGraphManager"/>
@@ -235,6 +239,7 @@
 			<bind interface="IMapManager" to="SolARMapManager" name="fusionMapper" range="default|all" properties="fusionMapper"/>
                         <bind interface="IPointCloudManager" to="SolARPointCloudManager" scope="Singleton"/>
                         <bind interface="IKeyframesManager" to="SolARKeyframesManager" scope="Singleton"/>
+                        <bind interface="ICameraParametersManager" to="SolARCameraParametersManager" scope="Singleton"/>
                         <bind interface="ICovisibilityGraphManager" to="SolARCovisibilityGraphManager" scope="Singleton"/>
                         <bind interface="IKeyframeRetriever" to="SolARKeyframeRetrieverFBOW" scope="Singleton"/>
                 </bindings>
@@ -254,7 +259,8 @@
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
 			<property name="keyframesManagerFileName" type="string" value="keyframes.bin"/>
-			<property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
+                        <property name="cameraParametersManagerFileName" type="string" value="cameraParameters.bin"/>
+                        <property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
 			<property name="keyframeRetrieverFileName" type="string" value="keyframe_retriever.bin"/>
 			<property name="reprojErrorThreshold" type="float" value="10.0"/>
 			<property name="thresConfidence" type="float" value="0.03"/>
@@ -265,7 +271,8 @@
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
 			<property name="keyframesManagerFileName" type="string" value="keyframes.bin"/>
-			<property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
+                        <property name="cameraParametersManagerFileName" type="string" value="cameraParameters.bin"/>
+                        <property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
 			<property name="keyframeRetrieverFileName" type="string" value="keyframe_retriever.bin"/>
 			<property name="reprojErrorThreshold" type="float" value="10.0"/>
 			<property name="thresConfidence" type="float" value="0.03"/>
@@ -276,7 +283,8 @@
 			<property name="coordinateFileName" type="string" value="coordinate.bin"/>
 			<property name="pointCloudManagerFileName" type="string" value="pointcloud.bin"/>
 			<property name="keyframesManagerFileName" type="string" value="keyframes.bin"/>
-			<property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
+                        <property name="cameraParametersManagerFileName" type="string" value="cameraParameters.bin"/>
+                        <property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
 			<property name="keyframeRetrieverFileName" type="string" value="keyframe_retriever.bin"/>
 			<property name="reprojErrorThreshold" type="float" value="10.0"/>
 			<property name="thresConfidence" type="float" value="0.03"/>

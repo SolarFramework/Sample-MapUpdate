@@ -85,9 +85,11 @@ int main(int argc, char *argv[])
 		LOG_INFO("Global map");
 		LOG_INFO("Number of point cloud: {}", globalMap->getConstPointCloud()->getNbPoints());
 		LOG_INFO("Number of keyframes: {}", globalMap->getConstKeyframeCollection()->getNbKeyframes());
+        LOG_INFO("Number of camera parameters: {}", globalMap->getConstCameraParametersCollection()->getNbCameraParameters());
 		LOG_INFO("Local map");
 		LOG_INFO("Number of point cloud: {}", floatingMap->getConstPointCloud()->getNbPoints());
 		LOG_INFO("Number of keyframes: {}", floatingMap->getConstKeyframeCollection()->getNbKeyframes());
+        LOG_INFO("Number of camera parameters: {}", floatingMap->getConstCameraParametersCollection()->getNbCameraParameters());
 
 		Transform3Df sim3Transform;
 		std::vector<std::pair<uint32_t, uint32_t>>overlapsIndices;		
