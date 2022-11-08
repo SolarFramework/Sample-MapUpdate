@@ -104,6 +104,11 @@ namespace PIPELINES {
         /// @return FrameworkReturnCode::_SUCCESS if the map is correctly reset, else FrameworkReturnCode::_ERROR_
         FrameworkReturnCode resetMap() override;
 
+        /// @brief Request to the map update pipeline to get the point cloud of the global map
+        /// @param[out] pointCloud: the output point cloud
+        /// @return FrameworkReturnCode::_SUCCESS if the point cloud is available, else FrameworkReturnCode::_ERROR_
+        FrameworkReturnCode getPointCloudRequest(SRef<SolAR::datastructure::PointCloud> & pointCloud) const override;
+
 	private:
 		/// @brief method that implementes the full maping processing
 		void processMapUpdate();
