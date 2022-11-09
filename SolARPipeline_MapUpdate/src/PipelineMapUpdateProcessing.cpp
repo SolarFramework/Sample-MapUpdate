@@ -196,6 +196,29 @@ FrameworkReturnCode PipelineMapUpdateProcessing::resetMap()
     }
 }
 
+FrameworkReturnCode PipelineMapUpdateProcessing::getPointCloudRequest(SRef<SolAR::datastructure::PointCloud> & pointCloud) const
+{
+    LOG_DEBUG("PipelineMapUpdateProcessing getPointCloudRequest");
+
+    if (!m_init)
+    {
+        LOG_WARNING("Try to use a pipeline that has not been initialized");
+        return FrameworkReturnCode::_ERROR_;
+    }
+
+    std::unique_lock<std::mutex> lock(m_map_mutex);
+
+    SRef<Map> globalMap;
+    m_mapManager->getMap(globalMap);
+    if (globalMap == nullptr)
+      return FrameworkReturnCode::_ERROR_;
+
+    globalMap->getPointCloud(pointCloud);
+
+    return FrameworkReturnCode::_SUCCESS;
+}
+
+
 void PipelineMapUpdateProcessing::processMapUpdate()
 {
     if (!m_init || m_inputMapBuffer.empty()) {
