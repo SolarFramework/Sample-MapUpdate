@@ -38,6 +38,7 @@
 #include "api/solver/map/IMapFusion.h"
 #include "api/solver/map/IMapUpdate.h"
 #include "api/solver/map/IBundler.h"
+#include "api/geom/I3DTransform.h"
 
 namespace SolAR {
 namespace PIPELINES {
@@ -128,6 +129,7 @@ namespace PIPELINES {
 		SRef<api::solver::map::IMapUpdate>			m_mapUpdate;
 		SRef<api::solver::map::IBundler>			m_bundler;
 		SRef<api::reloc::IKeyframeRetriever>        m_kfRetriever;
+        SRef<api::geom::I3DTransform>               m_transform3D;
         
         // Delegate task dedicated to asynchronous map update processing
         xpcf::DelegateTask *						m_mapUpdateTask = nullptr;

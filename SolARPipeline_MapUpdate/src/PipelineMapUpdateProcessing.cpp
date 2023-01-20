@@ -29,6 +29,7 @@ PipelineMapUpdateProcessing::PipelineMapUpdateProcessing():ConfigurableBase(xpcf
 	declareInjectable<api::solver::map::IMapUpdate>(m_mapUpdate);
 	declareInjectable<api::solver::map::IBundler>(m_bundler);
 	declareInjectable<api::reloc::IKeyframeRetriever>(m_kfRetriever);
+    declareInjectable<api::geom::I3DTransform>(m_transform3D);
 	declareProperty("nbKeyframeSubmap", m_nbKeyframeSubmap);
 	LOG_DEBUG("PipelineMapUpdateProcessing constructor");
 
@@ -250,6 +251,28 @@ void PipelineMapUpdateProcessing::processMapUpdate()
     m_mapManager->getMap(current_map);
 
     lock_map.unlock();
+
+    // Manange SolARToWorld transform 
+    if (current_map->getTransform3D().isApprox(Transform3Df::Identity())) {
+        if (map->getTransform3D().isApprox(Transform3Df::Identity())) {
+            // both current and new map are without 3D transform, do nothing and wait for next map which has valid transform ...
+        }
+        else {
+            // transfer map's T to current map 
+            current_map->setTransform3D(map->getTransform3D());
+        }
+    }
+    else {
+        if (map->getTransform3D().isApprox(Transform3Df::Identity())) {
+            // current map has transform but map does not, do nothing...
+        }
+        else {
+            // both current map and map has their own transforms, apply transform to map to bring it into the space of current map
+            if (!map->getTransform3D().isApprox(current_map->getTransform3D())) {
+                m_transform3D->transformInPlace(current_map->getTransform3D().inverse()*map->getTransform3D(), map);
+            }
+        }
+    }
 
 	const SRef<CoordinateSystem>& localMapCoordinateSystem = map->getConstCoordinateSystem();
 	Transform3Df sim3Transform;
