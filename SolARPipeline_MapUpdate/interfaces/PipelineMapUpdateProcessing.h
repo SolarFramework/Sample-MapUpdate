@@ -32,13 +32,13 @@
 #include "xpcf/threading/BaseTask.h"
 #include <mutex>
 
-#include "api/pipeline/IMapUpdatePipeline.h"
-#include "api/storage/IMapManager.h"
+#include "api/geom/I3DTransform.h"
 #include "api/loop/IOverlapDetector.h"
+#include "api/pipeline/IMapUpdatePipeline.h"
+#include "api/solver/map/IBundler.h"
 #include "api/solver/map/IMapFusion.h"
 #include "api/solver/map/IMapUpdate.h"
-#include "api/solver/map/IBundler.h"
-#include "api/geom/I3DTransform.h"
+#include "api/storage/IMapManager.h"
 
 namespace SolAR {
 namespace PIPELINES {

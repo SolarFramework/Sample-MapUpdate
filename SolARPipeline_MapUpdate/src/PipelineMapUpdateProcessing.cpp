@@ -253,24 +253,15 @@ void PipelineMapUpdateProcessing::processMapUpdate()
     lock_map.unlock();
 
     // Manange SolARToWorld transform 
-    if (current_map->getTransform3D().isApprox(Transform3Df::Identity())) {
-        if (map->getTransform3D().isApprox(Transform3Df::Identity())) {
-            // both current and new map are without 3D transform, do nothing and wait for next map which has valid transform ...
-        }
-        else {
-            // transfer map's T to current map 
+    if (!map->getTransform3D().isApprox(Transform3Df::Identity()))
+    {
+        if (current_map->getTransform3D().isApprox(Transform3Df::Identity()))
+        {
             current_map->setTransform3D(map->getTransform3D());
         }
-    }
-    else {
-        if (map->getTransform3D().isApprox(Transform3Df::Identity())) {
-            // current map has transform but map does not, do nothing...
-        }
-        else {
-            // both current map and map has their own transforms, apply transform to map to bring it into the space of current map
-            if (!map->getTransform3D().isApprox(current_map->getTransform3D())) {
-                m_transform3D->transformInPlace(current_map->getTransform3D().inverse()*map->getTransform3D(), map);
-            }
+        else if (!map->getTransform3D().isApprox(current_map->getTransform3D())) // different 3D transforms should modify map
+        {
+            m_transform3D->transformInPlace(current_map->getTransform3D().inverse()*map->getTransform3D(), map);
         }
     }
 
