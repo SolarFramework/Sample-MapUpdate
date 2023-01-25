@@ -22,7 +22,7 @@ To install the required data, just launch the following script:
 
 This script will install the following data into the `./data` folder:
 - The bag of words downloaded from our [GitHub releases](https://github.com/SolarFramework/binaries/releases/download/fbow%2F0.0.1%2Fwin/fbow_voc.zip) and unzipped in the `./data` folder.
-- Maps produced from the previous captures and downloaded from our Artifactory ([mapA](https://artifact.b-com.com/solar-generic-local/maps/hololens/bcomLab/loopDesktopA.zip) and [mapB](https://artifact.b-com.com/solar-generic-local/maps/hololens/bcomLab/loopDesktopB.zip)) and copied into the `./data/maps` folder.
+- Maps produced from the previous captures and downloaded from our Artifactory ([mapA](https://repository.solarframework.org/generic/maps/hololens/bcomLab/loopDesktopA.zip) and [mapB](https://repository.solarframework.org/generic/maps/hololens/bcomLab/loopDesktopB.zip)) and copied into the `./data/maps` folder.
 
 ### Install required modules
 
