@@ -29,6 +29,7 @@ PipelineMapUpdateProcessing::PipelineMapUpdateProcessing():ConfigurableBase(xpcf
 	declareInjectable<api::solver::map::IMapUpdate>(m_mapUpdate);
 	declareInjectable<api::solver::map::IBundler>(m_bundler);
 	declareInjectable<api::reloc::IKeyframeRetriever>(m_kfRetriever);
+    declareInjectable<api::geom::I3DTransform>(m_transform3D);
 	declareProperty("nbKeyframeSubmap", m_nbKeyframeSubmap);
 	LOG_DEBUG("PipelineMapUpdateProcessing constructor");
 
@@ -250,6 +251,19 @@ void PipelineMapUpdateProcessing::processMapUpdate()
     m_mapManager->getMap(current_map);
 
     lock_map.unlock();
+
+    // Manange SolARToWorld transform 
+    if (!map->getTransform3D().isApprox(Transform3Df::Identity()))
+    {
+        if (current_map->getTransform3D().isApprox(Transform3Df::Identity()))
+        {
+            current_map->setTransform3D(map->getTransform3D());
+        }
+        else if (!map->getTransform3D().isApprox(current_map->getTransform3D())) // different 3D transforms should modify map
+        {
+            m_transform3D->transformInPlace(current_map->getTransform3D().inverse()*map->getTransform3D(), map);
+        }
+    }
 
 	const SRef<CoordinateSystem>& localMapCoordinateSystem = map->getConstCoordinateSystem();
 	Transform3Df sim3Transform;
