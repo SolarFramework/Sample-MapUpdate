@@ -5,7 +5,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARPipelineTest_MapUpdate
-VERSION=1.1.0
+VERSION=1.0.0
 PROJECTDEPLOYDIR = $${PWD}/../../../deploy
 
 DEFINES += MYVERSION=$${VERSION}
