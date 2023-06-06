@@ -319,6 +319,7 @@ void PipelineMapUpdateProcessing::processMapUpdate()
     lock_map.lock();
 
 	// pruning
+    m_mapManager->visibilityPruning();
 	m_mapManager->pointCloudPruning();
 	m_mapManager->keyframePruning();
 	m_mapManager->saveToFile();
