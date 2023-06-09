@@ -46,12 +46,7 @@ include (SolARPipeline_MapUpdate.pri)
 unix {
     # Avoids adding install steps manually. To be commented to have a better control over them.
     QMAKE_POST_LINK += "make install"
-}
-
-unix:!android {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
-#    QMAKE_LINK=clang++
-#    QMAKE_CXX = clang++
 }
 
 linux {
@@ -75,10 +70,6 @@ win32 {
     QMAKE_CXXFLAGS += -wd4250 -wd4251 -wd4244 -wd4275
     QMAKE_CXXFLAGS_DEBUG += /Od
     QMAKE_CXXFLAGS_RELEASE += /O2
-}
-
-android {
-    ANDROID_ABIS="arm64-v8a"
 }
 
 header_files.path = $${PROJECTDEPLOYDIR}/interfaces
