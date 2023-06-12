@@ -25,10 +25,6 @@ CONFIG(release,debug|release) {
     DEFINES += NDEBUG=1
 }
 
-android {
-    ANDROID_ABIS="arm64-v8a"
-}
-
 DEPENDENCIESCONFIG = sharedlib install_recurse
 
 win32:CONFIG -= static
