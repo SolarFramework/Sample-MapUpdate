@@ -20,7 +20,6 @@ node("master") {
         buildDir= \
         "SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate,\
          SolARSample_MapUpdate_FloatingMapFusion,\
-         SolARSample_MapUpdate_LocalMapFusion,\
          SolARSample_MapUpdate_Standalone"
         android=false
         packageScripts="bundleSamples"
