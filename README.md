@@ -38,18 +38,7 @@ For more information about how to install remaken on your machine, visit the [in
 
 ## Run the samples
 
-### Map Fusion samples
-
-The two samples allow to fuse two maps previoulsy built:
-* <strong>Local Map Fusion</strong>: This fusion requires to specify the 3D transform between the two maps in the `TransformLocalToGlobal.txt` file. This 3D transform can be estimated with the OpenCV module test called `SolARTest_ModuleOpenCV_DeviceDualMarkerCalibration` which will estimate the transform between two markers, here the `FiducialMarkerA` reference of the `mapA`, and `FiducialMarkerB` reference of the `mapB` and also visible in the `loop_desktop_A` AR device capture.
-
-> #### Windows
->
-	SolARSample_MapUpdate_LocalMapFusion.exe
-
-> #### Linux
->
-	./run.sh ./SolARSample_MapUpdate_LocalMapFusion
+### Map Fusion sample
 
 * <strong>Floating Map Fusion</strong>: This fusion will automatically detect overlaps between two maps based on a keyframe retrieval approach. The overlaps detection will estimate the 3D transform between the two maps, and then the sample will merge them.
 
