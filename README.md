@@ -50,14 +50,3 @@ For more information about how to install remaken on your machine, visit the [in
 >
 	./run.sh ./SolARSample_MapUpdate_FloatingMapFusion
 
-### Map Update samples
-
-* <strong>Map Update Standalone</strong>: This sample aims at updating the global map from a local map. To do this, this sample first checks if the local map is a floating, it will perform a map overlap detection to estimate the 3D transform between the two maps. On the contrary, this 3D transform is known previously. Then this sample merge the local map into the global map. Finally, it automatically detects changes of the global map comparing to the local map and updates the global map.
-
-> #### Windows
->
-	SolARSample_MapUpdate_Standalone.exe
-
-> #### Linux
->
-	./run.sh ./SolARSample_MapUpdate_Standalone

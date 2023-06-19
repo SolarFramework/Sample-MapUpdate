@@ -18,8 +18,7 @@ node("master") {
         dirName="SolARBuild"
         buildDir= \
         "SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate,\
-         SolARSample_MapUpdate_FloatingMapFusion,\
-         SolARSample_MapUpdate_Standalone"
+         SolARSample_MapUpdate_FloatingMapFusion"
         packageScripts="bundleSamples"
     }
 
