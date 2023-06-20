@@ -36,17 +36,4 @@ and for debug mode:
 
 For more information about how to install remaken on your machine, visit the [install page](https://solarframework.github.io/install/) on the SolAR website.
 
-## Run the samples
-
-### Map Fusion sample
-
-* <strong>Floating Map Fusion</strong>: This fusion will automatically detect overlaps between two maps based on a keyframe retrieval approach. The overlaps detection will estimate the 3D transform between the two maps, and then the sample will merge them.
-
-> #### Windows
->
-	SolARSample_MapUpdate_FloatingMapFusion.exe
-
-> #### Linux
->
-	./run.sh ./SolARSample_MapUpdate_FloatingMapFusion
 
