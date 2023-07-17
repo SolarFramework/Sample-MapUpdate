@@ -32,12 +32,13 @@
 #include "xpcf/threading/BaseTask.h"
 #include <mutex>
 
-#include "api/pipeline/IMapUpdatePipeline.h"
-#include "api/storage/IMapManager.h"
+#include "api/geom/I3DTransform.h"
 #include "api/loop/IOverlapDetector.h"
+#include "api/pipeline/IMapUpdatePipeline.h"
+#include "api/solver/map/IBundler.h"
 #include "api/solver/map/IMapFusion.h"
 #include "api/solver/map/IMapUpdate.h"
-#include "api/solver/map/IBundler.h"
+#include "api/storage/IMapManager.h"
 
 namespace SolAR {
 namespace PIPELINES {
@@ -104,28 +105,34 @@ namespace PIPELINES {
         /// @return FrameworkReturnCode::_SUCCESS if the map is correctly reset, else FrameworkReturnCode::_ERROR_
         FrameworkReturnCode resetMap() override;
 
+        /// @brief Request to the map update pipeline to get the point cloud of the global map
+        /// @param[out] pointCloud: the output point cloud
+        /// @return FrameworkReturnCode::_SUCCESS if the point cloud is available, else FrameworkReturnCode::_ERROR_
+        FrameworkReturnCode getPointCloudRequest(SRef<SolAR::datastructure::PointCloud> & pointCloud) const override;
+
 	private:
 		/// @brief method that implementes the full maping processing
 		void processMapUpdate();
 
     private:
         bool										m_init = false;
-        bool                                        m_setCameraParameters = false;
-        bool										m_startedOK = false;
         bool                                        m_emptyMap = false;
-		datastructure::CameraParameters				m_cameraParams;
-		mutable std::mutex							m_mutex;
 		int											m_nbKeyframeSubmap = 100;
-		// Injected components
+
+        mutable std::mutex							m_map_mutex;      // Mutex to protect map access
+        mutable std::mutex							m_process_mutex;  // Mutex to protect map processing
+
+        // Injected components
 		SRef<api::storage::IMapManager>				m_mapManager;
 		SRef<api::loop::IOverlapDetector>			m_mapOverlapDetector;
 		SRef<api::solver::map::IMapFusion>			m_mapFusion;
 		SRef<api::solver::map::IMapUpdate>			m_mapUpdate;
 		SRef<api::solver::map::IBundler>			m_bundler;
 		SRef<api::reloc::IKeyframeRetriever>        m_kfRetriever;
+        SRef<api::geom::I3DTransform>               m_transform3D;
         
         // Delegate task dedicated to asynchronous map update processing
-        xpcf::DelegateTask *						m_mapUpdateTask;
+        xpcf::DelegateTask *						m_mapUpdateTask = nullptr;
 
         // Drop buffer containing maps sent by client
         xpcf::SharedFifo<SRef<datastructure::Map>>	m_inputMapBuffer;

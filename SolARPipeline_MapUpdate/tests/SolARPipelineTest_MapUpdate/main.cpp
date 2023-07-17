@@ -21,8 +21,6 @@
 #include "api/storage/IMapManager.h"
 #include "api/display/I3DPointsViewer.h"
 
-#define INDEX_USE_CAMERA 0
-
 using namespace SolAR;
 using namespace SolAR::api;
 using namespace SolAR::datastructure;
@@ -53,27 +51,16 @@ int main(int argc, char ** argv)
 		// Load components of the map update processing	
 		LOG_INFO("Start creating components");
         auto gMapUpdatePipeline = xpcfComponentManager->resolve<pipeline::IMapUpdatePipeline>();
-        auto gARDevice = xpcfComponentManager->resolve<input::devices::IARDevice>();
         std::vector<SRef<storage::IMapManager>> gMapManagers(2);
 		gMapManagers[0] = xpcfComponentManager->resolve<storage::IMapManager>("Map1");
 		gMapManagers[1] = xpcfComponentManager->resolve<storage::IMapManager>("Map2");
 		auto gViewer3D = xpcfComponentManager->resolve<display::I3DPointsViewer>();
 		LOG_INFO("All components loaded");
 
-		// Load camera intrinsics parameters
-        CameraRigParameters camRigParams = gARDevice->getCameraParameters();
-        CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
-
 		// Init map update pipeline
         if (gMapUpdatePipeline->init() != FrameworkReturnCode::_SUCCESS)
 		{
 			LOG_ERROR("Cannot init map update pipeline");
-			return -1;
-		}
-
-		// Set camera parameters
-		if (gMapUpdatePipeline->setCameraParameters(camParams) != FrameworkReturnCode::_SUCCESS) {
-			LOG_ERROR("Cannot set camera parameters for map update pipeline");
 			return -1;
 		}
 		

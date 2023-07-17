@@ -7,7 +7,6 @@ node("master") {
         moduleName="SolARPipelineMapUpdate"
         dirName="SolARBuild"
         buildDir="SolARPipeline_MapUpdate"
-        android=true
     }
 
 
@@ -18,11 +17,7 @@ node("master") {
         moduleName="SolARSample_MapUpdate"
         dirName="SolARBuild"
         buildDir= \
-        "SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate,\
-         SolARSample_MapUpdate_FloatingMapFusion,\
-         SolARSample_MapUpdate_LocalMapFusion,\
-         SolARSample_MapUpdate_Standalone"
-        android=false
+        "SolARPipeline_MapUpdate/tests/SolARPipelineTest_MapUpdate"
         packageScripts="bundleSamples"
     }
 
